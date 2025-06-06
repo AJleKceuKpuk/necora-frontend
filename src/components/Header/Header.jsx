@@ -1,39 +1,42 @@
 // src/components/Header.jsx
-import React from 'react';
 import './header.css';
-
-
+import notifications from '../../images/notification.png'
+import messages from '../../images/message.png'
+import friends from '../../images/friends.png'
 
 
 const UserMenu = () => (
-  <div className="user-menu">
-    Привет, Алексей!
+  <div className="header-right">
+    <div className="header-user-buttons">
+      <div className="img-container img-36 header-button"><img src={notifications} alt="notifications" /></div>
+      <div className="img-container img-36 header-button"><img src={messages} alt="messages" /></div>
+      <div className="img-container img-36 header-button"><img src={friends} alt="friends" /></div>
+    </div>
+    <div className="header-button profile-account pd-5">Username</div>
   </div>
 );
 
 const GuestMenu = () => (
-  <div className="guest-menu">
-    <button>Войти</button>
-    <button>Регистрация</button>
+  <div className="header-right">
+    <div className="header-button pd-5 br-5">Вход</div>
+    <div className="header-button pd-5 br-5">Регистрация</div>
   </div>
+  
 );
 
-const Header = ({ variant = 'start', isAuthenticated = false }) => {
+const Header = ({ variant = "game", isAuthenticated = true}) => {
 
   const menu = isAuthenticated ? <UserMenu /> : <GuestMenu />;
 
   if (variant === 'game') {
     return (
       <header className="header header-game-page">
-        <div className="header-left">
-          Игровой Логотип
-        </div>
+        <div>left</div>
         <div className="header-center">
-          Информация об игре
+          center
         </div>
-        <div className="header-right">
-          {menu}
-        </div>
+        {menu}
+        
       </header>
     );
   }
@@ -41,16 +44,14 @@ const Header = ({ variant = 'start', isAuthenticated = false }) => {
   return (
     <header className="header header-start-page">
       <div className="header-left">
-        <ul className="header-list-buttons">
-          <li><button className="header-button">Главная</button></li>
-          <li><button className="header-button">Форум</button></li>
-          <li><button className="header-button">Правила</button></li>
+        <ul className="header-start-buttons">
+          <li className="header-button pd-5 br-5">Главная</li>
+          <li className="header-button pd-5 br-5">Форум</li>
+          <li className="header-button pd-5 br-5">Правила</li>
+          <li className="header-button pd-5 br-5">Техподдержка</li>
         </ul>
       </div>
-  
-      <div className="header-right">
-        {menu}
-      </div>
+      {menu}
     </header>
   );
 };
