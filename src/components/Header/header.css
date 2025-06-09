@@ -1,3 +1,5 @@
+@import url("./../../index.css");
+
 .header{
     display: grid;
     height: 60px;
@@ -14,18 +16,33 @@
     grid-template-columns: 300px 1fr 300px;
 }
 
-.header-left{
+.header-start-left{
     height: 50px;
+}
+
+.header-time{
+    font-size: 20px;
 }
 
 .header-right{
     height: 50px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border-left: 1px solid white;
+    border-left: 1px solid rgba(255, 255, 255, 0.75);
     text-align: center;
     align-items: center;
     padding-left: 5px;
+}
+
+.header-left{
+    height: 50px;
+    display: grid;
+    grid-template-columns: 50px 1fr 50px;
+    border-right: 1px solid rgba(255, 255, 255, 0.75);
+    text-align: center;
+    align-items: center;
+    padding-right: 5px;
+    place-items: center;
 }
 
 .header-start-buttons{
@@ -35,26 +52,6 @@
     align-items: center;
     gap: 10px;
 }
-
-.header-button{
-    cursor: pointer;
-    border: 1px solid rgba(0, 0, 0, 0);
-    
-}
-
-.br-5{
-    border-radius: 5px;
-}
-
-.pd-5{
-    padding: 5px;
-}
-
-.header-button:hover{
-    background-color: #393939;
-    transition: all 0.3s;
-}
-
 
 .profile-account{
     border-left: 1px solid white;
@@ -68,41 +65,4 @@
     padding-right: 5px;
     justify-content: center;
     place-items: center;
-}
-
-.img-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.img-36 {
-    width: 40px;
-    height: 40px;
-}
-
-.img-36 img {
-    width: 36px;
-    height: 36px;
-}
-
-.img-25{
-    width: 30px;
-    height: 30px;
-}
-
-.img-25 img{
-    width: 25px;
-    height: 25px;
-}
-
-
-.img-15{
-    width: 20px;
-    height: 20px;
-}
-
-.img-15 img{
-    width: 15px;
-    height: 15px;
 }

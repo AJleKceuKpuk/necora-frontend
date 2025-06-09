@@ -1,0 +1,9 @@
+.header-button{
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.header-button:hover{
+    background-color: #393939;
+    transition: all 0.3s;
+}
