@@ -6,20 +6,22 @@ import Footer from '../components/Footer/Footer';
 
 const Body = () => {
 
-  const [page, setPage] = useState("game");
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [game, setGame] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   
 
   return (
     <div className="body">
-      <Header page={page} isAuthenticated={isAuthenticated} />
+      <Header game={game} isAuthenticated={isAuthenticated} />
       <main>
         {/* Этот Outlet будет содержать маршрутизуемый контент */}
         <Outlet />
       </main>
       <Footer />
     </div>
+
+    
   );
 };
 

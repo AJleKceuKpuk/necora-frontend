@@ -5,3 +5,18 @@
 .pd-5{
     padding: 5px;
 }
+
+.pd-6{
+    padding: 6px;
+}
+
+.no-select {
+  user-select: none;          /* Современные браузеры */
+  -webkit-user-select: none;  /* Chrome, Safari, Opera */
+  -moz-user-select: none;     /* Firefox */
+  -ms-user-select: none;      /* Internet Explorer/Edge */
+}
+
+.fs-20{
+    font-size: 20px;
+}

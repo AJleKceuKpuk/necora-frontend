@@ -1,14 +1,12 @@
-// src/images/index.js
-import notifications from './notification.png';
-import messages from './message.png';
-import friends from './friends.png';
-import home from './home.png';
-import chat from './chat.png';
-
-export {
-  notifications,
-  messages,
-  friends,
-  home,
-  chat,
+const importAllIcons = (r) => {
+  let icons = {};
+  r.keys().forEach((key) => {
+    // Из ключей можно убрать префикс "./" и расширение ".png"
+    const iconName = key.replace('./', '').replace('.png', '');
+    icons[iconName] = r(key);
+  });
+  return icons;
 };
+
+const icons = importAllIcons(require.context('../images', false, /\.png$/));
+export default icons;
