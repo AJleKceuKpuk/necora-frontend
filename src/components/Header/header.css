@@ -27,6 +27,8 @@
     text-align: center;
     text-align: center;
     align-items: center;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
 }
 
 .tm-container{
