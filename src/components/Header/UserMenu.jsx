@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import "./header.css";
+import "./css/header.css";
 import icons from "../../images/images";
 
 const UserMenu = () => {
@@ -12,6 +12,7 @@ const [isOpen, setIsOpen] = useState(false);
     setIsOpen((prev) => !prev);
   };
   
+  //Закрытие меню   
   useEffect(() => {
     const handleClickOutside = (event) => {
       // Если клик вне области dropdown, закрываем меню

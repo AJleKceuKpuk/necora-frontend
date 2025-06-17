@@ -1,15 +1,16 @@
-// src/components/Header.jsx
-import { useState } from "react";
 import { Link } from 'react-router-dom';
-import "./header.css";
+import "./css/header.css";
 import useDateTime from "../../services/useDateTime";
 import icons from "../../images/images";
 import UserMenu from "./UserMenu";
 import GuestMenu from "./GuestMenu";
+import PlanetMenu from './PlanetMenu';
 
 const Header = ({ game, isAuthenticated }) => {
   const dateTime = useDateTime();
   const menu = isAuthenticated ? (<UserMenu />) : (<GuestMenu/>);
+  const planet = <PlanetMenu />;
+
 
   if (game && isAuthenticated) {
     return (
@@ -24,24 +25,43 @@ const Header = ({ game, isAuthenticated }) => {
             {dateTime.toLocaleDateString()} <br />
             {dateTime.toLocaleTimeString()}
           </div>
+
           <Link to="/about"  className="img-container img-36 br-5 header-button">
             <img src={icons.chat} alt="chat" />
           </Link>
+
+
         </div>
         <div className="header-center">
+
           <div className="tm-container">
-            <div className="tm-counter">10.000.00</div>
+            <div className="tm-counter">99.999.999</div>
             <div className="img-container img-36 br-5">
               <img src={icons.TM} alt="dark materia" />
             </div>
           </div>
-          <div>Planet</div>
+
+          <div className='planet-control'>
+
+            <div className="img-container img-25 br-5 header-button">
+              <img src={icons.arrow} alt="left-arrow" />
+            </div>
+
+            {planet}
+
+            <div className="img-container img-25 br-5 header-button rotate-180">
+              <img src={icons.arrow} alt="right-arrow" />
+            </div>
+
+          </div>
+
           <div className="am-container">
             <div className="img-container img-36 br-5">
               <img src={icons.AM} alt="anti materia" />
             </div>
-            <div className="am-counter">10.000.00</div>
+            <div className="am-counter">99.999.000</div>
           </div>
+
         </div>
         {menu}
       </header>

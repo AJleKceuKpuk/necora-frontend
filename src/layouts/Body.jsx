@@ -6,7 +6,7 @@ import Footer from '../components/Footer/Footer';
 
 const Body = () => {
 
-  const [game, setGame] = useState(false);
+  const [game, setGame] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
