@@ -1,21 +1,18 @@
 // src/layouts/Body.jsx
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
+import Main from '../components/Main/Main';
 
 const Body = () => {
 
-  const [game, setGame] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [game, setGame] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <div className="body">
       <Header game={game} isAuthenticated={isAuthenticated} />
-      <main>
-        
-        <Outlet />
-      </main>
+      <Main />
       <Footer />
     </div>
   );

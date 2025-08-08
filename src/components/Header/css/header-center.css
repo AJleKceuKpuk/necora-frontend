@@ -110,3 +110,7 @@
     display: flex;
     align-items: center;
 }
+
+.planet{
+    font-size: 20px;
+}
