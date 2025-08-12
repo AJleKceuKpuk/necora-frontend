@@ -5,14 +5,14 @@
 
 
   display: grid;
-  grid-template-columns: minmax(200px, 300px) 1fr minmax(200px, 300px);
-  padding: 0px 10px;
+  grid-template-columns: minmax(200px, 310px) 1fr minmax(200px, 310px);
+
 }   
 
 .main-left.game{
-    background-color: bisque;
+    background-color: rgba(16, 16, 16, 0.9);
 }
 
 .main-right.game{
-    background-color: blue;
+  background-color: rgba(16, 16, 16, 0.9);
 }

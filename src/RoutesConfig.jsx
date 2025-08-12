@@ -2,7 +2,8 @@
 import React from "react";
 import { Route } from "react-router-dom";
 import Body from "./layouts/Body";
-import Home from "./pages/Start";
+import Home from "./pages/Start/Start";
+import Singin from "./pages/Singin/Singin"
 import About from "./pages/About";
 
 const RoutesConfig = () => (
@@ -14,7 +15,7 @@ const RoutesConfig = () => (
 
       
 
-      <Route path="singin" element={<About />} />
+      <Route path="singin" element={<Singin />} />
       <Route path="singup" element={<About />} />
 
       <Route path="forum" element={<About />} />
