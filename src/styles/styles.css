@@ -24,3 +24,11 @@
 .rotate-180{
     rotate: 180deg;
 }
+
+.motion-in{
+    opacity: 1;
+}
+
+.motion-out{
+    opacity: 0;
+}

@@ -1,6 +1,6 @@
 // src/App.jsx
 import "./index.css";
-import { Routes } from "react-router-dom";
+import { Routes, Route, useLocation} from "react-router-dom";
 import RoutesConfig from "./RoutesConfig";
 import "./styles/icons.css";
 

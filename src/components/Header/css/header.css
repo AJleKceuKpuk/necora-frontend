@@ -4,6 +4,7 @@
 @import url('./header-center.css');
 
 .header{
+    font-family: 'Manrope', sans-serif;
     display: grid;
     height: 60px;
     background-color: black;

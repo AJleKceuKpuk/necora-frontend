@@ -1,18 +1,15 @@
-// src/pages/Home.jsx
+// src/pages/Start.jsx
 import "./start.css"
 import icons from "../../images/images";
 import { Link } from 'react-router-dom';
 
-const Home = () => {
+const Start = () => {
   return (
     <div className='start-page'>
-      
-      <img className='start-logo' src={icons.logo1} alt="logo"/>
-      <Link to="/singin"className="btn-play no-select" >PLAY</Link>
-      
-    
+      <img className='start-logo' src={icons.logo} alt="logo"/>
+      <Link to="/signin"className="btn-play no-select" >Играть</Link>
     </div>
   );
 };
 
-export default Home;
+export default Start;

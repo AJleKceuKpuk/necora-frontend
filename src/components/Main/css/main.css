@@ -1,18 +1,31 @@
-
 .main {
   flex-grow: 1;
-  overflow: auto; /* если нужно прокручивать содержимое main */
+  overflow: auto;
+  /* если нужно прокручивать содержимое main */
 
 
   display: grid;
   grid-template-columns: minmax(200px, 310px) 1fr minmax(200px, 310px);
 
-}   
-
-.main-left.game{
-    background-color: rgba(16, 16, 16, 0.9);
 }
 
-.main-right.game{
+.main-left.game {
   background-color: rgba(16, 16, 16, 0.9);
+}
+
+.main-right.game {
+  background-color: rgba(16, 16, 16, 0.9);
+}
+
+.main-center {
+  position: relative;    /* делаем контейнер reference-точкой для абсолютных детей */
+  overflow: hidden;      /* прячем всё, что выходит за границы */
+  /* если нужно, задайте фиксированную высоту или min-height */
+}
+
+
+.motion-div {
+  height: 100%;
+  display: flex;
+  justify-content: center;
 }

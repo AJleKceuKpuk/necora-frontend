@@ -3,8 +3,11 @@ import React from "react";
 import { Route } from "react-router-dom";
 import Body from "./layouts/Body";
 import Home from "./pages/Start/Start";
-import Singin from "./pages/Singin/Singin"
+import Singin from "./pages/Auth/Singin"
 import About from "./pages/About";
+import Singup from "./pages/Auth/Singup";
+import SendCode from "./pages/Auth/SendCode";
+import Recovery from "./pages/Auth/Recovery";
 
 const RoutesConfig = () => (
   <>
@@ -15,8 +18,10 @@ const RoutesConfig = () => (
 
       
 
-      <Route path="singin" element={<Singin />} />
-      <Route path="singup" element={<About />} />
+      <Route path="signin" element={<Singin />} />
+      <Route path="signup" element={<Singup />} />
+      <Route path="sendcode" element={<SendCode />} />
+      <Route path="recovery" element={<Recovery />} />
 
       <Route path="forum" element={<About />} />
       <Route path="rules" element={<About />} />

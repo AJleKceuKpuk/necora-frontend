@@ -1,48 +1,63 @@
-import React, { Component } from 'react'
-import { Outlet } from 'react-router-dom';
-import "./css/main.css";
+// src/components/Main/Main.jsx
+import './css/main.css';
+import AnimatedOutlet from '../../services/AnimatedOutlet';
+import { useLocation, Navigate, Link } from 'react-router-dom';
 
-const Main  = ({game, isAuthenticated}) => {
+const Main = ({ game, isAuthenticated }) => {
+    const location = useLocation();
+    const pathname = location.pathname;
+    console.log(pathname)
 
-    // если вошел и в игре
+    const guestOnlyRoutes = ['/signup', '/signup', '/recovery', '/sendcode'];
+
+    const isGuestOnlyRoute = guestOnlyRoutes.some((path) =>
+        pathname.startsWith(path)
+    );
+    console.log(isGuestOnlyRoute);
+    const authOnlyRoutes = ['/game', '/profile'];
+    const isAuthOnlyRoute = authOnlyRoutes.some((path) =>
+        pathname.startsWith(path)
+    );
+
+    if (!isAuthenticated && isAuthOnlyRoute) {
+        return <Navigate to="/signin" replace />;
+    }
+
+    if (isAuthenticated && isGuestOnlyRoute) {
+        return <Navigate to="/" replace />;
+    }
+
     if (game && isAuthenticated) {
         return (
-            <main className='main main-start-page'>   
-                <div className='main-left game'></div>
-                <div className='main-center'>
-                    game and auth
-                </div>
-            <div className='main-right game'></div>
-            
-        </main>
-        );
-      }
-    
-    // Если вошел но не в игре
-    if(isAuthenticated) {
-        return (
-            <main className='main main-start-page'>   
-                <div className='main-left'></div>
-                <div className='main-center'>
-                    Вошел
-                </div>
-            <div className='main-right'></div>
-            
-        </main>
+            <main className="main main-start-page">
+                <div className="main-left game" />
+                <div className="main-center">game and auth</div>
+                <div className="main-right game" />
+            </main>
         );
     }
 
-    // для неавторизованных
+    // ✅ Просто авторизован
+    if (isAuthenticated) {
+        return (
+            <main className="main main-start-page">
+                <div className="main-left" />
+                <div className="main-center">
+                    is auth
+                </div>
+                <div className="main-right" />
+            </main>
+        );
+    }
+
+    // ❌ Гость — рендерим анимированный outlet
     return (
-    <main className='main main-start-page'>   
-        <div className='main-left'></div>
-        
-            <Outlet />
-       
-        <div className='main-right'></div>
-        
-    </main>
-    )
-  }
+        <main className="main main-start-page">
+            <div className="main-left" />
+            <AnimatedOutlet game/>
+            <div className="main-right" />
+        </main>
+    );
+};
 
 export default Main;

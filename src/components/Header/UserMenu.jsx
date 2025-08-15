@@ -44,7 +44,7 @@ const [isOpen, setIsOpen] = useState(false);
       </div>
       <div className="right-column">
         <div className="profile-account dropdown" ref={dropdownRef}>
-          <div className="pd-6 header-button no-select" onClick={toggleMenu}>
+          <div className="pd-6 profile-button no-select" onClick={toggleMenu}>
             Kpuk
           </div>
           <div className={`dropdown-content ${isOpen ? "" : "hide"}`}>

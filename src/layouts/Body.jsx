@@ -6,7 +6,7 @@ import Main from '../components/Main/Main';
 const Body = () => {
 
   const [game, setGame] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   return (
     <div className="body">
