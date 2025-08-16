@@ -5,8 +5,10 @@ import icons from "../../images/images";
 import UserMenu from "./UserMenu";
 import GuestMenu from "./GuestMenu";
 import PlanetMenu from './PlanetMenu';
+import { useAuth } from '../../context/AuthContext';
 
-const Header = ({ game, isAuthenticated }) => {
+const Header = ({ game }) => {
+  const { isAuthenticated } = useAuth();
   const dateTime = useDateTime();
   const menu = isAuthenticated ? (<UserMenu />) : (<GuestMenu/>);
   const planet = <PlanetMenu />;

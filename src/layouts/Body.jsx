@@ -2,11 +2,12 @@
 import { useState } from 'react';
 import Header from '../components/Header/Header';
 import Main from '../components/Main/Main';
+import { useAuth } from '../context/AuthContext';
 
 const Body = () => {
 
   const [game, setGame] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="body">

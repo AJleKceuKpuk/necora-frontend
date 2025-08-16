@@ -1,19 +1,19 @@
 // src/components/Main/Main.jsx
 import './css/main.css';
 import AnimatedOutlet from '../../services/AnimatedOutlet';
-import { useLocation, Navigate, Link } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
-const Main = ({ game, isAuthenticated }) => {
+const Main = ({ game }) => {
     const location = useLocation();
     const pathname = location.pathname;
-    console.log(pathname)
+    const { isAuthenticated } = useAuth();
 
     const guestOnlyRoutes = ['/signup', '/signup', '/recovery', '/sendcode'];
 
     const isGuestOnlyRoute = guestOnlyRoutes.some((path) =>
         pathname.startsWith(path)
     );
-    console.log(isGuestOnlyRoute);
     const authOnlyRoutes = ['/game', '/profile'];
     const isAuthOnlyRoute = authOnlyRoutes.some((path) =>
         pathname.startsWith(path)

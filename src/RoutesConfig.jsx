@@ -8,6 +8,7 @@ import About from "./pages/About";
 import Singup from "./pages/Auth/Singup";
 import SendCode from "./pages/Auth/SendCode";
 import Recovery from "./pages/Auth/Recovery";
+import LogoutPage from "./pages/Auth/LogoutPage";
 
 const RoutesConfig = () => (
   <>
@@ -22,6 +23,8 @@ const RoutesConfig = () => (
       <Route path="signup" element={<Singup />} />
       <Route path="sendcode" element={<SendCode />} />
       <Route path="recovery" element={<Recovery />} />
+      <Route path="logout" element={<LogoutPage />} />
+
 
       <Route path="forum" element={<About />} />
       <Route path="rules" element={<About />} />
@@ -32,7 +35,7 @@ const RoutesConfig = () => (
       <Route path="chats" element={<About />} />
       <Route path="notifications" element={<About />} />
       <Route path="settings" element={<About />} />
-      <Route path="logout" element={<About />} />
+      
 
       <Route path="about" element={<About />} />
     </Route>

@@ -1,17 +1,25 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import "./css/header.css";
 import icons from "../../images/images";
+import { useAuth } from "../../context/AuthContext";
 
 const UserMenu = () => {
   const dropdownRef = useRef(null);
-const [isOpen, setIsOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const {username, logout} = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
   };
-  
+
+  const handleLogout = async () => {
+    toggleMenu(); // закрываем меню
+    await logout(); // вызываем логаут
+    navigate('/'); // редирект
+  };
+
   //Закрытие меню   
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -45,7 +53,7 @@ const [isOpen, setIsOpen] = useState(false);
       <div className="right-column">
         <div className="profile-account dropdown" ref={dropdownRef}>
           <div className="pd-6 profile-button no-select" onClick={toggleMenu}>
-            Kpuk
+            {username}
           </div>
           <div className={`dropdown-content ${isOpen ? "" : "hide"}`}>
             <Link
@@ -106,7 +114,7 @@ const [isOpen, setIsOpen] = useState(false);
             <Link
               to="/logout"
               className="dropdown-item header-button no-select"
-              onClick={toggleMenu}
+              onClick={handleLogout}
             >
               <div className="img-container img-36 header-button">
                 <img src={icons.exit} alt="settings" />
