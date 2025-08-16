@@ -5,7 +5,7 @@ import { useAuth } from './AuthContext';
 import { jwtDecode } from 'jwt-decode';
 
 const RouteAuthListener = () => {
-    const { logout, validateToken, setIsAuthenticated, setUsername } = useAuth();
+    const { logout, validateToken, setIsAuthenticated, setUsername, setProfile } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -21,7 +21,8 @@ const RouteAuthListener = () => {
                 setIsAuthenticated(true);
                 setUsername(decoded.sub);
                 try {
-                    await api.get('/user/profile');
+                    const user = await api.get('/user/profile');
+                    setProfile(user);
                 } catch (err) {
                     const status = err.response?.status;
                     const errorCode = err.response?.data?.error;

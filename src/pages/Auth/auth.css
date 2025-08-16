@@ -11,8 +11,7 @@
     align-items: center;
     flex-direction: column;
     background-color: #000000b2;
-    min-width: 600px;
-    max-width: 900px;
+    width: 900px;
     padding: 50px;
     border-radius: 10px;
 }
@@ -25,6 +24,11 @@
     font-size: 60px;
     color: #ffffff;
     margin-top: -50px;
+}
+
+.auth-message{
+    font-family: 'Manrope', sans-serif;
+    font-size: 26px;
 }
 
 .auth-input {

@@ -8,8 +8,8 @@ export default function LogoutPage() {
 
   useEffect(() => {
     const performLogout = async () => {
-      await logout(); // удаляет токен, вызывает POST /auth/logout
-      navigate('/'); // или '/', если хочешь на главную
+      await logout();
+      navigate('/');
     };
 
     performLogout();

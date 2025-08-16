@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import api from '../api/axiosInstance';
-import { refreshAccessToken, loginRequest } from '../api/auth';
+import { refreshAccessToken, loginRequest, registrationRequest, activationRequest, getProfile } from '../api/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [username, setUsername] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [profile, setProfile] = useState(null);
 
   // Вход в систему 
   const login = async ({ username, password }) => {
@@ -19,10 +20,24 @@ export const AuthProvider = ({ children }) => {
     setAccessToken(token);
     localStorage.setItem('accessToken', token);
     setIsAuthenticated(true);
-    const decoded = jwtDecode(token);
-    setUsername(decoded.sub);
-    return token;
+    const user = await getProfile();
+    setProfile(user);
+    return user;
   };
+
+  // Регистрация
+  const registration = async ({ username, email, password }) => {
+    const response = await registrationRequest({ username, email, password });
+    setUsername(username);
+  };
+
+  const activation = async ({ code }) => {
+
+    console.log(username);
+
+    const response = await activationRequest({ username, code });
+  };
+
 
   // Проверяет токен и возвращает true/false
   const validateToken = async (token) => {
@@ -74,6 +89,7 @@ export const AuthProvider = ({ children }) => {
       setAccessToken(null);
       setIsAuthenticated(false);
       setUsername(null);
+      setProfile(null);
     }
   };
 
@@ -99,12 +115,16 @@ export const AuthProvider = ({ children }) => {
       accessToken,
       username,
       isAuthenticated,
+      profile,
       validateToken,
       login,
+      registration,
+      activation,
       refresh,
       logout,
       setIsAuthenticated,
       setUsername,
+
     }}>
       {children}
     </AuthContext.Provider>

@@ -6,7 +6,7 @@ import icons from "../../images/images";
 import "./auth.css";
 
 const Signin = () => {
-  const { login } = useAuth();
+  const { login, profile } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -34,8 +34,13 @@ const Signin = () => {
       return;
     }
     try {
-      await login({ username, password });
-      navigate("/", { replace: true });
+
+      const user = await login({ username, password });
+      if (!user.activate) {
+        navigate("/activate-account", { replace: true })
+      } else {
+        navigate("/", { replace: true });
+      }
     } catch (err) {
       const error = err.response?.data?.error;
       if (error === "ERROR_AUTH") {

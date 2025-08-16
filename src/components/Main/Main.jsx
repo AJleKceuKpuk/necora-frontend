@@ -9,7 +9,7 @@ const Main = ({ game }) => {
     const pathname = location.pathname;
     const { isAuthenticated } = useAuth();
 
-    const guestOnlyRoutes = ['/signup', '/signup', '/recovery', '/sendcode'];
+    const guestOnlyRoutes = ['/signin', '/signup', '/recovery', '/sendcode'];
 
     const isGuestOnlyRoute = guestOnlyRoutes.some((path) =>
         pathname.startsWith(path)
@@ -31,7 +31,7 @@ const Main = ({ game }) => {
         return (
             <main className="main main-start-page">
                 <div className="main-left game" />
-                <div className="main-center">game and auth</div>
+                game and auth
                 <div className="main-right game" />
             </main>
         );
@@ -42,9 +42,9 @@ const Main = ({ game }) => {
         return (
             <main className="main main-start-page">
                 <div className="main-left" />
-                <div className="main-center">
-                    is auth
-                </div>
+                
+                    <AnimatedOutlet game/>
+                
                 <div className="main-right" />
             </main>
         );

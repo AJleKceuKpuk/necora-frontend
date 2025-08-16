@@ -9,6 +9,7 @@ import Singup from "./pages/Auth/Singup";
 import SendCode from "./pages/Auth/SendCode";
 import Recovery from "./pages/Auth/Recovery";
 import LogoutPage from "./pages/Auth/LogoutPage";
+import AccountActivation from "./pages/Auth/AccountActivation";
 
 const RoutesConfig = () => (
   <>
@@ -17,10 +18,10 @@ const RoutesConfig = () => (
       <Route index element={<Home />} />
 
 
-      
-
+    
       <Route path="signin" element={<Singin />} />
       <Route path="signup" element={<Singup />} />
+      <Route path="activate-account" element={<AccountActivation />} />
       <Route path="sendcode" element={<SendCode />} />
       <Route path="recovery" element={<Recovery />} />
       <Route path="logout" element={<LogoutPage />} />

@@ -3,8 +3,8 @@ import "./css/header.css";
 
 const GuestMenu = () => (
   <div className="header-right start">
-    <Link to="/singin" className="header-button pd-5 br-5">Вход</Link>
-    <Link to="/singup" className="header-button pd-5 br-5">Регистрация</Link>
+    <Link to="/signin" className="header-button pd-5 br-5">Вход</Link>
+    <Link to="/signup" className="header-button pd-5 br-5">Регистрация</Link>
   </div>
 );
 
