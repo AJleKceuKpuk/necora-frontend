@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { refreshAccessToken } from './auth';
 
 const api = axios.create({
   baseURL: 'https://localhost:8443',
   withCredentials: true,
 });
+
 
 const authExcludedRoutes = ['/login', '/registration'];
 
@@ -18,7 +18,6 @@ api.interceptors.request.use(config => {
   return config;
 });
 
-// response-интерцептор: ловим 401 → обновляем → повторяем запрос
 api.interceptors.response.use(
   response => response,
   error => Promise.reject(error)

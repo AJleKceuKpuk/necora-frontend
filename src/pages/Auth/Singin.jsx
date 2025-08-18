@@ -1,4 +1,3 @@
-// src/pages/Auth/Signin.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
@@ -6,7 +5,7 @@ import icons from "../../images/images";
 import "./auth.css";
 
 const Signin = () => {
-  const { login, profile } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -17,7 +16,10 @@ const Signin = () => {
     password: false,
   });
 
-  // Валидация перед отправкой
+  const hasErrors = errors.username || errors.password;
+
+  const [buttonError, setButtonError] = useState("");
+
   const validate = () => {
     const newErrors = {
       username: username.trim() === "",
@@ -29,12 +31,11 @@ const Signin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validate()) {
+      setButtonError("Введите данные!");
       return;
     }
     try {
-
       const user = await login({ username, password });
       if (!user.activate) {
         navigate("/activate-account", { replace: true })
@@ -44,9 +45,10 @@ const Signin = () => {
     } catch (err) {
       const error = err.response?.data?.error;
       if (error === "ERROR_AUTH") {
-        console.warn("⛔️ Доступ запрещён: неверные данные");
         setErrors({ username: true, password: true });
+        setButtonError("Неверный логин или пароль");
       } else {
+        console.log("error");
       }
     }
   };
@@ -64,9 +66,8 @@ const Signin = () => {
           value={username}
           onChange={(e) => {
             setUsername(e.target.value);
-            if (errors.username && e.target.value.trim() !== "") {
-              setErrors((prev) => ({ ...prev, username: false }));
-            }
+            setErrors({ username: false, password: false });
+            setButtonError("");
           }}
         />
 
@@ -77,17 +78,17 @@ const Signin = () => {
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
-            if (errors.password && e.target.value.trim() !== "") {
-              setErrors((prev) => ({ ...prev, password: false }));
-            }
+            setErrors({ username: false, password: false });
+            setButtonError("");
           }}
         />
 
         <button
           type="submit"
-          className="auth-button"
+          className={`auth-button ${hasErrors ? "error" : ""}`}
+          disabled={hasErrors}
         >
-          ВОЙТИ
+          {buttonError || "ВОЙТИ"}
         </button>
 
         <div className="auth-footer">
@@ -104,7 +105,7 @@ const Signin = () => {
           </div>
         </div>
       </form>
-    </div>
+    </div >
   );
 };
 

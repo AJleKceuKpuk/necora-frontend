@@ -2,9 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import api from '../api/axiosInstance';
-import { refreshAccessToken, loginRequest, registrationRequest, activationRequest, getProfile } from '../api/auth';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { loginRequest, registrationRequest, logoutRequest, activationRequest, getProfile, refreshAccessToken, } from '../api/authApi';
 
 const AuthContext = createContext();
 
@@ -16,20 +14,40 @@ export const AuthProvider = ({ children }) => {
 
   // Вход в систему 
   const login = async ({ username, password }) => {
+    console.log("LOG");
+    
     const token = await loginRequest({ username, password });
-    setAccessToken(token);
     localStorage.setItem('accessToken', token);
-    setIsAuthenticated(true);
     const user = await getProfile();
+    setAccessToken(token);
+    setIsAuthenticated(true);
     setProfile(user);
     return user;
   };
 
   // Регистрация
   const registration = async ({ username, email, password }) => {
-    const response = await registrationRequest({ username, email, password });
+    await registrationRequest({ username, email, password });
     setUsername(username);
+    return username;
   };
+
+  // Выход из системы
+  const logout = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      try {
+        await logoutRequest();
+      } catch (e) {
+      }
+      localStorage.removeItem('accessToken');
+      setAccessToken(null);
+      setIsAuthenticated(false);
+      setUsername(null);
+      setProfile(null);
+    }
+  };
+
 
   const activation = async ({ code }) => {
 
@@ -75,23 +93,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Выход из системы
-  const logout = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (token) {
-      try {
-        const response = await api.post('/logout')
-      } catch (e) {
-        console.log(e);
-      }
-      console.log('🚪 logout called');
-      localStorage.removeItem('accessToken');
-      setAccessToken(null);
-      setIsAuthenticated(false);
-      setUsername(null);
-      setProfile(null);
-    }
-  };
+
 
   // При монтировании проверяем/обновляем токен
   useEffect(() => {

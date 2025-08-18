@@ -1,11 +1,10 @@
-// src/pages/Home.jsx
 import { useState } from "react";
 import icons from "../../images/images";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
 
 const Singup = () => {
-    const { registration } = useAuth();
+    const registration = useAuth();
     const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
@@ -18,43 +17,41 @@ const Singup = () => {
         password: false
     });
 
-    // Валидация перед отправкой
     const validate = () => {
         const newErrors = { username: '', email: '', password: '' };
         if (username.trim().length < 3) {
-          newErrors.username = 'Имя должно быть не менее 3 символов';
+            newErrors.username = 'Имя должно быть не менее 3 символов';
         }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-          newErrors.email = 'Неверный формат email';
+            newErrors.email = 'Неверный формат email';
         }
         if (password.length < 6) {
-          newErrors.password = 'Пароль должен быть не менее 6 символов';
+            newErrors.password = 'Пароль должен быть не менее 6 символов';
         } else if (!/[A-Z]/.test(password) || !/\d/.test(password)) {
-          newErrors.password = 'Пароль должен содержать хотя бы одну цифру и заглавную букву';
+            newErrors.password = 'Пароль должен содержать хотя бы одну цифру и заглавную букву';
         }
         setErrors(newErrors);
         return Object.values(newErrors).every((msg) => msg === '');
-      };
-      
+    };
 
-    const handleSubmit = async (e) => {       
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!validate()) {
             return;
         }
         try {
-            await registration({ username, email, password });
-            navigate("/activate-account", { replace: true });
+            const user = await registration({ username, email, password });
+            sessionStorage.setItem("username", username);
+            navigate("/activate-account", { replace: true, state: { user } });
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === "ERROR_USERNAME_EXISTS") {
                 console.warn("⛔️ Данное имя пользователя уже используется");
-                setErrors({ username: true, email: false, password: false});
-            } else if(error === "ERROR_EMAIL_EXISTS"){
+                setErrors({ username: true, email: false, password: false });
+            } else if (error === "ERROR_EMAIL_EXISTS") {
                 console.warn("⛔️ Данное имя пользователя уже используется");
-                setErrors({ username: false, email: true, password: false});
+                setErrors({ username: false, email: true, password: false });
             }
         }
     };
