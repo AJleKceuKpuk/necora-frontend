@@ -20,15 +20,14 @@ const UserMenu = () => {
   };
 
   const handleLogout = async () => {
-    toggleMenu(); // закрываем меню
-    await logout(); // вызываем логаут
-    navigate('/'); // редирект
+    toggleMenu(); 
+    await logout(); 
+    navigate('/'); 
   };
 
   //Закрытие меню   
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Если клик вне области dropdown, закрываем меню
       if (dropdownRef.current && !dropdownRef.current.contains(event.target) && isOpen) {
         toggleMenu();
       }

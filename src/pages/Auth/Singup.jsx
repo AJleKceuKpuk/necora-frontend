@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import icons from "../../images/images";
+import icons from "../../assets/images/images";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
 

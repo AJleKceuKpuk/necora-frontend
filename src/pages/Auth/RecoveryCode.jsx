@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import { useState } from "react";
 import "./auth.css";
-import icons from "../../images/images";
+import icons from "../../assets/images/images";
 import { Link } from 'react-router-dom';
 import Recovery from "./Recovery";
 

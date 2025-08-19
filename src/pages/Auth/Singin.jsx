@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../context/AuthContext";
-import icons from "../../images/images";
+import icons from "../../assets/images/images";
 import "./auth.css";
 
 const Signin = () => {

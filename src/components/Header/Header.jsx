@@ -15,7 +15,6 @@ const Header = ({ game }) => {
   const dateTime = useDateTime();
   const menu = isAuthenticated ? (<UserMenu />) : (<GuestMenu />);
   const planet = <PlanetMenu />;
-console.log('t(home):', t('home'));
 
 
   if (game && isAuthenticated) {

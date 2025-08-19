@@ -1,6 +1,6 @@
 // src/pages/Start.jsx
 import "./start.css"
-import icons from "../../images/images";
+import icons from "../../assets/images/images";
 import { Link } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
 
