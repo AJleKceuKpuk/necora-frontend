@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import "./css/header.css";
-import useDateTime from "../../services/useDateTime";
+import useDateTime from '../../hooks/useDateTime';
 import icons from "../../assets/images/images";
 import UserMenu from "./UserMenu";
 import GuestMenu from "./GuestMenu";
@@ -26,7 +26,7 @@ const Header = ({ game }) => {
             <img src={icons.home} alt="home" />
           </Link>
 
-          <div className="fs-20">
+          <div className="header-time">
             {dateTime.toLocaleDateString()} <br />
             {dateTime.toLocaleTimeString()}
           </div>

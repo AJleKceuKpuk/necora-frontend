@@ -58,6 +58,7 @@
 .profile-button{
     cursor: pointer;
     border: 1px solid rgba(0, 0, 0, 0);
+    padding: 6px;
 }
 
 .profile-button:hover{

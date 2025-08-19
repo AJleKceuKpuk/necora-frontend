@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [username, setUsername] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [language, setLanguage] = useState('en'); // дефолт
+  const [language, setLanguage] = useState('en');
 
   // 🔄 Автозагрузка языка при старте
   useEffect(() => {

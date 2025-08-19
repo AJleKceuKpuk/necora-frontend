@@ -6,8 +6,7 @@ import icons from "../../assets/images/images";
 import "./auth.css";
 
 const Signin = () => {
-  const { i18n } = useTranslation();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['auth', 'error']);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -42,7 +41,7 @@ const Signin = () => {
     setButtonError("");
 
     if (!validate()) {
-      setButtonError("Введите данные!");
+      setButtonError(t('signin.error.void-input'));
       return;
     }
 
@@ -59,26 +58,25 @@ const Signin = () => {
       const error = err.response?.data?.error;
       if (error === "ERROR_AUTH") {
         setErrors({ username: true, password: true });
-        setButtonError("Неверный логин или пароль");
+        setButtonError(t(`error:${error}`));
       } else {
         console.log("error", err);
-        setButtonError("Ошибка сервера");
+        setButtonError(t('signin.error.server-off'));
       }
     } finally {
       setIsLoading(false);
     }
   };
 
-
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
-        <img src={icons.logo} alt="signin logo" className="auth-logo" />
-        <h2 className="auth-title no-select">{t('titleLogin')}</h2>
+        <img src={icons.logo} alt={t('signin.logo-alt')} className="auth-logo" />
+        <h2 className="auth-title no-select">{t('signin.title')}</h2>
 
         <input
           type="text"
-          placeholder="Имя пользователя"
+          placeholder={t('signin.username-input')}
           className={`auth-input ${errors.username ? "error" : ""}`}
           value={username}
           onChange={(e) => {
@@ -90,7 +88,7 @@ const Signin = () => {
 
         <input
           type="password"
-          placeholder="Пароль"
+          placeholder={t('signin.password-input')}
           className={`auth-input ${errors.password ? "error" : ""}`}
           value={password}
           onChange={(e) => {
@@ -100,25 +98,25 @@ const Signin = () => {
           }}
         />
 
-         <button
+        <button
           type="submit"
           className={`auth-button ${hasErrors ? "error" : ""} ${isLoading ? "loading" : ""}`}
           disabled={hasErrors || isLoading}
         >
-          {buttonError || "ВОЙТИ"}
-        </button> 
-         
+          {buttonError || t('signin.submit')}
+        </button>
+
 
         <div className="auth-footer">
           <div className="auth-footer__option">
             <Link to="/sendcode" className="auth-footer__link">
-              Забыли пароль?
+              {t('signin.forgot-password')}
             </Link>
           </div>
           <div className="auth-footer__option">
-            <span className="auth-footer__label">Нет аккаунта?</span>
+            <span className="auth-footer__label">{t('signin.no-account-label')}</span>
             <Link to="/signup" className="auth-footer__link">
-              Регистрация
+              {t('signin.no-account-link')}
             </Link>
           </div>
         </div>

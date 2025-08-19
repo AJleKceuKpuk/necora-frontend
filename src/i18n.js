@@ -14,7 +14,7 @@ i18n
     interpolation: {
       escapeValue: false
     },
-    debug: true // ← временно включи, чтобы видеть загрузку в консоли
+    
   });
 
 export default i18n;

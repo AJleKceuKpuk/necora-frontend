@@ -22,3 +22,7 @@
     align-items: center;
     gap: 10px;
 }
+
+.header-time{
+    font-size: 20px;
+}

@@ -2,8 +2,10 @@ import { useState, useEffect } from "react";
 import icons from "../../assets/images/images";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
+import { useTranslation } from 'react-i18next';
 
 const Singup = () => {
+    const { t } = useTranslation(['auth', 'error']);
     const { registration } = useAuth();
     const navigate = useNavigate();
 
@@ -17,43 +19,30 @@ const Singup = () => {
     const [errors, setErrors] = useState({
         username: false,
         email: false,
-        password: false
+        password: false,
+        backend: false
     });
-
-
-    const textErrors = { username: '', email: '', password: '' };
-
-    const hasErrors = textErrors.username ||
-        textErrors.email ||
-        textErrors.password ||
-        '';;
-
 
     const validate = () => {
         const textErrors = { username: '', email: '', password: '' };
 
         if (username.trim().length < 3) {
-            textErrors.username = 'Имя должно быть не менее 3 символов';
+            textErrors.username = t('signup.error.username_too_short');
         }
-
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             textErrors.email = 'Неверный формат email';
         }
-
         if (password.length < 6) {
             textErrors.password = 'Слабый пароль!';
         } else if (!/[A-Z]/.test(password) || !/\d/.test(password)) {
             textErrors.password = 'Слабый пароль!';
         }
-
         setErrors({
             username: !!textErrors.username,
             email: !!textErrors.email,
             password: !!textErrors.password
         });
-
-        // Вернуть первую ошибку
         return textErrors.username || textErrors.email || textErrors.password || '';
     };
 
@@ -80,10 +69,10 @@ const Singup = () => {
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === "ERROR_USERNAME_EXISTS") {
-                setErrors({ username: true, email: false, password: false });
+                setErrors({ username: true, email: false, password: false, backend: true });
                 setButtonError("Имя пользователя занято");
             } else if (error === "ERROR_EMAIL_EXISTS") {
-                setErrors({ username: false, email: true, password: false });
+                setErrors({ username: false, email: true, password: false, backend: true });
                 setButtonError("Email пользователя занят");
             } else {
                 setButtonError("Ошибка регистрации");
@@ -102,39 +91,66 @@ const Singup = () => {
                 <img src={icons.logo} alt="singin logo" className="auth-logo" />
                 <h2 className="auth-title no-select">Регистрация</h2>
 
-                <input
-                    type="text"
-                    placeholder="Имя пользователя"
-                    className={`auth-input ${errors.username ? 'error' : ''}`}
-                    value={username}
-                    onChange={(e) => {
-                        setUsername(e.target.value);
-                        setErrors({ username: false, email: false, password: false });
-                        setButtonError("");
-                    }}
-                />
-                <input
-                    type="text"
-                    placeholder="E-mail пользователя"
-                    className={`auth-input ${errors.email ? 'error' : ''}`}
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                        setErrors({ username: false, email: false, password: false });
-                        setButtonError("");
-                    }}
-                />
-                <input
-                    type="password"
-                    placeholder="Пароль"
-                    className={`auth-input ${errors.password ? "error" : ""}`}
-                    value={password}
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                        setErrors({ username: false, email: false, password: false });
-                        setButtonError("");
-                    }}
-                />
+                <div className="auth-wrapper">
+                    <input
+                        type="text"
+                        placeholder={t('signin.username-input')}
+                        className={`auth-input ${errors.username ? "error" : ""}`}
+                        value={username}
+                        onChange={(e) => {
+                            setUsername(e.target.value);
+                            setErrors({ username: false, email: false, password: false, backend: false });
+                            setButtonError("");
+                        }}
+                    />
+                    {errors.username && (
+                        <div
+                            data-tooltip={
+                                errors.backend
+                                    ? "ERROR_BACKEND"
+                                    : "Имя пользователя должно содержать не менее 3 символов"
+                            }
+                            className="auth-input__error img-container img-36"
+                        >
+                            <img src={icons.error} alt="error" />
+                        </div>
+                    )}
+                </div>
+
+                <div className="auth-wrapper">
+                    <input
+                        type="text"
+                        placeholder="E-mail пользователя"
+                        className={`auth-input ${errors.email ? 'error' : ''}`}
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setErrors({ username: false, email: false, password: false, backend: false });
+                            setButtonError("");
+                        }}
+                    />
+                    {errors.email ? <div data-tooltip="Email" className="auth-input__error img-container img-36">
+                        <img src={icons.error} alt="error" />
+                    </div> : ""}
+                </div>
+
+                <div className="auth-wrapper">
+                    <input
+                        type="password"
+                        placeholder="Пароль"
+                        className={`auth-input ${errors.password ? "error" : ""}`}
+                        value={password}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            setErrors({ username: false, email: false, password: false, backend: false });
+                            setButtonError("");
+                        }}
+                    />
+                    {errors.password ? <div data-tooltip="password" className="auth-input__error img-container img-36">
+                        <img src={icons.error} alt="error" />
+                    </div> : ""}
+                </div>
+
                 <button
                     type='submit'
                     className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}

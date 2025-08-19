@@ -1,28 +1,27 @@
-// src/layouts/Body.jsx
 import { useState } from 'react';
 import Header from '../components/Header/Header';
 import Main from '../components/Main/Main';
-import { useAuth } from '../context/AuthContext';
+
 import Footer from '../components/Footer/Footer';
+import "../index.css"
 
 const Body = () => {
 
-  const [game, setGame] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const [game] = useState(false);
 
   if(game){
     return(
       <div className="body">
-      <Header game={game} isAuthenticated={isAuthenticated} />
-      <Main game={game} isAuthenticated={isAuthenticated} />
+      <Header game={game}/>
+      <Main game={game} />
     </div>
     );
   }
 
   return (
     <div className="body">
-      <Header game={game} isAuthenticated={isAuthenticated} />
-      <Main game={game} isAuthenticated={isAuthenticated} />
+      <Header game={game} />
+      <Main game={game} />
       <Footer />
     </div>
   );

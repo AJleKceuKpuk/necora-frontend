@@ -1,9 +1,6 @@
 .main {
   flex-grow: 1;
-  overflow: auto;
-  /* если нужно прокручивать содержимое main */
-
-
+  overflow: hidden;
   display: grid;
   grid-template-columns: minmax(200px, 310px) 1fr minmax(200px, 310px);
 
