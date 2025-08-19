@@ -42,7 +42,7 @@ const RecoveryCode = () => {
                 <h2 className="auth-title no-select">Востановление допуста</h2>
                 <input
                     type="text"
-                    placeholder="Имя пользователя"
+                    placeholder="Введите имя пользователя для отправки кода"
                     className={`auth-input ${errors.username ? "error" : ""}`}
                     value={username}
                     onChange={(e) => {

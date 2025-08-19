@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import api from '../api/axiosInstance';
-import { useAuth } from './AuthContext';
+import api from './api/axiosInstance';
+import { useAuth } from './context/AuthContext';
 import { jwtDecode } from 'jwt-decode';
 
 const RouteAuthListener = () => {

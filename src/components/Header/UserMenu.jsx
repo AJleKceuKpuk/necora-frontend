@@ -1,10 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import "./css/header.css";
-import icons from "../../images/images";
+import icons from "../../assets/images/images";
 import { useAuth } from "../../context/AuthContext";
+import { useTranslation } from 'react-i18next';
+
 
 const UserMenu = () => {
+
+  const { t } = useTranslation('header');
+
   const dropdownRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const {username, logout} = useAuth();
@@ -64,7 +69,7 @@ const UserMenu = () => {
               <div className="img-container img-36 header-button">
                 <img src={icons.profile} alt="profile" />
               </div>
-              <div>Профиль</div>
+              <div>{t('profile')}</div>
             </Link>
 
             <Link
@@ -75,7 +80,7 @@ const UserMenu = () => {
               <div className="img-container img-36 header-button">
                 <img src={icons.friends} alt="friends" />
               </div>
-              <div>Друзья</div>
+              <div>{t('friends')}</div>
             </Link>
 
             <Link
@@ -86,7 +91,7 @@ const UserMenu = () => {
               <div className="img-container img-36 header-button">
                 <img src={icons.message} alt="messages" />
               </div>
-              <div>Сообщения</div>
+              <div>{t('messages')}</div>
             </Link>
 
             <Link
@@ -97,7 +102,7 @@ const UserMenu = () => {
               <div className="img-container img-36 header-button">
                 <img src={icons.notification} alt="notifications" />
               </div>
-              <div>Уведомления</div>
+              <div>{t('notifications')}</div>
             </Link>
 
             <Link
@@ -108,7 +113,7 @@ const UserMenu = () => {
               <div className="img-container img-36 header-button">
                 <img src={icons.message} alt="settings" />
               </div>
-              <div>Настройки</div>
+              <div>{t('settings')}</div>
             </Link>
 
             <Link
@@ -119,7 +124,7 @@ const UserMenu = () => {
               <div className="img-container img-36 header-button">
                 <img src={icons.exit} alt="settings" />
               </div>
-              <div>Выход</div>
+              <div>{t('logout')}</div>
             </Link>
           </div>
         </div>

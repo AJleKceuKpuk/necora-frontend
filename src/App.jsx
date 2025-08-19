@@ -1,9 +1,9 @@
 // src/App.jsx
 import "./index.css";
-import { Routes, Route, useLocation} from "react-router-dom";
+import { Routes } from "react-router-dom";
 import RoutesConfig from "./RoutesConfig";
 import "./styles/icons.css";
-import RouteAuthListener from "./context/RouteAuthListener";
+import RouteAuthListener from "./RouteAuthListener";
 
 const App = () => {
   return (

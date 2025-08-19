@@ -1,15 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import icons from "../../images/images";
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from "../../context/AuthContext";
 
 const Singup = () => {
-    const registration = useAuth();
+    const { registration } = useAuth();
     const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const [buttonError, setButtonError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const [errors, setErrors] = useState({
         username: false,
@@ -17,29 +20,59 @@ const Singup = () => {
         password: false
     });
 
+
+    const textErrors = { username: '', email: '', password: '' };
+
+    const hasErrors = textErrors.username ||
+        textErrors.email ||
+        textErrors.password ||
+        '';;
+
+
     const validate = () => {
-        const newErrors = { username: '', email: '', password: '' };
+        const textErrors = { username: '', email: '', password: '' };
+
         if (username.trim().length < 3) {
-            newErrors.username = 'Имя должно быть не менее 3 символов';
+            textErrors.username = 'Имя должно быть не менее 3 символов';
         }
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            newErrors.email = 'Неверный формат email';
+            textErrors.email = 'Неверный формат email';
         }
+
         if (password.length < 6) {
-            newErrors.password = 'Пароль должен быть не менее 6 символов';
+            textErrors.password = 'Слабый пароль!';
         } else if (!/[A-Z]/.test(password) || !/\d/.test(password)) {
-            newErrors.password = 'Пароль должен содержать хотя бы одну цифру и заглавную букву';
+            textErrors.password = 'Слабый пароль!';
         }
-        setErrors(newErrors);
-        return Object.values(newErrors).every((msg) => msg === '');
+
+        setErrors({
+            username: !!textErrors.username,
+            email: !!textErrors.email,
+            password: !!textErrors.password
+        });
+
+        // Вернуть первую ошибку
+        return textErrors.username || textErrors.email || textErrors.password || '';
     };
+
+    useEffect(() => {
+        document.querySelector(".auth-input")?.focus();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!validate()) {
+        setButtonError("");
+
+        const validationError = validate();
+        if (validationError) {
+            setButtonError(validationError);
             return;
         }
+
+        setIsLoading(true);
+
         try {
             const user = await registration({ username, email, password });
             sessionStorage.setItem("username", username);
@@ -47,12 +80,19 @@ const Singup = () => {
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === "ERROR_USERNAME_EXISTS") {
-                console.warn("⛔️ Данное имя пользователя уже используется");
                 setErrors({ username: true, email: false, password: false });
+                setButtonError("Имя пользователя занято");
             } else if (error === "ERROR_EMAIL_EXISTS") {
-                console.warn("⛔️ Данное имя пользователя уже используется");
                 setErrors({ username: false, email: true, password: false });
+                setButtonError("Email пользователя занят");
+            } else {
+                setButtonError("Ошибка регистрации");
+                setTimeout(() => {
+                    setButtonError("");
+                }, 3000);
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -69,9 +109,8 @@ const Singup = () => {
                     value={username}
                     onChange={(e) => {
                         setUsername(e.target.value);
-                        if (errors.username && e.target.value.trim() !== "") {
-                            setErrors((prev) => ({ ...prev, username: false }));
-                        }
+                        setErrors({ username: false, email: false, password: false });
+                        setButtonError("");
                     }}
                 />
                 <input
@@ -81,9 +120,8 @@ const Singup = () => {
                     value={email}
                     onChange={(e) => {
                         setEmail(e.target.value);
-                        if (errors.email && e.target.value.trim() !== "") {
-                            setErrors((prev) => ({ ...prev, email: false }));
-                        }
+                        setErrors({ username: false, email: false, password: false });
+                        setButtonError("");
                     }}
                 />
                 <input
@@ -93,16 +131,16 @@ const Singup = () => {
                     value={password}
                     onChange={(e) => {
                         setPassword(e.target.value);
-                        if (errors.password && e.target.value.trim() !== "") {
-                            setErrors((prev) => ({ ...prev, password: false }));
-                        }
+                        setErrors({ username: false, email: false, password: false });
+                        setButtonError("");
                     }}
                 />
                 <button
                     type='submit'
-                    className="auth-button"
+                    className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
+                    disabled={!!buttonError || isLoading}
                 >
-                    Зарегестрироваться
+                    {buttonError || "Зарегистрироваться"}
                 </button>
                 <div className="auth-footer">
                     <div className="auth-footer__option">

@@ -11,7 +11,8 @@
     align-items: center;
     flex-direction: column;
     background-color: #000000b2;
-    width: 900px;
+    min-width: 700px;
+    max-width: 900px;
     padding: 50px;
     border-radius: 10px;
 }
@@ -24,9 +25,10 @@
     font-size: 60px;
     color: #ffffff;
     margin-top: -50px;
+    text-align: center;
 }
 
-.auth-message{
+.auth-message {
     font-family: 'Manrope', sans-serif;
     font-size: 26px;
 }
@@ -65,6 +67,8 @@
 
 
 .auth-button {
+    position: relative;
+    overflow: hidden;
     font-family: 'Orbitron', 'sans-serif';
     font-weight: bold;
     font-size: 30px;
@@ -80,22 +84,69 @@
     transition: all 0.3s ease;
 }
 
+.auth-button.loading::before,
+.auth-button.loading::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 5px;
+  width: 75%;
+  background-color: #ffffff;
+  box-shadow:
+    0 0 6px rgba(255, 255, 255, 0.8),
+    0 0 12px rgba(255, 255, 255, 0.6);
+  animation: loading-border 2s linear infinite;
+  opacity: 0;
+}
+
+.auth-button.loading::before {
+  animation-delay: 0s;
+}
+
+.auth-button.loading::after {
+  animation-delay: 1s;
+}
+
+@keyframes loading-border {
+  0% {
+    left: -75%;
+    opacity: 1;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    left: 175%;
+    opacity: 0;
+  }
+}
+
+
+
 .auth-button.error {
     background-color: rgb(218, 60, 60);
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
 }
 
 .auth-button:disabled {
     cursor: not-allowed;
     opacity: 0.6;
-  }
+}
 
 .auth-button:hover {
     background-color: #00cccc;
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
 }
 
-.auth-button:hover.error{
+.auth-button:hover.error {
     background-color: red;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
 }
 
 .auth-footer {

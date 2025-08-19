@@ -1,8 +1,14 @@
-// src/context/AuthContext.jsx
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { loginRequest, registrationRequest, logoutRequest, activationRequest, getProfile, refreshAccessToken, } from '../api/authApi';
+import i18n from 'i18next';
+import {
+  loginRequest,
+  registrationRequest,
+  logoutRequest,
+  activationRequest,
+  getProfile,
+  refreshAccessToken,
+} from '../api/authApi';
 
 const AuthContext = createContext();
 
@@ -11,11 +17,27 @@ export const AuthProvider = ({ children }) => {
   const [username, setUsername] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [language, setLanguage] = useState('en'); // дефолт
 
-  // Вход в систему 
+  // 🔄 Автозагрузка языка при старте
+  useEffect(() => {
+    const storedLang = localStorage.getItem('lang');
+    if (storedLang) {
+      i18n.changeLanguage(storedLang.toLowerCase());
+      setLanguage(storedLang);
+    }
+  }, []);
+
+  // 🌐 Смена языка
+  const changeLanguage = (lang) => {
+    const normalized = lang.toLowerCase();
+    i18n.changeLanguage(normalized);
+    localStorage.setItem('lang', normalized);
+    setLanguage(normalized);
+  };
+
+  // 🔐 Вход
   const login = async ({ username, password }) => {
-    console.log("LOG");
-    
     const token = await loginRequest({ username, password });
     localStorage.setItem('accessToken', token);
     const user = await getProfile();
@@ -25,21 +47,20 @@ export const AuthProvider = ({ children }) => {
     return user;
   };
 
-  // Регистрация
+  // 🆕 Регистрация
   const registration = async ({ username, email, password }) => {
     await registrationRequest({ username, email, password });
     setUsername(username);
     return username;
   };
 
-  // Выход из системы
+  // 🚪 Выход
   const logout = async () => {
     const token = localStorage.getItem('accessToken');
     if (token) {
       try {
         await logoutRequest();
-      } catch (e) {
-      }
+      } catch (e) {}
       localStorage.removeItem('accessToken');
       setAccessToken(null);
       setIsAuthenticated(false);
@@ -48,16 +69,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-
+  // ✅ Активация
   const activation = async ({ code }) => {
-
-    console.log(username);
-
-    const response = await activationRequest({ username, code });
+    await activationRequest({ username, code });
   };
 
-
-  // Проверяет токен и возвращает true/false
+  // 🔍 Проверка токена
   const validateToken = async (token) => {
     if (!token) return false;
     try {
@@ -73,9 +90,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Обновление токена
+  // 🔄 Обновление токена
   const refresh = async () => {
-
     try {
       const token = await refreshAccessToken();
       localStorage.setItem('accessToken', token);
@@ -85,17 +101,14 @@ export const AuthProvider = ({ children }) => {
       setUsername(decoded.sub);
       return true;
     } catch (e) {
-      const status = e.response?.status;
-      if (status === 403) {
+      if (e.response?.status === 403) {
         logout();
       }
       return false;
     }
   };
 
-
-
-  // При монтировании проверяем/обновляем токен
+  // 🧠 Проверка токена при монтировании
   useEffect(() => {
     const checkToken = async () => {
       const token = localStorage.getItem('accessToken');
@@ -108,26 +121,28 @@ export const AuthProvider = ({ children }) => {
         logout();
       }
     };
-
     checkToken();
   }, []);
 
   return (
-    <AuthContext.Provider value={{
-      accessToken,
-      username,
-      isAuthenticated,
-      profile,
-      validateToken,
-      login,
-      registration,
-      activation,
-      refresh,
-      logout,
-      setIsAuthenticated,
-      setUsername,
-
-    }}>
+    <AuthContext.Provider
+      value={{
+        accessToken,
+        username,
+        isAuthenticated,
+        profile,
+        language,
+        changeLanguage,
+        validateToken,
+        login,
+        registration,
+        activation,
+        refresh,
+        logout,
+        setIsAuthenticated,
+        setUsername,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

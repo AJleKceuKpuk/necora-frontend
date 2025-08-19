@@ -1,24 +1,28 @@
 import { Link } from 'react-router-dom';
 import "./css/header.css";
 import useDateTime from "../../services/useDateTime";
-import icons from "../../images/images";
+import icons from "../../assets/images/images";
 import UserMenu from "./UserMenu";
 import GuestMenu from "./GuestMenu";
 import PlanetMenu from './PlanetMenu';
 import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Header = ({ game }) => {
+  const { t } = useTranslation('header');
+
   const { isAuthenticated } = useAuth();
   const dateTime = useDateTime();
-  const menu = isAuthenticated ? (<UserMenu />) : (<GuestMenu/>);
+  const menu = isAuthenticated ? (<UserMenu />) : (<GuestMenu />);
   const planet = <PlanetMenu />;
+console.log('t(home):', t('home'));
 
 
   if (game && isAuthenticated) {
     return (
       <header className="header header-game-page">
         <div className="header-left">
-          
+
           <Link to="/" className="img-container img-36 br-5 header-button">
             <img src={icons.home} alt="home" />
           </Link>
@@ -28,7 +32,7 @@ const Header = ({ game }) => {
             {dateTime.toLocaleTimeString()}
           </div>
 
-          <Link to="/about"  className="img-container img-36 br-5 header-button">
+          <Link to="/about" className="img-container img-36 br-5 header-button">
             <img src={icons.chat} alt="chat" />
           </Link>
 
@@ -74,10 +78,10 @@ const Header = ({ game }) => {
     <header className="header header-start-page">
       <div className="header-left start">
         <ul className="header-left-buttons start">
-          <Link to="/"  className="header-button pd-5 br-5">Главная</Link>
-          <Link to="/forum" className="header-button pd-5 br-5">Форум</Link>
-          <Link to="/rules" className="header-button pd-5 br-5">Правила</Link>
-          <Link to="/support" className="header-button pd-5 br-5">Техподдержка</Link>
+          <Link to="/" className="header-button pd-5 br-5">{t('home')}</Link>
+          <Link to="/forum" className="header-button pd-5 br-5">{t('forum')}</Link>
+          <Link to="/rules" className="header-button pd-5 br-5">{t('rules')}</Link>
+          <Link to="/support" className="header-button pd-5 br-5">{t('support')}</Link>
         </ul>
       </div>
       {menu}

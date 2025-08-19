@@ -5,7 +5,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-
 const authExcludedRoutes = ['/login', '/registration'];
 
 api.interceptors.request.use(config => {

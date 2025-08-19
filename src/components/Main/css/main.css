@@ -18,9 +18,8 @@
 }
 
 .main-center {
-  position: relative;    /* делаем контейнер reference-точкой для абсолютных детей */
-  overflow: hidden;      /* прячем всё, что выходит за границы */
-  /* если нужно, задайте фиксированную высоту или min-height */
+  position: relative;
+  overflow: hidden;
 }
 
 

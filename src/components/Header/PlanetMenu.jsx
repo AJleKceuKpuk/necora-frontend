@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import "./css/header.css";
-import icons from "../../images/images";
+import icons from "../../assets/images/images";
 
 const PlanetMenu = () => {
     const dropdownRef = useRef(null);

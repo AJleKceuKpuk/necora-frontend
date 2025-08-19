@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../context/AuthContext";
 import icons from "../../images/images";
 import "./auth.css";
 
 const Signin = () => {
+  const { i18n } = useTranslation();
+  const { t } = useTranslation('common');
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [buttonError, setButtonError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     username: false,
@@ -17,8 +23,6 @@ const Signin = () => {
   });
 
   const hasErrors = errors.username || errors.password;
-
-  const [buttonError, setButtonError] = useState("");
 
   const validate = () => {
     const newErrors = {
@@ -29,16 +33,25 @@ const Signin = () => {
     return !newErrors.username && !newErrors.password;
   };
 
+  useEffect(() => {
+    document.querySelector(".auth-input")?.focus();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setButtonError("");
+
     if (!validate()) {
       setButtonError("Введите данные!");
       return;
     }
+
+    setIsLoading(true);
+
     try {
       const user = await login({ username, password });
       if (!user.activate) {
-        navigate("/activate-account", { replace: true })
+        navigate("/activate-account", { replace: true });
       } else {
         navigate("/", { replace: true });
       }
@@ -48,16 +61,20 @@ const Signin = () => {
         setErrors({ username: true, password: true });
         setButtonError("Неверный логин или пароль");
       } else {
-        console.log("error");
+        console.log("error", err);
+        setButtonError("Ошибка сервера");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
+
 
   return (
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
         <img src={icons.logo} alt="signin logo" className="auth-logo" />
-        <h2 className="auth-title no-select">Вход в игру</h2>
+        <h2 className="auth-title no-select">{t('titleLogin')}</h2>
 
         <input
           type="text"
@@ -83,13 +100,14 @@ const Signin = () => {
           }}
         />
 
-        <button
+         <button
           type="submit"
-          className={`auth-button ${hasErrors ? "error" : ""}`}
-          disabled={hasErrors}
+          className={`auth-button ${hasErrors ? "error" : ""} ${isLoading ? "loading" : ""}`}
+          disabled={hasErrors || isLoading}
         >
           {buttonError || "ВОЙТИ"}
-        </button>
+        </button> 
+         
 
         <div className="auth-footer">
           <div className="auth-footer__option">
