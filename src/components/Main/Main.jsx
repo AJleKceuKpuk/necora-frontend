@@ -2,14 +2,20 @@
 import './css/main.css';
 import AnimatedOutlet from '../../services/AnimatedOutlet';
 import { useLocation, Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigation } from '../../hooks/useNavigation';
+
 
 const Main = ({ game }) => {
     const location = useLocation();
-    const { pathname } = useAuth();
+    const { pathname } = useNavigation();
     const { isAuthenticated } = useAuth();
 
-    const currentPath = pathname || location.pathname;
+    const currentPath = pathname;
+    console.log(currentPath);
+    console.log(location.pathname);
+    
+    
     const guestOnlyRoutes = ['/signin', '/signup', '/recovery', '/sendcode'];
 
     const isGuestOnlyRoute = guestOnlyRoutes.some((path) =>

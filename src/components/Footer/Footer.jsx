@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../../context/AuthContext'; 
+
 import './footer.css';
 import icons from '../../assets/images/images';
+import { useAuth } from '../../hooks/useAuth';
 
 const Footer = () => {
     const [showList, setShowList] = useState(false);

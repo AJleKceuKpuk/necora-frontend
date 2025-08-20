@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import "./css/header.css";
 import icons from "../../assets/images/images";
-import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from 'react-i18next';
+import { useAuth } from "../../hooks/useAuth";
 
 
 const UserMenu = () => {

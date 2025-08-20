@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
-import { useAuth } from "../../context/AuthContext";
 import icons from "../../assets/images/images";
 import "./auth.css";
+import { useAuth } from "../../hooks/useAuth";
+import { useNavigation } from "../../hooks/useNavigation";
 
 const Signin = () => {
   const { t } = useTranslation(['auth', 'error']);
-  const { login, redirect, getProfile } = useAuth();
+  const { login, getProfile } = useAuth();
+  const { redirect } = useNavigation();
 
 
   const [username, setUsername] = useState("");
@@ -47,8 +49,12 @@ const Signin = () => {
     try {
       await login({ username, password });
       const user = await getProfile();
+      
+      
       if (!user.activate) {
-        redirect("/activate-account");
+        console.log(user);
+        
+        //redirect("/activate-account");
       } else {
         redirect("/");
       }

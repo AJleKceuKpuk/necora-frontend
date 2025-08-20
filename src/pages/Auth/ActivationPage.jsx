@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+
 import icons from "../../assets/images/images";
 import "./auth.css";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../../hooks/useAuth";
 
 const Activation = () => {
   const { t } = useTranslation(['auth', 'error']);
-  const { activation, redirect, isAuthenticated, profile, getProfile, username } = useAuth();
+  const { activation, isAuthenticated, profile, getProfile, username } = useAuth();
   const navigate = useNavigate();
-
+  
   const [code, setCode] = useState("");
   const [buttonError, setButtonError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +48,7 @@ const Activation = () => {
   };
 
   useEffect(() => {
-    console.log(isAuthenticated);
+    //console.log(isAuthenticated);
     
     // if (!isAuthenticated) {
     //   console.log("not auth");

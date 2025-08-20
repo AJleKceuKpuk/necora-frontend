@@ -1,8 +1,9 @@
 import "./start.css"
 import icons from "../../assets/images/images";
 import { Link } from 'react-router-dom';
-import { useAuth } from "../../context/AuthContext";
+
 import { useTranslation } from 'react-i18next';
+import { useAuth } from "../../hooks/useAuth";
 
 const Start = () => {
   const { t } = useTranslation('auth');

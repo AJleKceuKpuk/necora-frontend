@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import icons from "../../assets/images/images";
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from "../../context/AuthContext";
 import { useTranslation } from 'react-i18next';
+import { useAuth } from "../../hooks/useAuth";
 
 const Singup = () => {
     const { t } = useTranslation(['auth', 'error']);

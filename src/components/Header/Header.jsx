@@ -5,8 +5,8 @@ import icons from "../../assets/images/images";
 import UserMenu from "./UserMenu";
 import GuestMenu from "./GuestMenu";
 import PlanetMenu from './PlanetMenu';
-import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../../hooks/useAuth';
 
 const Header = ({ game }) => {
   const { t } = useTranslation('header');

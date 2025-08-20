@@ -3,7 +3,6 @@ import { useState } from "react";
 import "./auth.css";
 import icons from "../../assets/images/images";
 import { Link } from 'react-router-dom';
-import Recovery from "./Recovery";
 
 const RecoveryCode = () => {
     const [username, setUsername] = useState('');
