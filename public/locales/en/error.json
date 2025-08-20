@@ -1,3 +1,5 @@
 {
-    "ERROR_AUTH" : "Invalid username or password"
+    "ERROR_AUTH": "Incorrect username or password",
+    "ERROR_USERNAME_EXISTS": "Username is already taken",
+    "ERROR_EMAIL_EXISTS": "This email is already in use"
 }

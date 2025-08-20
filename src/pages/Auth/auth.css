@@ -134,6 +134,7 @@
 .auth-message {
   font-family: 'Manrope', sans-serif;
   font-size: 26px;
+  text-align: center;
 }
 
 .auth-title {
@@ -207,9 +208,7 @@
     transition: opacity 0.3s ease 0.3s; 
 }
 
-.auth-input__error:hover::after,
-.auth-input__error:focus::after,
-.auth-input__error:active::after {
+.auth-input__error:hover::after{
   opacity: 1;
 }
 

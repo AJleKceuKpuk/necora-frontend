@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../context/AuthContext";
 import icons from "../../assets/images/images";
@@ -7,8 +7,8 @@ import "./auth.css";
 
 const Signin = () => {
   const { t } = useTranslation(['auth', 'error']);
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const { login, redirect, getProfile } = useAuth();
+
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -39,20 +39,18 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setButtonError("");
-
     if (!validate()) {
       setButtonError(t('signin.error.void-input'));
       return;
     }
-
     setIsLoading(true);
-
     try {
-      const user = await login({ username, password });
+      await login({ username, password });
+      const user = await getProfile();
       if (!user.activate) {
-        navigate("/activate-account", { replace: true });
+        redirect("/activate-account");
       } else {
-        navigate("/", { replace: true });
+        redirect("/");
       }
     } catch (err) {
       const error = err.response?.data?.error;
@@ -79,6 +77,7 @@ const Signin = () => {
           placeholder={t('signin.username-input')}
           className={`auth-input ${errors.username ? "error" : ""}`}
           value={username}
+          autoComplete="username"
           onChange={(e) => {
             setUsername(e.target.value);
             setErrors({ username: false, password: false });
@@ -91,6 +90,7 @@ const Signin = () => {
           placeholder={t('signin.password-input')}
           className={`auth-input ${errors.password ? "error" : ""}`}
           value={password}
+          autoComplete="current-password"
           onChange={(e) => {
             setPassword(e.target.value);
             setErrors({ username: false, password: false });

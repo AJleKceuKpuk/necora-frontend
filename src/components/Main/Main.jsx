@@ -6,17 +6,19 @@ import { useAuth } from '../../context/AuthContext';
 
 const Main = ({ game }) => {
     const location = useLocation();
-    const pathname = location.pathname;
+    const { pathname } = useAuth();
     const { isAuthenticated } = useAuth();
 
+    const currentPath = pathname || location.pathname;
     const guestOnlyRoutes = ['/signin', '/signup', '/recovery', '/sendcode'];
 
     const isGuestOnlyRoute = guestOnlyRoutes.some((path) =>
-        pathname.startsWith(path)
+        currentPath.startsWith(path)
     );
+
     const authOnlyRoutes = ['/game', '/profile'];
     const isAuthOnlyRoute = authOnlyRoutes.some((path) =>
-        pathname.startsWith(path)
+        currentPath.startsWith(path)
     );
 
     if (!isAuthenticated && isAuthOnlyRoute) {
@@ -42,9 +44,9 @@ const Main = ({ game }) => {
         return (
             <main className="main main-start-page">
                 <div className="main-left" />
-                
-                    <AnimatedOutlet game/>
-                
+
+                <AnimatedOutlet game />
+
                 <div className="main-right" />
             </main>
         );
@@ -54,7 +56,7 @@ const Main = ({ game }) => {
     return (
         <main className="main main-start-page">
             <div className="main-left" />
-            <AnimatedOutlet game/>
+            <AnimatedOutlet game />
             <div className="main-right" />
         </main>
     );

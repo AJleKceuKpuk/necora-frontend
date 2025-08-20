@@ -1,15 +1,13 @@
-// src/routes.jsx
-import React from "react";
 import { Route } from "react-router-dom";
 import Body from "./layouts/Body";
 import Home from "./pages/Start/Start";
-import Singin from "./pages/Auth/Singin"
+import Singin from "./pages/Auth/SinginPage"
 import About from "./pages/About";
-import Singup from "./pages/Auth/Singup";
+import Singup from "./pages/Auth/SingupPage";
 import Recovery from "./pages/Auth/Recovery";
-import LogoutPage from "./pages/Auth/LogoutPage";
-import AccountActivation from "./pages/Auth/AccountActivation";
+import Logout from "./pages/Auth/LogoutPage";
 import RecoveryCode from "./pages/Auth/RecoveryCode";
+import Activation from "./pages/Auth/ActivationPage";
 
 const RoutesConfig = () => (
   <>
@@ -17,14 +15,16 @@ const RoutesConfig = () => (
 
       <Route index element={<Home />} />
 
-
-    
       <Route path="signin" element={<Singin />} />
       <Route path="signup" element={<Singup />} />
-      <Route path="activate-account" element={<AccountActivation />} />
+      <Route path="logout" element={<Logout />} />
+
+      <Route path="activate-account" element={<Activation />} />
+
+
       <Route path="sendcode" element={<RecoveryCode />} />
       <Route path="recovery" element={<Recovery />} />
-      <Route path="logout" element={<LogoutPage />} />
+
 
 
       <Route path="forum" element={<About />} />
@@ -36,7 +36,7 @@ const RoutesConfig = () => (
       <Route path="chats" element={<About />} />
       <Route path="notifications" element={<About />} />
       <Route path="settings" element={<About />} />
-      
+
 
       <Route path="about" element={<About />} />
     </Route>

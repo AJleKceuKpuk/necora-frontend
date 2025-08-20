@@ -1,19 +1,16 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-export default function LogoutPage() {
-  const navigate = useNavigate();
-  const { logout } = useAuth();
+export default function Logout() {
+  const { logout, redirect } = useAuth();
 
   useEffect(() => {
     const performLogout = async () => {
       await logout();
-      navigate('/');
+      redirect('/');
     };
-
     performLogout();
-  }, []);
+  }, [logout, redirect]);
 
-  return <div>Выход...</div>; // можно показать спиннер или просто текст
+  return null;
 }
