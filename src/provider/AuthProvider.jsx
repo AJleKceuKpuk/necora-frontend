@@ -1,57 +1,38 @@
 import { useState, useEffect, useCallback, useMemo, } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import i18n from 'i18next';
-import {    loginRequest,    registrationRequest,    logoutRequest,    activationRequest,    refreshAccessToken,} from '../api/authApi';
-import { getProfileRequest } from '../api/profileApi';
+import { loginRequest, registrationRequest, logoutRequest, activationRequest } from '../api/authApi';
 import { AuthContext } from '../context/AuthContext';
+import { useLanguage } from '../hooks/useLanguage';
+import { useToken } from '../hooks/useToken';
+import { useProfile } from './ProfileProvider';
 
 
 export const AuthProvider = ({ children }) => {
-    const [language, setLanguage] = useState('en');
     const [isInitializing, setIsInitializing] = useState(true);
 
-    const [accessToken, setAccessToken] = useState(null);
-    const [profile, setProfile] = useState(null);
     const [username, setUsername] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-
-    const changeLanguage = useCallback((lang) => {
-        const normalized = lang.toLowerCase();
-        i18n.changeLanguage(normalized);
-        localStorage.setItem('lang', normalized);
-        setLanguage(normalized);
-    }, []);
-
-    const initLanguage = useCallback(() => {
-        const storedLang = localStorage.getItem('lang');
-        if (storedLang) {
-            const normalized = storedLang.toLowerCase();
-            i18n.changeLanguage(normalized);
-            setLanguage(normalized);
-        }
-    }, []);
-
-    const getProfile = useCallback(async () => {
-        const user = await getProfileRequest();
-        setProfile(user);
-        return user;
-    }, []);
+    const { language } = useLanguage();
+    const { setAccessToken, accessToken, validateToken } = useToken();
+    const { getProfile, setProfile } = useProfile();
 
     const login = useCallback(async ({ username, password }) => {
         const token = await loginRequest({ username, password });
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
+        setUsername(username);
         setIsAuthenticated(true);
-        getProfile();
-    }, [getProfile]);
+        const user = await getProfile();
+        return user;
+    }, [getProfile, setAccessToken]);
 
     const registration = useCallback(async ({ username, email, password }) => {
-        const localisation = localStorage.getItem('lang')?.toLowerCase() || 'en';
-        await registrationRequest({ username, email, password, localisation });
+        console.log(language);
+        await registrationRequest({ username, email, password, language });
         setUsername(username);
         return username;
-    }, []);
+    }, [language]);
 
     const logout = useCallback(async () => {
         const token = localStorage.getItem('accessToken');
@@ -63,108 +44,67 @@ export const AuthProvider = ({ children }) => {
             }
             localStorage.removeItem('accessToken');
         }
-        setAccessToken(null);
         setIsAuthenticated(false);
+        setAccessToken(null);
         setUsername(null);
         setProfile(null);
-    }, []);
+    }, [setAccessToken, setProfile]);
 
     const activation = useCallback(async ({ code, username }) => {
         await activationRequest({ username, code });
     }, []);
 
-    const refresh = useCallback(async () => {
-        try {
-            const token = await refreshAccessToken();
-            localStorage.setItem('accessToken', token);
-            setAccessToken(token);
-            const decoded = jwtDecode(token);
+
+
+    const validateSession = useCallback(async () => {
+        const isValid = await validateToken(accessToken);
+        if (isValid && accessToken) {
+            const decoded = jwtDecode(accessToken);
+            setIsAuthenticated(true);
             setUsername(decoded.sub);
-            return true;
-        } catch (e) {
-            if (e.response?.status === 403) {
-                logout();
-            }
-            return false;
+            await getProfile();
+        } else {
+            await logout();
         }
-    }, [logout]);
+    }, [validateToken, logout, getProfile, accessToken]);
 
-    const validateToken = useCallback(async (token) => {
-        if (!token) return false;
+    const initSession = useCallback(async () => {
         try {
-            const decoded = jwtDecode(token);
-            if (decoded.exp * 1000 < Date.now()) {
-                return await refresh();
-            }
-            return true;
-        } catch (e) {
-            console.error('❌ Ошибка при декодировании токена:', e);
-            return false;
-        }
-    }, [refresh]);
-
-    const initAuth = useCallback(async () => {
-        const token = localStorage.getItem('accessToken');
-        const isValid = await validateToken(token);
-        try {
-            if (isValid && token) {
-                const decoded = jwtDecode(token);
-                setIsAuthenticated(true);
-                setUsername(decoded.sub);
-                await getProfile();
-            } else {
-                await logout();
-            }
+            await validateSession();
         } catch (e) {
             console.error(e?.response?.data?.error || e.message);
             await logout();
         } finally {
             setIsInitializing(false);
         }
-    }, [validateToken, logout, getProfile]);
+    }, [validateSession, logout]);
 
     useEffect(() => {
-        const init = async () => {
-            initLanguage();
-            await initAuth();
-        };
-        init();
-    }, [initLanguage, initAuth]);
+        initSession();
+    }, [initSession]);
 
     const contextValue = useMemo(() => ({
-        language,
         isInitializing,
-        accessToken,
-        profile,
         username,
         isAuthenticated,
-        changeLanguage,
-        getProfile,
         login,
         registration,
         logout,
         activation,
-        validateToken,
-        refresh,
         setUsername,
         setIsAuthenticated,
+        validateSession
     }), [
-        language,
         isInitializing,
-        accessToken,
-        profile,
         username,
         isAuthenticated,
-        changeLanguage,
-        getProfile,
         login,
         registration,
         logout,
         activation,
-        validateToken,
-        refresh,
         setUsername,
         setIsAuthenticated,
+        validateSession
     ]);
 
     return (

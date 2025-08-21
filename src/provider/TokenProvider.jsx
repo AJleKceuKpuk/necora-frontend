@@ -1,77 +1,58 @@
-// context/TokenContext.js
-import React, { createContext, useState, useCallback, useEffect, useMemo } from 'react'
-import { jwtDecode } from 'jwt-decode'
-import { refreshAccessToken } from '../api/authApi'
-
-export const TokenContext = createContext(null)
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import { refreshToken } from '../api/token';
+import { TokenContext } from '../context/TokenContext';
 
 export const TokenProvider = ({ children }) => {
-    const [accessToken, setAccessToken] = useState(
-        () => localStorage.getItem('accessToken')
-    )
 
-    const saveToken = useCallback(token => {
-        localStorage.setItem('accessToken', token)
-        setAccessToken(token)
-    }, [])
+    const [accessToken, setAccessToken] = useState(() =>
+        localStorage.getItem('accessToken')
+    );
 
-    const clearToken = useCallback(() => {
-        localStorage.removeItem('accessToken')
-        setAccessToken(null)
-    }, [])
+    // Попытка обновить токен
+    const refresh = useCallback(async () => {
+        const token = await refreshToken();
+        localStorage.setItem('accessToken', token);
+        setAccessToken(token);
+        return token;
+    }, []);
 
-    const refreshToken = useCallback(async () => {
+    // Проверка срока жизни
+    const validateToken = useCallback(async (token) => {
+        if (!token) return false;
         try {
-            const newToken = await refreshAccessToken()
-            saveToken(newToken)
-            return true
-        } catch {
-            clearToken()
-            return false
-        }
-    }, [saveToken, clearToken])
-
-    const validateToken = useCallback(
-        async token => {
-            if (!token) return false
-            try {
-                const { exp } = jwtDecode(token)
-                if (exp * 1000 < Date.now()) {
-                    return await refreshToken()
-                }
-                return true
-            } catch {
-                clearToken()
-                return false
+            const { exp } = jwtDecode(token);
+            if (exp * 1000 < Date.now()) {
+                await refresh();
             }
-        },
-        [refreshToken, clearToken]
-    )
+            return true;
+        } catch {
+            return false;
+        }
+    }, [refresh]);
 
-    // при старте проверяем токен
+    // Инициализация при старте
     useEffect(() => {
         (async () => {
-            await validateToken(accessToken)
-        })()
-    }, [accessToken, validateToken])
+            const token = accessToken;
+            const valid = await validateToken(token);
+            if (!valid) {
+                localStorage.removeItem('accessToken');
+                setAccessToken(null);
+            }
+        })();
+    }, [accessToken, validateToken]);
 
-    const value = useMemo(
-        () => ({
-            accessToken,
-            saveToken,
-            clearToken,
-            validateToken,
-            refreshToken,
-        }),
-        [accessToken, saveToken, clearToken, validateToken, refreshToken]
-    )
+    const value = useMemo(() => ({
+        accessToken,
+        setAccessToken,
+        validateToken,
+        refresh,
+    }), [accessToken, setAccessToken, validateToken, refresh]);
 
     return (
         <TokenContext.Provider value={value}>
             {children}
         </TokenContext.Provider>
-    )
-}
-
-// хук для удобства
-export const useToken = () => React.useContext(TokenContext)
+    );
+};

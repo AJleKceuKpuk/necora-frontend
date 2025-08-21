@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 
 import './footer.css';
 import icons from '../../assets/images/images';
-import { useAuth } from '../../hooks/useAuth';
+import { useLanguage } from '../../hooks/useLanguage';
 
 const Footer = () => {
     const [showList, setShowList] = useState(false);
     const listRef = useRef(null);
 
-    const { language, changeLanguage } = useAuth(); 
+    const { language, changeLanguage } = useLanguage(); 
 
     const toggleList = () => {
         setShowList(prev => !prev);
@@ -58,7 +58,6 @@ const Footer = () => {
     );
 };
 
-// 👇 Tooltip-подписи
 const getTooltip = (lang) => {
     switch (lang) {
         case 'RU': return 'Русский';

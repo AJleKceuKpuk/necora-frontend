@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import "./css/header.css";
 import icons from "../../assets/images/images";
 import { useTranslation } from 'react-i18next';
@@ -13,16 +13,9 @@ const UserMenu = () => {
   const dropdownRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const {username, logout} = useAuth();
-  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
-  };
-
-  const handleLogout = async () => {
-    toggleMenu(); 
-    await logout(); 
-    navigate('/'); 
   };
 
   //Закрытие меню   
@@ -118,7 +111,6 @@ const UserMenu = () => {
             <Link
               to="/logout"
               className="dropdown-item header-button no-select"
-              onClick={handleLogout}
             >
               <div className="img-container img-36 header-button">
                 <img src={icons.exit} alt="settings" />

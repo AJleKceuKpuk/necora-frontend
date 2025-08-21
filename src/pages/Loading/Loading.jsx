@@ -1,6 +1,6 @@
-import "./SplashScreen.css";
+import "./loading.css";
 
-const SplashScreen = () => {
+const Loading = () => {
   return (
     <div className="splash-screen">
       <div className="spinner" />
@@ -8,4 +8,4 @@ const SplashScreen = () => {
   );
 };
 
-export default SplashScreen;
+export default Loading;

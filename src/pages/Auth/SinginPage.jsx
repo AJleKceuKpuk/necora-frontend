@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 import icons from "../../assets/images/images";
 import "./auth.css";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigation } from "../../hooks/useNavigation";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const { t } = useTranslation(['auth', 'error']);
-  const { login, getProfile } = useAuth();
-  const { redirect } = useNavigation();
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
 
   const [username, setUsername] = useState("");
@@ -47,16 +47,12 @@ const Signin = () => {
     }
     setIsLoading(true);
     try {
-      await login({ username, password });
-      const user = await getProfile();
-      
-      
+      const user = await login({ username, password });
+
       if (!user.activate) {
-        console.log(user);
-        
-        //redirect("/activate-account");
+        navigate("/activate-account");
       } else {
-        redirect("/");
+        navigate("/");
       }
     } catch (err) {
       const error = err.response?.data?.error;
@@ -115,7 +111,7 @@ const Signin = () => {
 
         <div className="auth-footer">
           <div className="auth-footer__option">
-            <Link to="/sendcode" className="auth-footer__link">
+            <Link to="/recovery" className="auth-footer__link">
               {t('signin.forgot-password')}
             </Link>
           </div>

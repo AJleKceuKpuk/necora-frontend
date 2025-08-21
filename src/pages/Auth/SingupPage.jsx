@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/useAuth";
 
-const Singup = () => {
+const Signup = () => {
     const { t } = useTranslation(['auth', 'error']);
     const { registration } = useAuth();
     const navigate = useNavigate();
@@ -184,4 +184,4 @@ const Singup = () => {
     );
 };
 
-export default Singup;
+export default Signup;

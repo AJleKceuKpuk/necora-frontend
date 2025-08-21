@@ -1,7 +1,6 @@
 // src/pages/Home.jsx
 import { useState } from "react";
 import icons from "../../assets/images/images";
-import { Link } from 'react-router-dom';
 
 const Recovery = () => {
     const [recovery_code, setRecoveryCode] = useState('');
@@ -30,7 +29,7 @@ const Recovery = () => {
                     value={recovery_code}
                     onChange={handleInputChange(setRecoveryCode, 'recovery_code')}
                 />
-                 <input
+                <input
                     type="password"
                     placeholder="Новый пароль"
                     className={`auth-input ${errors.password ? 'error' : ''}`}

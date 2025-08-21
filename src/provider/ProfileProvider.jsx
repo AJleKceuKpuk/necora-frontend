@@ -1,4 +1,4 @@
-// context/ProfileContext.js
+
 import React, { createContext, useState, useCallback, useMemo } from 'react'
 import { getProfileRequest } from '../api/profileApi'
 
@@ -7,15 +7,15 @@ export const ProfileContext = createContext(null)
 export const ProfileProvider = ({ children }) => {
     const [profile, setProfile] = useState(null)
 
-    const fetchProfile = useCallback(async () => {
-        const data = await getProfileRequest()
-        setProfile(data)
-        return data
-    }, [])
+    const getProfile = useCallback(async () => {
+        const user = await getProfileRequest();
+        setProfile(user);
+        return user;
+    }, []);
 
     const value = useMemo(
-        () => ({ profile, fetchProfile, setProfile }),
-        [profile, fetchProfile]
+        () => ({ profile, getProfile, setProfile }),
+        [profile, getProfile, setProfile]
     )
 
     return (

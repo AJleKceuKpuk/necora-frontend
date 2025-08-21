@@ -1,10 +1,4 @@
 import { useContext } from 'react';
 import { LanguageContext } from '../context/LanguageContext';
 
-export const useLanguage = () => {
-    const context = useContext(LanguageContext);
-    if (!context) {
-        throw new Error('useToken must be used within a TokenProvider');
-    }
-    return context;
-};
+export const useLanguage = () => useContext(LanguageContext);

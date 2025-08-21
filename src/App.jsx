@@ -1,23 +1,20 @@
-import { Routes } from "react-router-dom";
-import RoutesConfig from "./RoutesConfig";
-import RouteAuthListener from "./RouteAuthListener";
+import RouteAuthListener from "./routes/RouteAuthListener";
 
-import SplashScreen from "./pages/SplashScreen";
+import Loading from "./pages/Loading/Loading";
 import { useAuth } from "./hooks/useAuth";
+import RoutesConfig from "./routes/RoutesConfig";
 
 const App = () => {
   const { isInitializing } = useAuth();
 
   if (isInitializing) {
-    return <SplashScreen />;
+    return <Loading />;
   }
 
   return (
     <>
       <RouteAuthListener />
-      <Routes>
-        {RoutesConfig()}
-      </Routes>
+      <RoutesConfig />
     </>
   );
 };
