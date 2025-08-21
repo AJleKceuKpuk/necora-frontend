@@ -144,6 +144,14 @@
   text-align: center;
 }
 
+.auth-description{
+  text-align: center;
+}
+
+.auth-description__span{
+  color: #00cccc;
+}
+
 /* Анимации */
 @keyframes loading-border {
   0% {

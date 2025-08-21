@@ -3,15 +3,19 @@ import icons from '../../assets/images/images'
 import { useState, useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { recoveryCodeRequest } from '../../api/authApi'
+import { recoveryCodeRequest, recoveryRequest } from '../../api/authApi'
 import { useLanguage } from '../../hooks/useLanguage'
 import { useTranslation } from 'react-i18next'
+import { useToken } from '../../hooks/useToken'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function Recovery() {
     const { t } = useTranslation(['auth', 'error']);
     const navigate = useNavigate()
-
+    const [step, setStep] = useState(1)
     const { language } = useLanguage();
+    const { setAccessToken } = useToken();
+    const { validateSession, isAuthenticated } = useAuth();
 
     const [username, setUsername] = useState('')
     const [code, setCode] = useState('')
@@ -35,23 +39,17 @@ export default function Recovery() {
             newPassword: false,
             newPasswordApply: false,
         };
-
         if (key.includes("username")) {
-            console.log("username");
 
             if (!username || username.trim().length < 3) {
-                console.log("error username");
-
                 clientErrors.username = true;
             }
         }
-
         if (key.includes("code")) {
             if (!code || code.trim() === "") {
                 clientErrors.code = true;
             }
         }
-
         if (key.includes("password")) {
             if (!newPassword || newPassword.length < 6 || !/[A-Z]/.test(newPassword) || !/\d/.test(newPassword)) {
                 clientErrors.newPassword = true;
@@ -60,8 +58,6 @@ export default function Recovery() {
                 clientErrors.newPasswordApply = true;
             }
         }
-
-
 
         setErrors({
             username: clientErrors.username,
@@ -73,8 +69,19 @@ export default function Recovery() {
         return clientErrors.username || clientErrors.code || clientErrors.newPassword || clientErrors.newPasswordApply;
     };
 
+    async function handelBack() {
+        setStep(1)
+        setErrors({
+            username: false,
+            code: false,
+            newPassword: false,
+            newPasswordApply: false,
+            backend: true
+        });
+        setButtonError("")
+        setCode("")
+    }
 
-    const [step, setStep] = useState(1)
 
     // 1. Отправляем код на email
     async function handleRequest(e) {
@@ -114,10 +121,39 @@ export default function Recovery() {
     // 2. Подтверждаем код и сразу получаем токены
     async function handleConfirm(e) {
         e.preventDefault()
+        setButtonError("");
+        const validationError = validate("code");
+        if (validationError) {
+            setButtonError(t('signup.error.incorrect_data'));
+            return;
+        }
+        setIsLoading(true);
         try {
-            setStep(3)
+            const token = await recoveryRequest({ username, code, language });
+            localStorage.setItem('accessToken', token);
+            setAccessToken(token);
+            await validateSession(token);
+            setStep(3);
         } catch (err) {
-            console.error('Неверный код', err)
+            const error = err.response?.data?.error;
+            if (error === "ERROR_INVALID_CODE") {
+                setErrors({
+                    username: false,
+                    code: true,
+                    newPassword: false,
+                    newPasswordApply: false,
+                    backend: true
+                });
+                setButtonError(t(`error:${error}`));
+            } else {
+                setButtonError(t('signup.error.server-off'));
+                setTimeout(() => {
+                    setButtonError("");
+                }, 3000);
+            }
+        } finally {
+            setIsLoading(false);
+            setCode("");
         }
     }
 
@@ -175,9 +211,6 @@ export default function Recovery() {
                             </div>
                         )}
                     </div>
-
-
-
                     <button
                         type='submit'
                         className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
@@ -195,71 +228,129 @@ export default function Recovery() {
                 </form>
                 )}
 
-
-            {/* {step === 1 && (
-                <form onSubmit={handleRequest}>
-                    <label>
-                        Логин или email
+            {step === 2 &&
+                (<form className="auth-form" onSubmit={handleConfirm}>
+                    <img src={icons.logo} alt={t('recovery.logo-alt')} className="auth-logo" />
+                    <h2 className="auth-title no-select"> {t('recovery.title')} </h2>
+                    <span className='auth-description no-select'>На ваш <b className='auth-description__span'>E-mail</b> отправлен код для востановления доступа к аккаунту</span>
+                    <div className="auth-wrapper">
                         <input
                             type="text"
-                            value={username}
-                            onChange={e => setUsername(e.target.value)}
-                            required
-                        />
-                    </label>
-                    <button type="submit">Отправить код</button>
-                </form>
-            )}
-
-            {step === 2 && (
-                <form onSubmit={handleConfirm}>
-                    <p>Код был выслан на {username}. Введите его ниже:</p>
-                    <label>
-                        Код подтверждения
-                        <input
-                            type="text"
+                            placeholder={t('recovery.code-input')}
+                            className={`auth-input ${errors.code ? "error" : ""}`}
                             value={code}
-                            onChange={e => setCode(e.target.value)}
-                            required
+                            onChange={(e) => {
+                                setCode(e.target.value);
+                                setErrors({ username: false, code: false, newPassword: false, newPasswordApply: false, backend: false });
+                                setButtonError("");
+                            }}
                         />
-                    </label>
-                    <button type="submit">Подтвердить код</button>
-                </form>
-            )}
-
-            {step === 3 && (
-                <div>
-                    <form onSubmit={handleReset}>
-                        <p>Смените пароль (рекомендуется):</p>
-                        <label>
-                            Новый пароль
-                            <input
-                                type="password"
-                                value={newPassword}
-                                onChange={e => setNewPassword(e.target.value)}
-                                required
-                            />
-                        </label>
-                        <button type="submit">Сменить пароль</button>
-                    </form>
-
+                        {errors.code && (
+                            <div
+                                data-tooltip={
+                                    errors.backend
+                                        ? t("error:ERROR_INVALID_CODE")
+                                        : t("recovery.error.code_invalid")
+                                }
+                                className="auth-input__error img-container img-36"
+                            >
+                                <img src={icons.error} alt={t('signup.error.error-alt')} />
+                            </div>
+                        )}
+                    </div>
                     <button
-                        className="skip-button"
-                        type="button"
-                        onClick={handleSkipReset}
+                        type='submit'
+                        className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
+                        disabled={!!buttonError || isLoading}
                     >
-                        Пропустить смену пароля
+                        {buttonError || t('recovery.submit-confirm')}
                     </button>
-                </div>
-            )}
+                    <div className="auth-footer">
+                        <div className="auth-footer__option">
+                            <Link onClick={handelBack} className="auth-footer__link">Не получили код?</Link>
+                        </div>
+                        <div className="auth-footer__option">
+                            <span className="auth-footer__label">{t('recovery.remember-password-label')}</span>
+                            <Link to="/signin" className="auth-footer__link">{t('recovery.signin-link')}</Link>
+                        </div>
+                    </div>
 
-            {step === 4 && (
-                <div className="success-step">
-                    <h2>Готово!</h2>
-                    <p>Всё прошло успешно. Нажмите «Войти», чтобы продолжить.</p>
-                    <button onClick={handleSignIn}>Войти</button>
-                </div>
-            )} */}
+                </form>
+                )}
+
+            {step === 3 &&
+                (<form className="auth-form" onSubmit={handleReset}>
+                    <img src={icons.logo} alt={t('recovery.logo-alt')} className="auth-logo" />
+                    <h2 className="auth-title no-select"> {t('recovery.title')} </h2>
+                    <span className='auth-description no-select'>Изменение пароля</span>
+                    <div className="auth-wrapper">
+                        <input
+                            type="text"
+                            placeholder={t('recovery.password-input')}
+                            className={`auth-input ${errors.newPassword ? "error" : ""}`}
+                            value={newPassword}
+                            onChange={(e) => {
+                                setNewPassword(e.target.value);
+                                setErrors({ username: false, code: false, newPassword: false, newPasswordApply: false, backend: false });
+                                setButtonError("");
+                            }}
+                        />
+                        {errors.newPassword && (
+                            <div
+                                data-tooltip={
+                                    errors.backend
+                                        ? t("error:?")
+                                        : t("recovery.client?")
+                                }
+                                className="auth-input__error img-container img-36"
+                            >
+                                <img src={icons.error} alt={t('signup.error.error-alt')} />
+                            </div>
+                        )}
+                    </div>
+                    <div className="auth-wrapper">
+                        <input
+                            type="text"
+                            placeholder={t('recovery.password-apply-input')}
+                            className={`auth-input ${errors.newPasswordApply ? "error" : ""}`}
+                            value={newPasswordApply}
+                            onChange={(e) => {
+                                setNewPasswordApply(e.target.value);
+                                setErrors({ username: false, code: false, newPassword: false, newPasswordApply: false, backend: false });
+                                setButtonError("");
+                            }}
+                        />
+                        {errors.newPasswordApply && (
+                            <div
+                                data-tooltip={
+                                    errors.backend
+                                        ? t("error:?")
+                                        : t("recovery.client?")
+                                }
+                                className="auth-input__error img-container img-36"
+                            >
+                                <img src={icons.error} alt={t('signup.error.error-alt')} />
+                            </div>
+                        )}
+                    </div>
+                    <button
+                        type='submit'
+                        className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
+                        disabled={!!buttonError || isLoading}
+                    >
+                        {buttonError || t('recovery.submit-confirm')}
+                    </button>
+                    <div className="auth-footer">
+                        <div className="auth-footer__option">
+                            <Link className="auth-footer__link">Пропустить</Link>
+                        </div>
+                        <div className="auth-footer__option">
+                            <span className="auth-footer__label">{t('recovery.remember-password-label')}</span>
+                            <Link to="/signin" className="auth-footer__link">{t('recovery.signin-link')}</Link>
+                        </div>
+                    </div>
+                </form>
+                )}
         </div>
     )
 }

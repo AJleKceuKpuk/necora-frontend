@@ -56,17 +56,21 @@ export const AuthProvider = ({ children }) => {
 
 
 
-    const validateSession = useCallback(async () => {
-        const isValid = await validateToken(accessToken);
-        if (isValid && accessToken) {
-            const decoded = jwtDecode(accessToken);
-            setIsAuthenticated(true);
-            setUsername(decoded.sub);
-            await getProfile();
-        } else {
-            await logout();
-        }
-    }, [validateToken, logout, getProfile, accessToken]);
+    const validateSession = useCallback(
+        async (overrideToken) => {
+            const tokenToCheck = overrideToken ?? accessToken;
+            const isValid = await validateToken(tokenToCheck);
+            if (isValid && tokenToCheck) {
+                const decoded = jwtDecode(tokenToCheck);
+                setIsAuthenticated(true);
+                setUsername(decoded.sub);
+                await getProfile();
+            } else {
+                await logout();
+            }
+        },
+        [validateToken, logout, getProfile, accessToken]
+    );
 
     const initSession = useCallback(async () => {
         try {

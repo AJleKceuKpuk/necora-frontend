@@ -12,8 +12,8 @@ export const logoutRequest = () =>
 export const activationRequest = ({ username, code }) =>
   api.post('/activation', { username, code }).then(res => res);
 
-export const recoveryRequest = ({ username, code, newPassword, language }) =>
-  api.post('/recovery', { username, code, newPassword, language }).then(res => res);
+export const recoveryRequest = ({ username, code, language }) =>
+  api.post('/recovery', { username, code, language }).then(res => res.data.accessToken);
 
 
 //Получить код активации

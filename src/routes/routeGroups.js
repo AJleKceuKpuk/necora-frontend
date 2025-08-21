@@ -7,12 +7,13 @@ import Recovery from "../pages/Auth/RecoveryPage";
 export const publicRoutes = [
     { path: '/', element: <Start /> },
     { path: '/logout', element: <Logout /> },
+    { path: "/recovery", element: <Recovery />},
 ];
 
 export const guestRoutes = [
     { path: '/signin', element: <Signin /> },
     { path: '/signup', element: <Signup /> },
-    { path: "/recovery", element: <Recovery />},
+    
 ];
 
 export const privateRoutes = [

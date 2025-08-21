@@ -9,6 +9,7 @@ export const ProfileProvider = ({ children }) => {
 
     const getProfile = useCallback(async () => {
         const user = await getProfileRequest();
+        
         setProfile(user);
         return user;
     }, []);

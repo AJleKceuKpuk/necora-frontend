@@ -19,10 +19,13 @@ export const TokenProvider = ({ children }) => {
 
     // Проверка срока жизни
     const validateToken = useCallback(async (token) => {
+        
         if (!token) return false;
         try {
             const { exp } = jwtDecode(token);
             if (exp * 1000 < Date.now()) {
+                console.log("Истек");
+                
                 await refresh();
             }
             return true;
