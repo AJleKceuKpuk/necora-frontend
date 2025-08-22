@@ -12,27 +12,37 @@ const Signin = () => {
   const navigate = useNavigate();
 
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [buttonError, setButtonError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
-    username: false,
+    email: false,
     password: false,
   });
 
-  const hasErrors = errors.username || errors.password;
+  const hasErrors = errors.email || errors.password;
 
   const validate = () => {
-    const newErrors = {
-      username: username.trim() === "",
-      password: password.trim() === "",
-    };
-    setErrors(newErrors);
-    return !newErrors.username && !newErrors.password;
+    const clientErrors = { email: false, password: false };
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      clientErrors.email = true;
+    }
+    if (password.length < 4) {
+      clientErrors.password = true;
+    }
+
+    setErrors({
+      email: clientErrors.email,
+      password: clientErrors.password,
+    });
+    return clientErrors.email || clientErrors.password;
   };
+
 
   useEffect(() => {
     document.querySelector(".auth-input")?.focus();
@@ -41,23 +51,24 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setButtonError("");
-    if (!validate()) {
-      setButtonError(t('signin.error.void-input'));
-      return;
-    }
+
+    const validationError = validate();
+        if (validationError) {
+            setButtonError(t('signin.error.void-input'));
+            return;
+        }
     setIsLoading(true);
     try {
-      const user = await login({ username, password });
-
+      const user = await login({ email, password });
       if (!user.activate) {
-        navigate("/activate-account");
+        navigate("/activate");
       } else {
         navigate("/");
       }
     } catch (err) {
       const error = err.response?.data?.error;
       if (error === "ERROR_AUTH") {
-        setErrors({ username: true, password: true });
+        setErrors({ email: true, password: true });
         setButtonError(t(`error:${error}`));
       } else {
         console.log("error", err);
@@ -76,13 +87,13 @@ const Signin = () => {
 
         <input
           type="text"
-          placeholder={t('signin.username-input')}
-          className={`auth-input ${errors.username ? "error" : ""}`}
-          value={username}
-          autoComplete="username"
+          placeholder={t('signin.email-input')}
+          className={`auth-input ${errors.email ? "error" : ""}`}
+          value={email}
+          autoComplete="current-email"
           onChange={(e) => {
-            setUsername(e.target.value);
-            setErrors({ username: false, password: false });
+            setEmail(e.target.value);
+            setErrors({ email: false, password: false });
             setButtonError("");
           }}
         />
@@ -95,7 +106,7 @@ const Signin = () => {
           autoComplete="current-password"
           onChange={(e) => {
             setPassword(e.target.value);
-            setErrors({ username: false, password: false });
+            setErrors({ email: false, password: false });
             setButtonError("");
           }}
         />

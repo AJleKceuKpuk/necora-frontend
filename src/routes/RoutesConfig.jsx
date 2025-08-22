@@ -1,21 +1,18 @@
 import { Routes, Route } from 'react-router-dom';
 
 import Body from '../layouts/Body';
-import { guestRoutes, privateRoutes, publicRoutes } from './routeGroups';
-import GuestRoute from './guards/GuestRoute';
-import PrivateRoute from './guards/PrivateRoute';
+import RouteGuard from './RouteGuard';
+import { routes } from './routeGroups';
 
 const RoutesConfig = () => (
     <Routes>
         <Route path="/" element={<Body />}>
-            {publicRoutes.map(({ path, element }) => (
-                <Route key={path} path={path} element={element} />
-            ))}
-            {guestRoutes.map(({ path, element }) => (
-                <Route key={path} path={path} element={<GuestRoute>{element}</GuestRoute>} />
-            ))}
-            {privateRoutes.map(({ path, element }) => (
-                <Route key={path} path={path} element={<PrivateRoute>{element}</PrivateRoute>} />
+            {routes.map(({ path, element, meta }) => (
+                <Route
+                    key={path}
+                    path={path}
+                    element={<RouteGuard meta={meta}>{element}</RouteGuard>}
+                />
             ))}
         </Route>
     </Routes>

@@ -17,13 +17,13 @@ export const AuthProvider = ({ children }) => {
     const { setAccessToken, accessToken, validateToken } = useToken();
     const { getProfile, setProfile } = useProfile();
 
-    const login = useCallback(async ({ username, password }) => {
-        const token = await loginRequest({ username, password });
+    const login = useCallback(async ({ email, password }) => {
+        const token = await loginRequest({ email, password });
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
-        setUsername(username);
         setIsAuthenticated(true);
-        const user = await getProfile();
+        const user = await getProfile(); 
+        setUsername(user.username)
         return user;
     }, [getProfile, setAccessToken]);
 
@@ -84,6 +84,8 @@ export const AuthProvider = ({ children }) => {
     }, [validateSession, logout]);
 
     useEffect(() => {
+        console.log("init!");
+        
         initSession();
     }, [initSession]);
 

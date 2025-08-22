@@ -64,7 +64,7 @@ const Signup = () => {
         try {
             const user = await registration({ username, email, password });
             sessionStorage.setItem("username", username);
-            navigate("/activate-account", { replace: true, state: { user } });
+            navigate("/activate", { replace: true, state: { user } });
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === "ERROR_USERNAME_EXISTS") {

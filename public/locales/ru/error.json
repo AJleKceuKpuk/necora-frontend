@@ -1,5 +1,5 @@
 {
-    "ERROR_AUTH" : "Неверный логин или пароль",
+    "ERROR_AUTH" : "Неверный E-mail или пароль",
 
     "ERROR_USERNAME_EXISTS" : "Имя пользователя уже используется",
     "ERROR_EMAIL_EXISTS" : "Этот email уже используется",

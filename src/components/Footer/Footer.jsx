@@ -42,7 +42,7 @@ const Footer = () => {
                 <div className='footer-lang'>{language.toUpperCase()}</div> {/* 👈 текущий язык */}
             </div>
 
-            <div className={`footer-list ${showList ? 'show' : ''}`}>
+            <div className={`footer-list no-select ${showList ? 'show' : ''}`}>
                 {['RU', 'EN', 'FR', 'CH', 'LV'].map((lang) => (
                     <div
                         key={lang}

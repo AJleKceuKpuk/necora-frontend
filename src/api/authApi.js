@@ -3,8 +3,8 @@ import api from './axiosInstance';
 export const registrationRequest = ({ username, email, password, language }) =>
   api.post('/registration', { username, email, password, language }).then(res => res);
 
-export const loginRequest = ({ username, password }) =>
-  api.post('/login', { username, password }).then(res => res.data.accessToken);
+export const loginRequest = ({ email, password }) =>
+  api.post('/login', { email, password }).then(res => res.data.accessToken);
 
 export const logoutRequest = () =>
   api.post('/logout');
