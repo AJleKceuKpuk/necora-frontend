@@ -6,7 +6,14 @@ import { routes } from './routeGroups';
 
 const RoutesConfig = () => (
     <Routes>
-        <Route path="/" element={<Body />}>
+        <Route
+            path="/"
+            element={
+                <RouteGuard meta={{}}>
+                    <Body />
+                </RouteGuard>
+            }
+        >
             {routes.map(({ path, element, meta }) => (
                 <Route
                     key={path}

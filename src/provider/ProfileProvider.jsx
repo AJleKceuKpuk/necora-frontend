@@ -19,10 +19,13 @@ const getProfileRequest = () => {
 
 export const ProfileProvider = ({ children }) => {
     const [profile, setProfile] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const getProfile = async () => {
+        setIsLoading(true)
         const user = await getProfileRequest();
         setProfile(user);
+        setIsLoading(false)
         return user;
     };
 
@@ -30,7 +33,8 @@ export const ProfileProvider = ({ children }) => {
         profile,
         getProfile,
         setProfile,
-    }), [profile]);
+        isLoading
+    }), [profile, isLoading]);
 
     return (
         <ProfileContext.Provider value={value}>

@@ -1,13 +1,26 @@
 
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useProfile } from '../provider/ProfileProvider';
+import { useEffect } from 'react';
 
 const RouteGuard = ({ children, meta }) => {
+    const location = useLocation();
     const { isAuthenticated } = useAuth();
     const { profile, isLoading } = useProfile();
 
+    useEffect(() => {
+        console.log('Current route:', location.pathname);
+        console.log({ isAuthenticated, profile, meta, children, isLoading, location });
+    }, [location.pathname]);
+
+
+
     if (isLoading) return null;
+
+    if (isAuthenticated && !profile.activate && location.pathname == '/') {
+        return <Navigate to="/activate" replace />;
+    }
 
     if (meta?.public) return children;
 

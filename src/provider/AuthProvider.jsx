@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../hooks/useLanguage';
 import { useToken } from '../hooks/useToken';
 import { useProfile } from './ProfileProvider';
+import { useNavigate } from 'react-router-dom';
 
 
 export const AuthProvider = ({ children }) => {
@@ -17,15 +18,13 @@ export const AuthProvider = ({ children }) => {
     const { setAccessToken, accessToken, validateToken } = useToken();
     const { getProfile, setProfile } = useProfile();
 
+    const navigate = useNavigate();
+
     const login = useCallback(async ({ email, password }) => {
         const token = await loginRequest({ email, password });
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
-        setIsAuthenticated(true);
-        const user = await getProfile(); 
-        setUsername(user.username)
-        return user;
-    }, [getProfile, setAccessToken]);
+    }, [setAccessToken]);
 
     const registration = useCallback(async ({ username, email, password }) => {
         console.log(language);
@@ -84,8 +83,6 @@ export const AuthProvider = ({ children }) => {
     }, [validateSession, logout]);
 
     useEffect(() => {
-        console.log("init!");
-        
         initSession();
     }, [initSession]);
 

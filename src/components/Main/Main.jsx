@@ -1,16 +1,8 @@
 import './css/main.css';
 import AnimatedOutlet from '../../services/AnimatedOutlet';
 import { useAuth } from '../../hooks/useAuth';
-import { useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const Main = ({ game }) => {
-    const location = useLocation();
-
-    useEffect(() => {
-        console.log('Current route:', location.pathname);
-    }, [location.pathname]);
-
 
     const { isAuthenticated } = useAuth();
     if (game && isAuthenticated) {

@@ -1,28 +1,15 @@
-import { useState } from 'react';
-import Header from '../components/Header/Header';
-import Main from '../components/Main/Main';
-
-import Footer from '../components/Footer/Footer';
-import "../index.css"
+import Header from "../components/Header/Header";
+import Main from "../components/Main/Main";
+import Footer from "../components/Footer/Footer";
 
 const Body = () => {
-
-  const [game] = useState(false);
-
-  if(game){
-    return(
-      <div className="body">
-      <Header game={game}/>
-      <Main game={game} />
-    </div>
-    );
-  }
+  const game = false;
 
   return (
     <div className="body">
       <Header game={game} />
       <Main game={game} />
-      <Footer />
+      {!game && <Footer />}
     </div>
   );
 };

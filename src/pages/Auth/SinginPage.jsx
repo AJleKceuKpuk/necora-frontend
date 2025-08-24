@@ -59,12 +59,7 @@ const Signin = () => {
         }
     setIsLoading(true);
     try {
-      const user = await login({ email, password });
-      if (!user.activate) {
-        navigate("/activate");
-      } else {
-        navigate("/");
-      }
+      await login({ email, password });
     } catch (err) {
       const error = err.response?.data?.error;
       if (error === "ERROR_AUTH") {

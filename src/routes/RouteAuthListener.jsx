@@ -3,15 +3,15 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const RouteAuthListener = () => {
-    const { validateSession } = useAuth();
-    const { pathname } = useLocation();
+    // const { validateSession } = useAuth();
+    // const { pathname } = useLocation();
 
-    useEffect(() => {
-        const checkProfile = async () => {
-            validateSession();
-        };
-        checkProfile();
-    }, [pathname, validateSession]);
+    // useEffect(() => {
+    //     const checkProfile = async () => {
+    //         validateSession();
+    //     };
+    //     checkProfile();
+    // }, [pathname, validateSession]);
 
     return null;
 };
