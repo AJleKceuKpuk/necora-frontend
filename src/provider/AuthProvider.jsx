@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const AuthProvider = ({ children }) => {
     const [isInitializing, setIsInitializing] = useState(true);
+    const [justLoggined, setJustLoggined] = useState(false);
 
     const [username, setUsername] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }) => {
         const token = await loginRequest({ email, password });
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
+        setJustLoggined(true);
     }, [setAccessToken]);
 
     const registration = useCallback(async ({ username, email, password }) => {
@@ -90,24 +92,28 @@ export const AuthProvider = ({ children }) => {
         isInitializing,
         username,
         isAuthenticated,
+        justLoggined,
         login,
         registration,
         logout,
         activation,
         setUsername,
         setIsAuthenticated,
-        validateSession
+        validateSession,
+        setJustLoggined
     }), [
         isInitializing,
         username,
         isAuthenticated,
+        justLoggined,
         login,
         registration,
         logout,
         activation,
         setUsername,
         setIsAuthenticated,
-        validateSession
+        validateSession,
+        setJustLoggined
     ]);
 
     return (

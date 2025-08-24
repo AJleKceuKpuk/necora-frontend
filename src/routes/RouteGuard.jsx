@@ -6,19 +6,22 @@ import { useEffect } from 'react';
 
 const RouteGuard = ({ children, meta }) => {
     const location = useLocation();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, justLoggined, setJustLoggined } = useAuth();
     const { profile, isLoading } = useProfile();
 
     useEffect(() => {
         console.log('Current route:', location.pathname);
-        console.log({ isAuthenticated, profile, meta, children, isLoading, location });
+        console.log({ isAuthenticated, profile, meta, justLoggined, isLoading, location });
+        if(location.pathname == '/activate'){
+            setJustLoggined(false)
+        }
     }, [location.pathname]);
 
 
 
     if (isLoading) return null;
 
-    if (isAuthenticated && !profile.activate && location.pathname == '/') {
+    if (isAuthenticated && !profile.activate && location.pathname == '/' && justLoggined) {
         return <Navigate to="/activate" replace />;
     }
 
