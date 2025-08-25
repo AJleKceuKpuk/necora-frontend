@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
 import icons from "../../assets/images/images";
-import "./auth.css";
+import "./styles/auth.css";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../hooks/useAuth";
 import { useCountdown } from "../../hooks/useTimer";
-import AuthInputCode from "./AuthInputCode";
+import AuthInputCode from "./components/AuthInputCode";
 
 const Activation = () => {
   const { t } = useTranslation(['auth', 'error']);

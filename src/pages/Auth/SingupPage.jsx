@@ -3,7 +3,8 @@ import icons from "../../assets/images/images";
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/useAuth";
-import AuthInput from "./AuthInput";
+import AuthInput from "./components/AuthInput";
+import "./styles/auth.css";
 
 const Signup = () => {
     const { t } = useTranslation(['auth', 'error']);

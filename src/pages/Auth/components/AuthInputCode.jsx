@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import "./auth.css"; // если стили общие
+import "./../styles/auth.css";
 
 const AuthInputCode = ({
     valueArray,

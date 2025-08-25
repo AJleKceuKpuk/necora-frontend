@@ -1,6 +1,6 @@
 // src/pages/RecoveryPage.jsx
 import icons from '../../assets/images/images'
-import { useState, useContext } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { recoveryCodeRequest, recoveryRequest } from '../../api/authApi'

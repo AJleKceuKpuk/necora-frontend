@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import icons from "../../assets/images/images";
-import "./auth.css";
+import icons from "../../../assets/images/images";
+import "./../styles/auth.css";
 
 const AuthInput = ({
   type = "text",
