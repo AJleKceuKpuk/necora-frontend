@@ -1,22 +1,31 @@
-import { useState, useRef, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { useState, useRef, useEffect, useCallback } from "react";
 import "./css/header.css";
 import icons from "../../assets/images/images";
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/useAuth";
+import MenuItem from "./MenuItem";
+import HeaderButton from "./HeaderButton";
 
 
 const UserMenu = () => {
-
   const { t } = useTranslation('header');
 
   const dropdownRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const {username, logout} = useAuth();
+  const { username } = useAuth();
 
-  const toggleMenu = () => {
+  const menuItems = [
+    { to: "/profile", icon: icons.profile, label: t('profile') },
+    { to: "/friends", icon: icons.friends, label: t('friends') },
+    { to: "/chats", icon: icons.message, label: t('messages') },
+    { to: "/notifications", icon: icons.notification, label: t('notifications') },
+    { to: "/settings", icon: icons.message, label: t('settings') },
+    { to: "/logout", icon: icons.exit, label: t('logout') },
+  ];
+
+  const toggleMenu = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
   //Закрытие меню   
   useEffect(() => {
@@ -36,15 +45,9 @@ const UserMenu = () => {
     <div className={`header-right ${isOpen ? "hide-left" : ""}`}>
       <div className="left-column">
         <div className="header-user-buttons">
-          <div className="img-container img-36 header-button">
-            <img src={icons.notification} alt="notifications" />
-          </div>
-          <div className="img-container img-36 header-button">
-            <img src={icons.message} alt="messages" />
-          </div>
-          <div className="img-container img-36 header-button">
-            <img src={icons.friends} alt="friends" />
-          </div>
+          <HeaderButton icon={icons.notification} alt="notifications" />
+          <HeaderButton icon={icons.message} alt="messages" />
+          <HeaderButton icon={icons.friends} alt="friends" />
         </div>
       </div>
       <div className="right-column">
@@ -53,70 +56,15 @@ const UserMenu = () => {
             {username}
           </div>
           <div className={`dropdown-content ${isOpen ? "" : "hide"}`}>
-            <Link
-              to="/profile"
-              className="dropdown-item header-button no-select"
-              onClick={toggleMenu}
-            >
-              <div className="img-container img-36 header-button">
-                <img src={icons.profile} alt="profile" />
-              </div>
-              <div>{t('profile')}</div>
-            </Link>
-
-            <Link
-              to="/friends"
-              className="dropdown-item header-button no-select"
-              onClick={toggleMenu}
-            >
-              <div className="img-container img-36 header-button">
-                <img src={icons.friends} alt="friends" />
-              </div>
-              <div>{t('friends')}</div>
-            </Link>
-
-            <Link
-              to="/chats"
-              className="dropdown-item header-button no-select"
-              onClick={toggleMenu}
-            >
-              <div className="img-container img-36 header-button">
-                <img src={icons.message} alt="messages" />
-              </div>
-              <div>{t('messages')}</div>
-            </Link>
-
-            <Link
-              to="/notifications"
-              className="dropdown-item header-button no-select"
-              onClick={toggleMenu}
-            >
-              <div className="img-container img-36 header-button">
-                <img src={icons.notification} alt="notifications" />
-              </div>
-              <div>{t('notifications')}</div>
-            </Link>
-
-            <Link
-              to="/settings"
-              className="dropdown-item header-button no-select"
-              onClick={toggleMenu}
-            >
-              <div className="img-container img-36 header-button">
-                <img src={icons.message} alt="settings" />
-              </div>
-              <div>{t('settings')}</div>
-            </Link>
-
-            <Link
-              to="/logout"
-              className="dropdown-item header-button no-select"
-            >
-              <div className="img-container img-36 header-button">
-                <img src={icons.exit} alt="settings" />
-              </div>
-              <div>{t('logout')}</div>
-            </Link>
+            {menuItems.map(({ to, icon, label }) => (
+              <MenuItem
+                key={to}
+                to={to}
+                icon={icon}
+                label={label}
+                onClick={toggleMenu}
+              />
+            ))}
           </div>
         </div>
       </div>

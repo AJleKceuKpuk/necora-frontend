@@ -6,22 +6,20 @@ import { useEffect } from 'react';
 
 const RouteGuard = ({ children, meta }) => {
     const location = useLocation();
-    const { isAuthenticated, justLoggined, setJustLoggined } = useAuth();
+    const { isAuthenticated, justLoggedIn, setJustLoggedIn } = useAuth();
     const { profile, isLoading } = useProfile();
 
     useEffect(() => {
         console.log('Current route:', location.pathname);
-        console.log({ isAuthenticated, profile, meta, justLoggined, isLoading, location });
-        if(location.pathname == '/activate'){
-            setJustLoggined(false)
+        console.log({ isAuthenticated, justLoggedIn, isLoading, location, profile, meta, });
+        if(location.pathname === '/activate'){
+            setJustLoggedIn(false)
         }
-    }, [location.pathname]);
-
-
+    }, [justLoggedIn, setJustLoggedIn, isAuthenticated, isLoading, profile, meta, location]);
 
     if (isLoading) return null;
 
-    if (isAuthenticated && !profile.activate && location.pathname == '/' && justLoggined) {
+    if (justLoggedIn && isAuthenticated) {
         return <Navigate to="/activate" replace />;
     }
 
@@ -47,7 +45,7 @@ const RouteGuard = ({ children, meta }) => {
         const userRoles = profile?.roles || [];
         const hasAccess = meta.roles.some(role => userRoles.includes(role));
         if (!hasAccess) {
-            return <Navigate to="/403" replace />; // или /not-authorized
+            return <Navigate to="/" replace />; 
         }
     }
 

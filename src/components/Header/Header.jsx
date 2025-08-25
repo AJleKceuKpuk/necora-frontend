@@ -7,6 +7,7 @@ import GuestMenu from "./GuestMenu";
 import PlanetMenu from './PlanetMenu';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
+import HeaderButton from './HeaderButton';
 
 const Header = ({ game }) => {
   const { t } = useTranslation('header');
@@ -22,18 +23,12 @@ const Header = ({ game }) => {
       <header className="header header-game-page">
         <div className="header-left">
 
-          <Link to="/" className="img-container img-36 br-5 header-button">
-            <img src={icons.home} alt="home" />
-          </Link>
-
+          <HeaderButton icon={icons.home} alt="home" />
           <div className="header-time">
             {dateTime.toLocaleDateString()} <br />
             {dateTime.toLocaleTimeString()}
           </div>
-
-          <Link to="/about" className="img-container img-36 br-5 header-button">
-            <img src={icons.chat} alt="chat" />
-          </Link>
+          <HeaderButton icon={icons.chat} alt="chat" />
 
 
         </div>
@@ -47,17 +42,9 @@ const Header = ({ game }) => {
           </div>
 
           <div className='planet-control'>
-
-            <div className="img-container img-25 br-5 header-button">
-              <img src={icons.arrow} alt="left-arrow" />
-            </div>
-
+            <HeaderButton icon={icons.arrow} alt="left-arrow" size={25} />
             {planet}
-
-            <div className="img-container img-25 br-5 header-button rotate-180">
-              <img src={icons.arrow} alt="right-arrow" />
-            </div>
-
+            <HeaderButton icon={icons.arrow} alt="right-arrow" size={25} className="rotate-180" />
           </div>
 
           <div className="am-container">

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, } from 'react';
 import { jwtDecode } from 'jwt-decode';
-import { loginRequest, registrationRequest, logoutRequest, activationRequest } from '../api/authApi';
+import { loginRequest, registrationRequest, logoutRequest, activationRequest, activationCodeRequest } from '../api/authApi';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../hooks/useLanguage';
 import { useToken } from '../hooks/useToken';
@@ -10,30 +10,28 @@ import { useNavigate } from 'react-router-dom';
 
 export const AuthProvider = ({ children }) => {
     const [isInitializing, setIsInitializing] = useState(true);
-    const [justLoggined, setJustLoggined] = useState(false);
+    const [justLoggedIn, setJustLoggedIn] = useState(false);
 
     const [username, setUsername] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const { language } = useLanguage();
     const { setAccessToken, accessToken, validateToken } = useToken();
-    const { getProfile, setProfile } = useProfile();
-
-    const navigate = useNavigate();
+    const { getProfile, setProfile, profile } = useProfile();
 
     const login = useCallback(async ({ email, password }) => {
         const token = await loginRequest({ email, password });
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
-        setJustLoggined(true);
+        setJustLoggedIn(true);
     }, [setAccessToken]);
 
     const registration = useCallback(async ({ username, email, password }) => {
-        console.log(language);
-        await registrationRequest({ username, email, password, language });
-        setUsername(username);
-        return username;
-    }, [language]);
+        const token = await registrationRequest({ username, email, password, language });
+        localStorage.setItem('accessToken', token);
+        setAccessToken(token);
+        setJustLoggedIn(true)
+    }, [setAccessToken]);
 
     const logout = useCallback(async () => {
         const token = localStorage.getItem('accessToken');
@@ -51,9 +49,20 @@ export const AuthProvider = ({ children }) => {
         setProfile(null);
     }, [setAccessToken, setProfile]);
 
-    const activation = useCallback(async ({ code, username }) => {
+    const activation = useCallback(async ({ code }) => {
+
+        const username = profile?.username;
+        console.log(username);
         await activationRequest({ username, code });
     }, []);
+
+
+
+    const sendCodeActivation = useCallback(async () => {
+        await activationCodeRequest({ language });
+    }, []);
+
+
 
 
 
@@ -65,7 +74,11 @@ export const AuthProvider = ({ children }) => {
                 const decoded = jwtDecode(tokenToCheck);
                 setIsAuthenticated(true);
                 setUsername(decoded.sub);
-                await getProfile();
+                try {
+                    await getProfile();
+                } catch (e) {
+                    await logout();
+                }
             } else {
                 await logout();
             }
@@ -92,7 +105,7 @@ export const AuthProvider = ({ children }) => {
         isInitializing,
         username,
         isAuthenticated,
-        justLoggined,
+        justLoggedIn,
         login,
         registration,
         logout,
@@ -100,12 +113,13 @@ export const AuthProvider = ({ children }) => {
         setUsername,
         setIsAuthenticated,
         validateSession,
-        setJustLoggined
+        setJustLoggedIn,
+        sendCodeActivation
     }), [
         isInitializing,
         username,
         isAuthenticated,
-        justLoggined,
+        justLoggedIn,
         login,
         registration,
         logout,
@@ -113,7 +127,8 @@ export const AuthProvider = ({ children }) => {
         setUsername,
         setIsAuthenticated,
         validateSession,
-        setJustLoggined
+        setJustLoggedIn,
+        sendCodeActivation
     ]);
 
     return (

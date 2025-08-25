@@ -4,13 +4,10 @@ import { useTranslation } from 'react-i18next';
 import icons from "../../assets/images/images";
 import "./auth.css";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const { t } = useTranslation(['auth', 'error']);
   const { login } = useAuth();
-  const navigate = useNavigate();
-
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,10 +50,10 @@ const Signin = () => {
     setButtonError("");
 
     const validationError = validate();
-        if (validationError) {
-            setButtonError(t('signin.error.void-input'));
-            return;
-        }
+    if (validationError) {
+      setButtonError(t('signin.error.void-input'));
+      return;
+    }
     setIsLoading(true);
     try {
       await login({ email, password });
@@ -82,7 +79,7 @@ const Signin = () => {
 
         <input
           type="text"
-          placeholder={t('signin.email-input')}
+          placeholder={t('email-input')}
           className={`auth-input ${errors.email ? "error" : ""}`}
           value={email}
           autoComplete="current-email"
@@ -95,7 +92,7 @@ const Signin = () => {
 
         <input
           type="password"
-          placeholder={t('signin.password-input')}
+          placeholder={t('password-input')}
           className={`auth-input ${errors.password ? "error" : ""}`}
           value={password}
           autoComplete="current-password"

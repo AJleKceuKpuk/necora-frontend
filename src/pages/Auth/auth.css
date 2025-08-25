@@ -1,3 +1,4 @@
+/* === Кнопка авторизации и состояния === */
 .auth-button {
   position: relative;
   overflow: hidden;
@@ -58,6 +59,7 @@
   animation-delay: 1s;
 }
 
+/* === Контейнеры === */
 .auth-container {
   display: flex;
   align-items: center;
@@ -65,22 +67,11 @@
   justify-content: center;
 }
 
-.auth-footer {
-  width: 100%;
-  box-sizing: border-box;
+.auth-wrapper {
   display: flex;
-  font-family: 'Manrope', sans-serif;
-  font-size: 20px;
-  justify-content: space-evenly;
-  gap: 100px;
-}
-
-.auth-footer__label {
-  margin-right: 5px;
-}
-
-.auth-footer__link {
-  color: #00ffff;
+  align-items: center;
+  width: 100%;
+  position: relative;
 }
 
 .auth-form {
@@ -95,6 +86,33 @@
   border-radius: 10px;
 }
 
+/* === Логотип, заголовки, описание === */
+.auth-logo {
+  width: 100%;
+}
+
+.auth-title {
+  font-size: 45px;
+  color: #ffffff;
+  margin-top: -50px;
+  text-align: center;
+}
+
+.auth-message {
+  font-family: 'Manrope', sans-serif;
+  font-size: 26px;
+  text-align: center;
+}
+
+.auth-description {
+  text-align: center;
+}
+
+.auth-description__span {
+  color: #00cccc;
+}
+
+/* === Инпуты === */
 .auth-input {
   font-family: 'Orbitron', 'sans-serif';
   font-weight: 600;
@@ -127,32 +145,115 @@
   letter-spacing: 2px;
 }
 
-.auth-logo {
-  width: 100%;
+/* === Ошибки инпутов === */
+.auth-input__error {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
 }
 
-.auth-message {
+.auth-input__error::after {
   font-family: 'Manrope', sans-serif;
-  font-size: 26px;
-  text-align: center;
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 0;
+  transform: translateX(-50px);
+  background-color: #222;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  font-size: 15px;
+  z-index: 10;
+  transition: opacity 0.3s ease 0.3s;
 }
 
-.auth-title {
-  font-size: 45px;
+.auth-input__error:hover::after {
+  opacity: 1;
+}
+
+/* === Футер === */
+.auth-footer {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  font-family: 'Manrope', sans-serif;
+  font-size: 20px;
+  justify-content: space-evenly;
+  gap: 100px;
+}
+
+.auth-footer__label {
+  margin-right: 5px;
+}
+
+.auth-footer__link {
+  color: #00ffff;
+}
+
+.auth-footer__button {
+  position: relative;
+  color: #00ffff;
+  font-size: 20px;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  margin: 0 10px;
+  transition: all 0.3s ease;
+}
+
+.auth-footer__button:disabled {
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.auth-footer__button:disabled::after {
+  content: attr(data-seconds) " сек";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 100%;
+  margin-left: 5px;
   color: #ffffff;
-  margin-top: -50px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* === Ввод кода === */
+.code-input-wrapper {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.code-input-cell {
+  width: 60px;
+  height: 70px;
+  font-size: 36px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
   text-align: center;
+  border: 2px solid #ffffff00;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.75);
+  color: #000000;
+  outline: none;
+  transition: all 0.3s ease;
 }
 
-.auth-description{
-  text-align: center;
+.code-input-cell:focus {
+  background-color: #ffffff;
+  border-color: #00ffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.9);
 }
 
-.auth-description__span{
-  color: #00cccc;
+.code-input-wrapper.error .code-input-cell {
+  border-color: red;
 }
 
-/* Анимации */
+/* === Анимации === */
 @keyframes loading-border {
   0% {
     left: -75%;
@@ -184,39 +285,3 @@
     transform: translateX(10px);
   }
 }
-
-.auth-wrapper{
-  display: flex;
-  align-items: center;
-  width: 100%;
-  position: relative;
-}
-
-.auth-input__error{
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-}
-
-.auth-input__error::after{
-  font-family: 'Manrope', sans-serif;
-    content: attr(data-tooltip);
-    position: absolute;
-    right: 0;
-    transform: translateX(-50px);
-    background-color: #222;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    font-size: 12px;
-    z-index: 10;
-    transition: opacity 0.3s ease 0.3s; 
-}
-
-.auth-input__error:hover::after{
-  opacity: 1;
-}
-

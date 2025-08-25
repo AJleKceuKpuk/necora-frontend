@@ -1,66 +1,83 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
 import icons from "../../assets/images/images";
 import "./auth.css";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../hooks/useAuth";
+import { useCountdown } from "../../hooks/useTimer";
+import AuthInputCode from "./AuthInputCode";
 
 const Activation = () => {
   const { t } = useTranslation(['auth', 'error']);
-  const { activation, isAuthenticated, profile, getProfile, username } = useAuth();
-  const navigate = useNavigate();
-  
-  const [code, setCode] = useState("");
+  const { activation, sendCodeActivation } = useAuth();
+
+  const { secondsLeft, isRunning, start } = useCountdown(60);
+
+  const [codeArray, setCodeArray] = useState(Array(6).fill(""));
+  const inputRefs = useRef([]);
   const [buttonError, setButtonError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const [errors, setErrors] = useState({
+  const defaultErrors = {
     code: false,
-    backend: false
-  });
-
-  // Валидация перед отправкой
-  const validate = () => {
-    const newErrors = {
-      code: code.trim() === "",
-    };
-    setErrors(newErrors);
-    return !newErrors.code;
+    backend: false,
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) {
-      return;
+  const [errors, setErrors] = useState(defaultErrors);
+
+  // Валидация перед отправкой
+  const code = codeArray.join("");
+
+  const validate = () => {
+    const clientErrors = { code: false };
+    if (code.length !== 6) {
+      clientErrors.code = true;
     }
-    try {
-      await activation({ code, username });
-      navigate("/", { replace: true });
-    } catch (err) {
-      const error = err.response?.data?.error;
-      if (error === "ERROR_AUTH") {
-        console.warn("⛔️ Доступ запрещён: неверные данные");
-        setErrors({ username: true, password: true });
-      } else {
-      }
-    }
+    setErrors({ code: clientErrors.code });
+    return clientErrors.code;
   };
 
   useEffect(() => {
-    //console.log(isAuthenticated);
-    
-    // if (!isAuthenticated) {
-    //   console.log("not auth");
-    //   if (!username){
-    //     redirect("/signin")
-    //   }
-    // }
-    // else if(!profile.activation){
-    //   console.log("not activated");
-      
-    // }
-  }, [profile, isAuthenticated]);
+    document.querySelector(".auth-input")?.focus();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setButtonError("");
+    const validationError = validate();
+    if (validationError) {
+      setButtonError(t('?'));
+      return;
+    }
+
+    setIsLoading(true);
+
+
+    try {
+      await activation({ code });
+    } catch (err) {
+      const error = err.response?.data?.error;
+      if (error === "ERROR_INVALID_CODE") {
+        setErrors({ code: true });
+        setButtonError(t(`error:${error}`));
+      } else {
+        setButtonError(t('signup.error.server-off'));
+        setTimeout(() => {
+          setButtonError("");
+        }, 3000);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const handleSendCode = async (e) => {
+    e.preventDefault();
+    start();
+    setErrors(defaultErrors);
+    setButtonError("");
+    await sendCodeActivation()
+  };
 
   return (
     <div className="auth-container">
@@ -70,36 +87,42 @@ const Activation = () => {
 
         <div className="auth-message no-select">На ваш <b>E-mail</b> было отправлено письмо с кодом активации</div>
 
-        <input
-          type="text"
-          placeholder="Код"
-          className={`auth-input ${errors.code ? "error" : ""}`}
-          value={code}
-          onChange={(e) => {
-            setCode(e.target.value);
-            setErrors({ code: false, backend: false });
+        <AuthInputCode
+          valueArray={codeArray}
+          setValueArray={setCodeArray}
+          error={errors.code}
+          resetError={() => {
+            setErrors(defaultErrors);
             setButtonError("");
           }}
+          onComplete={() => {
+            setTimeout(() => {
+              handleSubmit(new Event("submit"));
+            }, 100);
+          }}
         />
-        {errors.code && (
-          <div
-            data-tooltip={
-              errors.backend
-                ? t("error:ERROR_USERNAME_EXISTS")
-                : t("signup.error.username_too_short")
-            }
-            className="auth-input__error img-container img-36"
-          >
-            <img src={icons.error} alt={t('signup.error.error-alt')} />
-          </div>
-        )}
 
         <button
-          type="submit"
-          className="auth-button"
+          type='submit'
+          className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
+          disabled={!!buttonError || isLoading}
         >
-          Активировать
+          {buttonError || t('?.submit')}
         </button>
+
+        <div className="auth-footer">
+          <div className="auth-footer__option">
+            <span className="auth-footer__label">Не пришло письмо?</span>
+            <button
+              className="auth-footer__button"
+              disabled={isRunning}
+              onClick={handleSendCode}
+              data-seconds={secondsLeft}
+            >
+              Отправить
+            </button>
+          </div>
+        </div>
       </form>
     </div>
   );

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import icons from "../../assets/images/images";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/useAuth";
+import AuthInput from "./AuthInput";
 
 const Signup = () => {
     const { t } = useTranslation(['auth', 'error']);
     const { registration } = useAuth();
-    const navigate = useNavigate();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -16,27 +16,27 @@ const Signup = () => {
     const [buttonError, setButtonError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const [errors, setErrors] = useState({
+    const defaultErrors = {
         username: false,
         email: false,
         password: false,
-        backend: false
-    });
+        backend: false,
+    };
+
+    const [errors, setErrors] = useState(defaultErrors);
 
     const validate = () => {
         const clientErrors = { username: false, email: false, password: false };
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
         if (username.trim().length < 3) {
             clientErrors.username = true;
         }
         if (!emailRegex.test(email)) {
             clientErrors.email = true;
         }
-        if (password.length < 6 || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+        if (password.length < 8 || !/[A-Z]/.test(password) || !/\d/.test(password)) {
             clientErrors.password = true;
         }
-
         setErrors({
             username: clientErrors.username,
             email: clientErrors.email,
@@ -52,19 +52,14 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setButtonError("");
-
         const validationError = validate();
         if (validationError) {
             setButtonError(t('signup.error.incorrect_data'));
             return;
         }
-
         setIsLoading(true);
-
         try {
-            const user = await registration({ username, email, password });
-            sessionStorage.setItem("username", username);
-            navigate("/activate", { replace: true, state: { user } });
+            await registration({ username, email, password });
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === "ERROR_USERNAME_EXISTS") {
@@ -86,81 +81,51 @@ const Signup = () => {
             <form className="auth-form" onSubmit={handleSubmit}>
                 <img src={icons.logo} alt={t('signup.logo-alt')} className="auth-logo" />
                 <h2 className="auth-title no-select">{t('signup.title')}</h2>
-                <div className="auth-wrapper">
-                    <input
-                        type="text"
-                        placeholder={t('signin.username-input')}
-                        className={`auth-input ${errors.username ? "error" : ""}`}
-                        value={username}
-                        onChange={(e) => {
-                            setUsername(e.target.value);
-                            setErrors({ username: false, email: false, password: false, backend: false });
-                            setButtonError("");
-                        }}
-                    />
-                    {errors.username && (
-                        <div
-                            data-tooltip={
-                                errors.backend
-                                    ? t("error:ERROR_USERNAME_EXISTS")
-                                    : t("signup.error.username_too_short")
-                            }
-                            className="auth-input__error img-container img-36"
-                        >
-                            <img src={icons.error} alt={t('signup.error.error-alt')} />
-                        </div>
-                    )}
-                </div>
+                <AuthInput
+                    type="text"
+                    value={username}
+                    onChange={(e) => {
+                        setUsername(e.target.value);
+                        setErrors(defaultErrors);
+                        setButtonError("");
+                    }}
+                    placeholderKey="username-input"
+                    hasError={errors.username}
+                    errorKey="signup.error.username_too_short"
+                    backendErrorKey={errors.backend ? "ERROR_USERNAME_EXISTS" : ""}
+                    showError={errors.username}
+                />
 
-                <div className="auth-wrapper">
-                    <input
-                        type="text"
-                        placeholder={t('signup.email-input')}
-                        className={`auth-input ${errors.email ? 'error' : ''}`}
-                        value={email}
-                        autoComplete="username"
-                        onChange={(e) => {
-                            setEmail(e.target.value);
-                            setErrors({ username: false, email: false, password: false, backend: false });
-                            setButtonError("");
-                        }}
-                    />
-                    {errors.email && (
-                        <div
-                            data-tooltip={
-                                errors.backend
-                                    ? t("error:ERROR_EMAIL_EXISTS")
-                                    : t("signup.error.email_invalid_format")
-                            }
-                            className="auth-input__error img-container img-36"
-                        >
-                            <img src={icons.error} alt={t('signup.error.error-alt')} />
-                        </div>
-                    )}
-                </div>
+                <AuthInput
+                    type="text"
+                    value={email}
+                    onChange={(e) => {
+                        setEmail(e.target.value);
+                        setErrors(defaultErrors);
+                        setButtonError("");
+                    }}
+                    placeholderKey="email-input"
+                    hasError={errors.email}
+                    errorKey="signup.error.email_invalid_format"
+                    backendErrorKey={errors.backend ? "ERROR_EMAIL_EXISTS" : ""}
+                    showError={errors.email}
+                    autoComplete="current-email"
+                />
 
-                <div className="auth-wrapper">
-                    <input
-                        type="password"
-                        placeholder={t('signup.password-input')}
-                        className={`auth-input ${errors.password ? "error" : ""}`}
-                        value={password}
-                        autoComplete="current-password"
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            setErrors({ username: false, email: false, password: false, backend: false });
-                            setButtonError("");
-                        }}
-                    />
-                    {errors.password && (
-                        <div
-                            data-tooltip={t('signup.error.password_invalid_format')}
-                            className="auth-input__error img-container img-36"
-                        >
-                            <img src={icons.error} alt={t('signup.error.error-alt')} />
-                        </div>
-                    )}
-                </div>
+                <AuthInput
+                    type="password"
+                    value={password}
+                    onChange={(e) => {
+                        setPassword(e.target.value);
+                        setErrors(defaultErrors);
+                        setButtonError("");
+                    }}
+                    placeholderKey="password-input"
+                    hasError={errors.password}
+                    errorKey="signup.error.password_invalid_format"
+                    showError={errors.password}
+                    autoComplete="current-password"
+                />
 
                 <button
                     type='submit'

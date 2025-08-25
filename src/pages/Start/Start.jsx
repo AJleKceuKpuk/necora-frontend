@@ -9,19 +9,12 @@ const Start = () => {
   const { t } = useTranslation('auth');
   const { isAuthenticated } = useAuth();
 
-  if (isAuthenticated) {
-    return (
-      <div className='start-page'>
-        <img className='start-logo' src={icons.logo} alt="logo" />
-        <Link to="/game" className="btn-play no-select" >{t('start.play')}</Link>
-      </div>
-    );
-  }
-
   return (
     <div className='start-page'>
       <img className='start-logo' src={icons.logo} alt="logo" />
-      <Link to="/signin" className="btn-play no-select" >{t('start.signin')}</Link>
+      {isAuthenticated
+        ? <Link to="/game" className="btn-play no-select" >{t('start.play')}</Link>
+        : <Link to="/signin" className="btn-play no-select" >{t('start.signin')}</Link>}
     </div>
   );
 };
