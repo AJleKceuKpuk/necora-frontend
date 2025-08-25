@@ -210,7 +210,7 @@
 }
 
 .auth-footer__button:disabled::after {
-  content: attr(data-seconds) " сек";
+  content: attr(data-seconds) " " attr(data-seconds-label);
   position: absolute;
   top: 50%;
   transform: translateY(-50%);

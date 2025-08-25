@@ -7,7 +7,7 @@ const RouteAuthListener = () => {
     const { logout, isAuthenticated } = useAuth();
     const { pathname } = useLocation();
 
-    const lastCheckedPath = useRef (null);
+    const lastCheckedPath = useRef(null);
 
     useEffect(() => {
         if (lastCheckedPath.current === pathname) return;
@@ -29,7 +29,7 @@ const RouteAuthListener = () => {
         };
 
         checkProfile();
-    }, [pathname, isAuthenticated]);
+    }, [pathname, isAuthenticated, logout]);
 
     return null;
 };

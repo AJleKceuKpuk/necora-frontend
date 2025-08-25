@@ -1,4 +1,3 @@
-
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useProfile } from '../provider/ProfileProvider';
@@ -6,46 +5,49 @@ import { useEffect } from 'react';
 
 const RouteGuard = ({ children, meta }) => {
     const location = useLocation();
-    const { isAuthenticated, justLoggedIn, setJustLoggedIn } = useAuth();
+    const { isAuthenticated, authPhase, setAuthPhase } = useAuth();
     const { profile, isLoading } = useProfile();
 
     useEffect(() => {
-        console.log('Current route:', location.pathname);
-        console.log({ isAuthenticated, justLoggedIn, isLoading, location, profile, meta, });
-        if(location.pathname === '/activate'){
-            setJustLoggedIn(false)
+        const resetPaths = ["/", "/activate"];
+        if (resetPaths.includes(location.pathname) && authPhase !== "") {
+            setAuthPhase("");
         }
-    }, [justLoggedIn, setJustLoggedIn, isAuthenticated, isLoading, profile, meta, location]);
+    }, [location.pathname, authPhase, setAuthPhase]);
 
     if (isLoading) return null;
 
-    if (justLoggedIn && isAuthenticated) {
-        return <Navigate to="/activate" replace />;
-    }
+    if (isAuthenticated) {
+        if (authPhase === "login" && !profile.activate) {
+            return <Navigate to="/activate" replace />;
+        }
 
-    if (meta?.public) return children;
+        if (authPhase === "recovery") {
+            return <Navigate to="/reset-password" replace />;
+        }
 
-    if (meta?.guestOnly && isAuthenticated) {
-        return <Navigate to="/" replace />;
-    }
+        if (meta?.guestOnly) {
+            return <Navigate to="/" replace />;
+        }
 
-    if (meta?.auth && !isAuthenticated) {
-        return <Navigate to="/signin" replace />;
-    }
+        if (meta?.activationRequired && !profile.activate) {
+            return <Navigate to="/activate" replace />;
+        }
 
-    if (meta?.activationRequired && !profile?.activate) {
-        return <Navigate to="/activate" replace />;
-    }
+        if (meta?.onlyIfNotActivated && profile.activate) {
+            return <Navigate to="/" replace />;
+        }
 
-    if (meta?.onlyIfNotActivated && profile?.activate) {
-        return <Navigate to="/" replace />;
-    }
-
-    if (meta?.roles) {
-        const userRoles = profile?.roles || [];
-        const hasAccess = meta.roles.some(role => userRoles.includes(role));
-        if (!hasAccess) {
-            return <Navigate to="/" replace />; 
+        if (meta?.roles) {
+            const userRoles = profile.roles || [];
+            const hasAccess = meta.roles.some(role => userRoles.includes(role));
+            if (!hasAccess) {
+                return <Navigate to="/" replace />;
+            }
+        }
+    } else {
+        if (meta?.auth) {
+            return <Navigate to="/signin" replace />;
         }
     }
 
