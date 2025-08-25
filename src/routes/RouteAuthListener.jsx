@@ -1,17 +1,35 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { getProfileRequest } from "../api/profileApi"
 
 const RouteAuthListener = () => {
-    const { validateSession } = useAuth();
+    const { logout, isAuthenticated } = useAuth();
     const { pathname } = useLocation();
 
+    const lastCheckedPath = useRef (null);
+
     useEffect(() => {
+        if (lastCheckedPath.current === pathname) return;
+        lastCheckedPath.current = pathname;
+
         const checkProfile = async () => {
-            validateSession();
+            if (isAuthenticated) {
+                try {
+                    await getProfileRequest();
+                } catch (e) {
+                    if (e.response?.data?.error === "ERROR_TOKEN_INVALID") {
+                        logout();
+                    } else {
+                        console.error(e);
+                        logout();
+                    }
+                }
+            }
         };
+
         checkProfile();
-    }, [pathname, validateSession]);
+    }, [pathname, isAuthenticated]);
 
     return null;
 };
