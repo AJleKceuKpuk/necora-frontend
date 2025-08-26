@@ -2,9 +2,9 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import "./css/header.css";
 import icons from "../../assets/images/images";
 import { useTranslation } from 'react-i18next';
-import { useAuth } from "../../hooks/useAuth";
 import MenuItem from "./MenuItem";
 import HeaderButton from "./HeaderButton";
+import { useProfile } from "../../provider/ProfileProvider";
 
 
 const UserMenu = () => {
@@ -12,7 +12,7 @@ const UserMenu = () => {
 
   const dropdownRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const { username } = useAuth();
+  const { profile } = useProfile();
 
   const menuItems = [
     { to: "/profile", icon: icons.profile, label: t('profile') },
@@ -34,7 +34,6 @@ const UserMenu = () => {
         toggleMenu();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -53,7 +52,7 @@ const UserMenu = () => {
       <div className="right-column">
         <div className="profile-account dropdown" ref={dropdownRef}>
           <div className="pd-6 profile-button no-select" onClick={toggleMenu}>
-            {username}
+            {profile.username}
           </div>
           <div className={`dropdown-content ${isOpen ? "" : "hide"}`}>
             {menuItems.map(({ to, icon, label }) => (

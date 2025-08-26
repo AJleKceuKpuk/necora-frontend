@@ -15,14 +15,11 @@ export const logoutRequest = () =>
 export const activationRequest = ({ username, code }) =>
   api.post('/activation', { username, code }).then(res => res);
 
-
-
-
 //Получить код активации
 export const activationCodeRequest = ({ language }) =>
   api.post('/code/activation', { language }).then(res => res);
 
 //Получить код востановления
-export const recoveryCodeRequest = ({ username, language }) =>
-  api.post('/code/recovery', { username, language }).then(res => res);
+export const recoveryCodeRequest = ({ email, language }) =>
+  api.post('/code/recovery', { email, language }).then(res => res);
 

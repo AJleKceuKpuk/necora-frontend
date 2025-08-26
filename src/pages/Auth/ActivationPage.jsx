@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import icons from "../../assets/images/images";
 import "./styles/auth.css";
@@ -14,7 +14,6 @@ const Activation = () => {
   const { secondsLeft, isRunning, start } = useCountdown(60);
 
   const [codeArray, setCodeArray] = useState(Array(6).fill(""));
-  const inputRefs = useRef([]);
   const [buttonError, setButtonError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,13 +45,10 @@ const Activation = () => {
     setButtonError("");
     const validationError = validate();
     if (validationError) {
-      setButtonError(t('?'));
+      setButtonError(t('activate.error.incorrect_data'));
       return;
     }
-
     setIsLoading(true);
-
-
     try {
       await activation({ code });
     } catch (err) {
@@ -61,7 +57,7 @@ const Activation = () => {
         setErrors({ code: true });
         setButtonError(t(`error:${error}`));
       } else {
-        setButtonError(t('signup.error.server-off'));
+        setButtonError(t('activate.error.server-off'));
         setTimeout(() => {
           setButtonError("");
         }, 3000);
@@ -83,9 +79,13 @@ const Activation = () => {
     <div className="auth-container">
       <form className="auth-form" onSubmit={handleSubmit}>
         <img src={icons.logo} alt="signin logo" className="auth-logo" />
-        <h2 className="auth-title no-select">Активация</h2>
+        <h2 className="auth-title no-select">{t('activate.title')}</h2>
 
-        <div className="auth-message no-select">На ваш <b>E-mail</b> было отправлено письмо с кодом активации</div>
+        <div className="auth-message no-select">
+          {t('activate.email-sent-start')}
+          <b className="auth-description__span">{t('activate.email-word')}</b>
+          {t('activate.email-sent-end')}
+        </div>
 
         <AuthInputCode
           valueArray={codeArray}
@@ -107,19 +107,22 @@ const Activation = () => {
           className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
           disabled={!!buttonError || isLoading}
         >
-          {buttonError || t('?.submit')}
+          {buttonError || t('activate.submit')}
         </button>
 
         <div className="auth-footer">
           <div className="auth-footer__option">
-            <span className="auth-footer__label">Не пришло письмо?</span>
+            <span className="auth-footer__label">
+              {t('activate.have-account-label')}
+            </span>
             <button
               className="auth-footer__button"
               disabled={isRunning}
               onClick={handleSendCode}
+              data-seconds-label={t('activate.time')}
               data-seconds={secondsLeft}
             >
-              Отправить
+              {t('activate.have-account-link')}
             </button>
           </div>
         </div>

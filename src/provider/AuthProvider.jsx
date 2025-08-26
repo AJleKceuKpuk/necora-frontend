@@ -1,38 +1,44 @@
 import { useState, useEffect, useCallback, useMemo, } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { loginRequest, registrationRequest, logoutRequest, activationRequest, activationCodeRequest } from '../api/authApi';
+import { loginRequest, registrationRequest, recoveryRequest, activationRequest, logoutRequest, activationCodeRequest, recoveryCodeRequest } from '../api/authApi';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../hooks/useLanguage';
 import { useToken } from '../hooks/useToken';
 import { useProfile } from './ProfileProvider';
-import { useNavigate } from 'react-router-dom';
-
 
 export const AuthProvider = ({ children }) => {
     const [isInitializing, setIsInitializing] = useState(true);
-    const [justLoggedIn, setJustLoggedIn] = useState(false);
-
-    const [username, setUsername] = useState(null);
+    const [authPhase, setAuthPhase] = useState("");
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const { language } = useLanguage();
     const { setAccessToken, accessToken, validateToken } = useToken();
     const { getProfile, setProfile, profile } = useProfile();
 
+    // Функция входа!
     const login = useCallback(async ({ email, password }) => {
         const token = await loginRequest({ email, password });
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
-        setJustLoggedIn(true);
+        setAuthPhase("login");
     }, [setAccessToken]);
 
+    // Функция регистрации
     const registration = useCallback(async ({ username, email, password }) => {
         const token = await registrationRequest({ username, email, password, language });
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
-        setJustLoggedIn(true)
-    }, [setAccessToken]);
+        setAuthPhase("login");
+    }, [setAccessToken, language]);
 
+    // Функция востановления доступа
+    const recovery = useCallback(async ({ email, code }) => {
+        const token = await recoveryRequest({ email, code, language });
+        localStorage.setItem('accessToken', token);
+        setAccessToken(token);
+        setAuthPhase("recovery");
+    }, [setAccessToken, language]);
+
+    // Функция выхода
     const logout = useCallback(async () => {
         const token = localStorage.getItem('accessToken');
         if (token) {
@@ -45,35 +51,33 @@ export const AuthProvider = ({ children }) => {
         }
         setIsAuthenticated(false);
         setAccessToken(null);
-        setUsername(null);
         setProfile(null);
     }, [setAccessToken, setProfile]);
 
+    // Функция активации аккаунта
     const activation = useCallback(async ({ code }) => {
-
         const username = profile?.username;
         console.log(username);
         await activationRequest({ username, code });
-    }, []);
+    }, [profile]);
 
-
-
+    // Функция отправки кода активации
     const sendCodeActivation = useCallback(async () => {
         await activationCodeRequest({ language });
-    }, []);
+    }, [language]);
 
+    // Функция отправки кода востановления доступа
+    const sendCodeRecovery = useCallback(async ({ email }) => {
+        await recoveryCodeRequest({ email, language });
+    }, [language]);
 
-
-
-
+    // Валидация сессии
     const validateSession = useCallback(
         async (overrideToken) => {
             const tokenToCheck = overrideToken ?? accessToken;
             const isValid = await validateToken(tokenToCheck);
             if (isValid && tokenToCheck) {
-                const decoded = jwtDecode(tokenToCheck);
                 setIsAuthenticated(true);
-                setUsername(decoded.sub);
                 try {
                     await getProfile();
                 } catch (e) {
@@ -86,6 +90,7 @@ export const AuthProvider = ({ children }) => {
         [validateToken, logout, getProfile, accessToken]
     );
 
+    //Инициализация сессии
     const initSession = useCallback(async () => {
         try {
             await validateSession();
@@ -97,38 +102,24 @@ export const AuthProvider = ({ children }) => {
         }
     }, [validateSession, logout]);
 
+    // Инициализация сессии при монтировании
     useEffect(() => {
         initSession();
     }, [initSession]);
 
+    // Мемоизация
     const contextValue = useMemo(() => ({
-        isInitializing,
-        username,
-        isAuthenticated,
-        justLoggedIn,
-        login,
-        registration,
-        logout,
-        activation,
-        setUsername,
-        setIsAuthenticated,
-        validateSession,
-        setJustLoggedIn,
-        sendCodeActivation
+        isInitializing, isAuthenticated, authPhase,
+
+        login, registration, recovery, activation, logout,
+        setIsAuthenticated, setAuthPhase,
+        sendCodeActivation, sendCodeRecovery,
     }), [
-        isInitializing,
-        username,
-        isAuthenticated,
-        justLoggedIn,
-        login,
-        registration,
-        logout,
-        activation,
-        setUsername,
-        setIsAuthenticated,
-        validateSession,
-        setJustLoggedIn,
-        sendCodeActivation
+        isInitializing, isAuthenticated, authPhase,
+
+        login, registration, recovery, activation, logout,
+        setIsAuthenticated, setAuthPhase,
+        sendCodeActivation, sendCodeRecovery,
     ]);
 
     return (

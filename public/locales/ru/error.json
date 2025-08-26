@@ -4,5 +4,6 @@
     "ERROR_USERNAME_EXISTS" : "Имя пользователя уже используется",
     "ERROR_EMAIL_EXISTS" : "Этот email уже используется",
     
-    "ERROR_USER_NOT_FOUND" : "Пользователь не найден"
+    "ERROR_USER_NOT_FOUND" : "Пользователь не найден",
+    "ERROR_INVALID_CODE" : "Неверный код"
 }
