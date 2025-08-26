@@ -28,15 +28,21 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
         setAuthPhase("login");
+        sendCodeActivation();
     }, [setAccessToken, language]);
 
     // Функция востановления доступа
     const recovery = useCallback(async ({ email, code }) => {
-        const token = await recoveryRequest({ email, code, language });
+        const { data } = await recoveryRequest({ email, code, language });
+        const token = data.tokens.accessToken;
+        const recoveryCode = data.recoveryCode;
+        sessionStorage.setItem('recoveryCode', recoveryCode);
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
         setAuthPhase("recovery");
-    }, [setAccessToken, language]);
+        await getProfile();
+        return recoveryCode;
+    }, [setAccessToken, language, getProfile]);
 
     // Функция выхода
     const logout = useCallback(async () => {
@@ -57,9 +63,9 @@ export const AuthProvider = ({ children }) => {
     // Функция активации аккаунта
     const activation = useCallback(async ({ code }) => {
         const username = profile?.username;
-        console.log(username);
         await activationRequest({ username, code });
-    }, [profile]);
+        await getProfile();
+    }, [profile, getProfile]);
 
     // Функция отправки кода активации
     const sendCodeActivation = useCallback(async () => {

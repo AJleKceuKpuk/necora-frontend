@@ -18,7 +18,7 @@
 
 .auth-button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .auth-button.error {
@@ -285,3 +285,9 @@
     transform: translateX(10px);
   }
 }
+
+.code-input-wrapper.disabled .code-input-cell {
+  background-color: #8a8a8a79;
+  cursor: not-allowed;
+}
+

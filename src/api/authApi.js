@@ -6,8 +6,8 @@ export const registrationRequest = ({ username, email, password, language }) =>
 export const loginRequest = ({ email, password }) =>
   api.post('/login', { email, password }).then(res => res.data.accessToken);
 
-export const recoveryRequest = ({ username, code, language }) =>
-  api.post('/recovery', { username, code, language }).then(res => res.data.accessToken);
+export const recoveryRequest = ({ email, code, language }) =>
+  api.post('/recovery', { email, code, language }).then(res => res);
 
 export const logoutRequest = () =>
   api.post('/logout');

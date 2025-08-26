@@ -61,6 +61,7 @@ const Signup = () => {
         setIsLoading(true);
         try {
             await registration({ username, email, password });
+            
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === "ERROR_USERNAME_EXISTS") {

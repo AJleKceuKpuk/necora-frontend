@@ -1,22 +1,19 @@
 // src/pages/RecoveryPage.jsx
-<<<<<<< HEAD
-import icons from '../../assets/images/images'
-import { useState } from 'react'
+
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-=======
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import icons from '../../assets/images/images';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import AuthInputCode from './components/AuthInputCode';
 import "./styles/auth.css";
->>>>>>> e4ba7e8c24a3479404664fac695beb643fadae0a
+import { useCountdown } from '../../hooks/useTimer';
+
 
 
 export default function Recovery() {
     const { t } = useTranslation(['auth', 'error']);
-    const navigate = useNavigate();
+    const { secondsLeft, isRunning, start } = useCountdown(60);
 
     const [step, setStep] = useState(1);
 
@@ -24,6 +21,7 @@ export default function Recovery() {
 
     const [email, setEmail] = useState('');
     const [codeArray, setCodeArray] = useState(Array(6).fill(''));
+    const code = codeArray.join("");
 
     const [buttonError, setButtonError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +42,8 @@ export default function Recovery() {
         return clientErrors.email || clientErrors.code;
     };
 
+
+
     const handleRequest = async (e) => {
         e.preventDefault();
         setButtonError('');
@@ -52,43 +52,62 @@ export default function Recovery() {
             return;
         }
         setIsLoading(true);
-        try {
-            await sendCodeRecovery({ email });
-            setStep(2);
-        } catch {
-            setButtonError(t('recovery.error.server-off'));
-            setTimeout(() => setButtonError(''), 3000);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
-    const handleConfirm = async (e) => {
-        e.preventDefault();
-        setButtonError('');
-        if (validate('code')) {
-            setButtonError(t('recovery.error.incorrect_data'));
-            return;
-        }
-        setIsLoading(true);
-        const code = codeArray.join('');
         try {
-            await recovery({ email, code });
-            navigate("/update-password")
+            const delay = new Promise(resolve => setTimeout(resolve, 1500));
+            sendCodeRecovery({ email }).catch(() => { });
+            await delay;
+            setStep(2);
         } catch (err) {
-            const error = err.response?.data?.error;
-            if (error === 'ERROR_INVALID_CODE') {
-                setErrors({ email: false, code: true, backend: true });
-                setButtonError(t(`error:${error}`));
+            if (err.response?.data?.error === "ERROR_RATE_LIMIT_EXCEEDED") {
+                console.log(err.response.data.error);
+                setButtonError(t('ERROR_RATE_LIMIT_EXCEEDED'))
             } else {
                 setButtonError(t('recovery.error.server-off'));
                 setTimeout(() => setButtonError(''), 3000);
             }
         } finally {
             setIsLoading(false);
-            setCodeArray(Array(6).fill(''));
         }
     };
+
+    const handleConfirm = async (e) => {
+        e?.preventDefault(); // вызов только если e есть
+        submitCode(code);
+    };
+
+    const submitCode = async () => {
+        setButtonError("");
+        const validationError = validate('code'); // всегда проверяем код
+        if (validationError) {
+            setButtonError(t("activate.error.incorrect_data"));
+            return;
+        }
+        setIsLoading(true);
+        const code = codeArray.join('');
+        try {
+            await recovery({ email, code });
+        } catch (err) {
+            const error = err.response?.data?.error;
+            if (error === 'ERROR_INVALID_CODE') {
+                console.log("Invalid code");
+                setErrors({ email: false, code: true, backend: true });
+                setButtonError(t(`error:${error}`));
+            } else if (error === 'ERROR_RATE_LIMIT_EXCEEDED') {
+                start();
+                setButtonError(t(`error:${error}`));
+                return;
+            }
+            else {
+                setButtonError(t('recovery.error.server-off'));
+                setTimeout(() => setButtonError(''), 3000);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
 
     const handleBack = () => {
         setStep(1);
@@ -96,6 +115,12 @@ export default function Recovery() {
         setButtonError('');
         setCodeArray(Array(6).fill(''));
     };
+
+    useEffect(() => {
+        if (codeArray.every((c) => c.trim() !== "")) {
+            submitCode();
+        }
+    }, [codeArray]);
 
     return (
         <div className="auth-container">
@@ -158,27 +183,25 @@ export default function Recovery() {
 
                     <AuthInputCode
                         valueArray={codeArray}
-                        setValueArray={setCodeArray}
+                        setValueArray={isRunning ? () => { } : setCodeArray}
                         error={errors.code}
                         resetError={() => {
                             setErrors(defaultErrors);
                             setButtonError('');
                         }}
-                        onComplete={() => {
-                            setTimeout(() => {
-                                handleConfirm(new Event("submit"));
-                            }, 100);
-                        }}
+                        onComplete={(final) => !isRunning && submitCode(final)}
+                        disabled={isRunning}
                     />
+
 
                     <button
                         type="submit"
-                        className={`auth-button ${buttonError ? 'error' : ''} ${isLoading ? 'loading' : ''
-                            }`}
-                        disabled={!!buttonError || isLoading}
+                        className={`auth-button ${buttonError ? 'error' : ''} ${isLoading ? 'loading' : ''}`}
+                        disabled={!!buttonError || isLoading || isRunning}
                     >
                         {buttonError || t('recovery.submit-confirm')}
                     </button>
+
                     <div className="auth-footer">
                         <div className="auth-footer__option">
                             <Link onClick={handleBack} className="auth-footer__link">

@@ -9,16 +9,25 @@ const RouteGuard = ({ children, meta }) => {
     const { profile, isLoading } = useProfile();
 
     useEffect(() => {
-        const resetPaths = ["/", "/activate"];
+
+        console.log({ profile, location, isAuthenticated, authPhase, sessionStorage });
+
+        const resetPaths = ["/", "/activate", "/reset-password"];
         if (resetPaths.includes(location.pathname) && authPhase !== "") {
+            console.log("reset authPhase");
             setAuthPhase("");
+
         }
-    }, [location.pathname, authPhase, setAuthPhase]);
+        if (location.pathname === "/" && sessionStorage.getItem("recoveryCode")) {
+            sessionStorage.removeItem("recoveryCode")
+        }
+    }, [location.pathname, authPhase, setAuthPhase, profile,]);
 
     if (isLoading) return null;
 
     if (isAuthenticated) {
         if (authPhase === "login" && !profile.activate) {
+            console.log("authPhase === login && !activate");
             return <Navigate to="/activate" replace />;
         }
 
@@ -27,14 +36,21 @@ const RouteGuard = ({ children, meta }) => {
         }
 
         if (meta?.guestOnly) {
+            console.log("meta?.guestOnly");
             return <Navigate to="/" replace />;
         }
 
         if (meta?.activationRequired && !profile.activate) {
+            console.log("meta?.activationRequired && !profile.activate");
             return <Navigate to="/activate" replace />;
         }
 
+        if (meta?.onlyIfRecovery && !sessionStorage.getItem("recoveryCode")) {
+            return <Navigate to="/" replace />;
+        }
+
         if (meta?.onlyIfNotActivated && profile.activate) {
+            console.log("meta?.onlyIfNotActivated && profile.activate");
             return <Navigate to="/" replace />;
         }
 

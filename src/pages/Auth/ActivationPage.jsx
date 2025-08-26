@@ -14,59 +14,27 @@ const Activation = () => {
   const { secondsLeft, isRunning, start } = useCountdown(60);
 
   const [codeArray, setCodeArray] = useState(Array(6).fill(""));
+  const code = codeArray.join("");
   const [buttonError, setButtonError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const defaultErrors = {
-    code: false,
-    backend: false,
-  };
-
+  const defaultErrors = { code: false, backend: false, };
   const [errors, setErrors] = useState(defaultErrors);
 
-  // Валидация перед отправкой
-  const code = codeArray.join("");
-
-  const validate = () => {
-    const clientErrors = { code: false };
-    if (code.length !== 6) {
-      clientErrors.code = true;
-    }
-    setErrors({ code: clientErrors.code });
-    return clientErrors.code;
+  const validate = (value) => {
+    const codeToCheck = value ?? code;
+    const hasError = codeToCheck.length !== 6;
+    setErrors({ code: hasError });
+    return hasError;
   };
 
-  useEffect(() => {
-    document.querySelector(".auth-input")?.focus();
-  }, []);
-
-  const handleSubmit = async (e) => {
+  //Отправка формы
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setButtonError("");
-    const validationError = validate();
-    if (validationError) {
-      setButtonError(t('activate.error.incorrect_data'));
-      return;
-    }
-    setIsLoading(true);
-    try {
-      await activation({ code });
-    } catch (err) {
-      const error = err.response?.data?.error;
-      if (error === "ERROR_INVALID_CODE") {
-        setErrors({ code: true });
-        setButtonError(t(`error:${error}`));
-      } else {
-        setButtonError(t('activate.error.server-off'));
-        setTimeout(() => {
-          setButtonError("");
-        }, 3000);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }
+    submitCode(code);
+  };
 
+  // Повторная отрпавка кода на почту
   const handleSendCode = async (e) => {
     e.preventDefault();
     start();
@@ -74,6 +42,36 @@ const Activation = () => {
     setButtonError("");
     await sendCodeActivation()
   };
+
+  const submitCode = async (finalCode) => {
+    setButtonError("")
+    const validationError = validate?.(finalCode) ?? validate?.();
+    if (validationError) {
+      setButtonError(t("activate.error.incorrect_data"));
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await activation({ code: finalCode });
+    } catch (err) {
+      const error = err.response?.data?.error;
+      if (error === "ERROR_INVALID_CODE") {
+        setErrors({ code: true });
+        setButtonError(t(`error:${error}`));
+      } else {
+        setButtonError(t("activate.error.server-off"));
+        setTimeout(() => setButtonError(""), 3000);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+
+  useEffect(() => {
+    document.querySelector(".auth-input")?.focus();
+  }, []);
 
   return (
     <div className="auth-container">
@@ -95,11 +93,7 @@ const Activation = () => {
             setErrors(defaultErrors);
             setButtonError("");
           }}
-          onComplete={() => {
-            setTimeout(() => {
-              handleSubmit(new Event("submit"));
-            }, 100);
-          }}
+          onComplete={(final) => submitCode(final)}
         />
 
         <button

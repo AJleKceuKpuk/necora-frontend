@@ -1,9 +1,8 @@
 {
-    "ERROR_AUTH" : "Неверный E-mail или пароль",
-
-    "ERROR_USERNAME_EXISTS" : "Имя пользователя уже используется",
-    "ERROR_EMAIL_EXISTS" : "Этот email уже используется",
-    
-    "ERROR_USER_NOT_FOUND" : "Пользователь не найден",
-    "ERROR_INVALID_CODE" : "Неверный код"
+    "ERROR_AUTH": "Неверный E-mail или пароль",
+    "ERROR_USERNAME_EXISTS": "Имя пользователя уже используется",
+    "ERROR_EMAIL_EXISTS": "Этот email уже используется",
+    "ERROR_USER_NOT_FOUND": "Пользователь не найден",
+    "ERROR_INVALID_CODE": "Неверный код",
+    "ERROR_RATE_LIMIT_EXCEEDED": "Слишком много запросов"
 }

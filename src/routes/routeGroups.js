@@ -16,7 +16,7 @@ export const routes = [
     { path: '/signup', element: <Signup />, meta: { guestOnly: true } },
 
     { path: '/recovery', element: <Recovery />, meta: { guestOnly: true } },
-    { path: "/reset-password", element: <PasswordReset />, meta: { auth: true } },
+    { path: "/reset-password", element: <PasswordReset />, meta: { auth: true, onlyIfRecovery: true} },
 
     { path: '/logout', element: <Logout />, meta: { auth: true } },
     { path: '/profile', element: <About />, meta: { auth: true } },
