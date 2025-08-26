@@ -61,11 +61,14 @@ const Signup = () => {
         setIsLoading(true);
         try {
             await registration({ username, email, password });
-            
+
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === "ERROR_USERNAME_EXISTS") {
                 setErrors({ username: true, email: false, password: false, backend: true });
+                setButtonError(t(`error:${error}`));
+            } else if (error == "ERROR_EMAIL_EXISTS") {
+                setErrors({ username: false, email: true, password: false, backend: true });
                 setButtonError(t(`error:${error}`));
             } else {
                 setButtonError(t('signup.error.server-off'));

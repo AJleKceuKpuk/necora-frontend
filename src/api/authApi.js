@@ -9,6 +9,9 @@ export const loginRequest = ({ email, password }) =>
 export const recoveryRequest = ({ email, code, language }) =>
   api.post('/recovery', { email, code, language }).then(res => res);
 
+export const resetPasswordRequest = ({ password, passwordApply, code}) => 
+  api.post("/reset-password", { password, passwordApply, code}).then(res => res);
+
 export const logoutRequest = () =>
   api.post('/logout');
 

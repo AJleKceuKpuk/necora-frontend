@@ -21,7 +21,7 @@ const RouteGuard = ({ children, meta }) => {
         if (location.pathname === "/" && sessionStorage.getItem("recoveryCode")) {
             sessionStorage.removeItem("recoveryCode")
         }
-    }, [location.pathname, authPhase, setAuthPhase, profile,]);
+    }, [location.pathname, authPhase, setAuthPhase, profile, sessionStorage]);
 
     if (isLoading) return null;
 

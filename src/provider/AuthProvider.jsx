@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, } from 'react';
-import { loginRequest, registrationRequest, recoveryRequest, activationRequest, logoutRequest, activationCodeRequest, recoveryCodeRequest } from '../api/authApi';
+import { loginRequest, registrationRequest, recoveryRequest, activationRequest, logoutRequest, activationCodeRequest, recoveryCodeRequest, resetPasswordRequest } from '../api/authApi';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../hooks/useLanguage';
 import { useToken } from '../hooks/useToken';
@@ -43,6 +43,11 @@ export const AuthProvider = ({ children }) => {
         await getProfile();
         return recoveryCode;
     }, [setAccessToken, language, getProfile]);
+
+    const resetPassword = useCallback(async ({ password, passwordApply }) => {
+        const code = sessionStorage.getItem("recoveryCode");
+        await resetPasswordRequest({ password, passwordApply, code })
+    }, []);
 
     // Функция выхода
     const logout = useCallback(async () => {
@@ -117,13 +122,13 @@ export const AuthProvider = ({ children }) => {
     const contextValue = useMemo(() => ({
         isInitializing, isAuthenticated, authPhase,
 
-        login, registration, recovery, activation, logout,
+        login, registration, recovery, activation, logout, resetPassword,
         setIsAuthenticated, setAuthPhase,
         sendCodeActivation, sendCodeRecovery,
     }), [
         isInitializing, isAuthenticated, authPhase,
 
-        login, registration, recovery, activation, logout,
+        login, registration, recovery, activation, logout, resetPassword,
         setIsAuthenticated, setAuthPhase,
         sendCodeActivation, sendCodeRecovery,
     ]);
