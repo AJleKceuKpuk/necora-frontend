@@ -1,0 +1,68 @@
+.header__button {
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0);
+
+    &:hover {
+        background-color: #393939;
+        color: #00cccc;
+        transition: all 0.3s linear;
+    }
+
+    &-profile {
+        cursor: pointer;
+        border: 1px solid rgba(0, 0, 0, 0);
+        padding: 6px;
+
+        &:hover {
+            background-color: #393939;
+            transition: all 0.3s;
+        }
+    }
+}
+
+.footer-button {
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &.active {
+        background-color: #00cccc;
+        color: black;
+    }
+
+    &:hover {
+        background-color: #393939;
+        color: #00cccc;
+        transition: all 0.3s linear;
+
+        &::after {
+            opacity: 1;
+        }
+    }
+
+    &::after {
+        font-family: 'Manrope', sans-serif;
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: 115%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #222;
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease 0.5s;
+        font-size: 12px;
+        z-index: 10;
+    }
+}

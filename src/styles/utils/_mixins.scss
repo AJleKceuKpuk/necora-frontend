@@ -1,0 +1,15 @@
+@mixin image-wrapper($wrapper-size, $img-size) {
+    width: $wrapper-size;
+    height: $wrapper-size;
+
+    img {
+        width: $img-size;
+        height: $img-size;
+    }
+}
+
+@mixin hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}

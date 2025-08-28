@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import "./css/header.css";
 import icons from "../../assets/images/images";
 import { useTranslation } from 'react-i18next';
 import MenuItem from "./MenuItem";
@@ -41,20 +40,20 @@ const UserMenu = () => {
   }, [isOpen, toggleMenu]);
 
   return (
-    <div className={`header-right ${isOpen ? "hide-left" : ""}`}>
-      <div className="left-column">
-        <div className="header-user-buttons">
+    <div className={`header__right ${isOpen ? "header__right--hide-left" : ""}`}>
+      <div className="header__right-left">
+        <div className="header__right-options">
           <HeaderButton icon={icons.notification} alt="notifications" />
           <HeaderButton icon={icons.message} alt="messages" />
           <HeaderButton icon={icons.friends} alt="friends" />
         </div>
       </div>
-      <div className="right-column">
-        <div className="profile-account dropdown" ref={dropdownRef}>
-          <div className="pd-6 profile-button no-select" onClick={toggleMenu}>
+      <div className="header__right-right">
+        <div className="header__right-profile" ref={dropdownRef}>
+          <div className="header__button-profile no-select" onClick={toggleMenu}>
             {profile.username}
           </div>
-          <div className={`dropdown-content ${isOpen ? "" : "hide"}`}>
+          <div className={`header__right-dropdown ${isOpen ? "" : "header__right-dropdown--hide"}`}>
             {menuItems.map(({ to, icon, label }) => (
               <MenuItem
                 key={to}

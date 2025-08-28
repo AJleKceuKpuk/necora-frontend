@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 
-import './footer.css';
 import icons from '../../assets/images/images';
 import { useLanguage } from '../../hooks/useLanguage';
 
@@ -35,18 +34,18 @@ const Footer = () => {
 
     return (
         <div className="footer" ref={listRef}>
-            <div className='footer-lang__button no-select' onClick={toggleList}>
+            <div className='footer__lang-toggle no-select' onClick={toggleList}>
                 <div className="img-container img-36">
                     <img src={icons.language} alt="language" />
                 </div>
-                <div className='footer-lang'>{language.toUpperCase()}</div> {/* 👈 текущий язык */}
+                <div className='footer__lang-label'>{language.toUpperCase()}</div> {/* 👈 текущий язык */}
             </div>
 
-            <div className={`footer-list no-select ${showList ? 'show' : ''}`}>
+            <div className={`footer__lang-list no-select ${showList ? 'show' : ''}`}>
                 {['RU', 'EN', 'FR', 'CH', 'LV'].map((lang) => (
                     <div
                         key={lang}
-                        className={`footer-lang footer-button ${language.toUpperCase() === lang ? 'active' : ''}`}
+                        className={`footer__lang-label footer-button ${language.toUpperCase() === lang ? 'active' : ''}`}
                         onClick={() => changeLanguage(lang)}
                         data-tooltip={getTooltip(lang)}
                     >

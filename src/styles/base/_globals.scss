@@ -1,0 +1,28 @@
+.body {
+    font-family: 'Orbitron', 'sans-serif';
+    font-weight: 500;
+    font-size: 26px;
+    color: #ffffff;
+    min-height: 100vh;
+    background: url('../../assets/images/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+
+.br-5 {
+    border-radius: 5px;
+}
+
+.pd-5 {
+    padding: 5px;
+}
+
+.rotate-180 {
+    rotate: 180deg;
+}

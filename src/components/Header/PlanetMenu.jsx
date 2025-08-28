@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import "./css/header.css";
 import icons from "../../assets/images/images";
 
 const PlanetMenu = () => {
@@ -23,37 +22,37 @@ const PlanetMenu = () => {
         };
     }, [isOpen, toggleMenu]);
 
-    
+
 
 
     return (
-        <div className="planet-container no-select" ref={dropdownRef} >
-            <div className="current-planet header-button " onClick={toggleMenu}>
+        <div className="header__planet no-select" ref={dropdownRef} >
+            <div className="header__planet-current header__button " onClick={toggleMenu}>
                 <img src={icons.planet} alt="planet" />
-                <div className='planet' >Planet [1:11:11]</div>
+                <div className='header__planet-name' >Planet [1:11:11]</div>
             </div>
 
-            <div className={`dropdown-planet-content ${isOpen ? "" : "hide"}`}>
+            <div className={`header__planet-content ${isOpen ? "" : "header__planet-content--hide"}`}>
 
-                <div className="planet-container-item">
-                    <div className="planet-coordinates">[11:11:11]</div>
-                    <div className="planet-details">
-                        <div className="planet-details-left header-button current-item-planet">
-                            <div className="planet-details-info">
-                                <div className="planet-details-tittle">
+                <div className="header__planet-item">
+                    <div className="header__planet-coordinates">[11:11:11]</div>
+                    <div className="header__planet-card">
+                        <div className="header__button header__planet-active">
+                            <div className="header__planet-details">
+                                <div className="header__planet-title">
                                     <div className="img-container img-36">
                                         <img src={icons.planet} alt="planet" />
                                     </div>
-                                    <div className="planet-details-name">Planet</div>
+                                    <div className="header__planet-name">Planet</div>
                                 </div>
-                                <div className="planet-details-weaponry">
-                                    <div className="card-text">
+                                <div className="header__planet-weaponry">
+                                    <div className="header__planet-stat">
                                         <div className="img-container img-15">
                                             <img src={icons.swords} alt="planet" />
                                         </div>
                                         <div>99K</div>
                                     </div>
-                                    <div className="card-text">
+                                    <div className="header__planet-stat">
                                         <div className="img-container img-15">
                                             <img src={icons.shield} alt="planet" />
                                         </div>
@@ -62,24 +61,24 @@ const PlanetMenu = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="planet-details-right header-button">
-                            <div className="planet-details-info">
-                                <div className="planet-details-weaponry">
-                                    <div className="card-text">
+                        <div className="header__button">
+                            <div className="header__planet-details">
+                                <div className="header__planet-weaponry">
+                                    <div className="header__planet-stat">
                                         <div className="img-container img-15">
                                             <img src={icons.swords} alt="planet" />
                                         </div>
                                         <div>999B</div>
                                     </div>
-                                    <div className="card-text">
+                                    <div className="header__planet-stat">
                                         <div className="img-container img-15">
                                             <img src={icons.shield} alt="planet" />
                                         </div>
                                         <div>999T</div>
                                     </div>
                                 </div>
-                                <div className="planet-details-tittle">
-                                    <div className="planet-details-name">Moon</div>
+                                <div className="header__planet-title">
+                                    <div className="header__planet-name">Moon</div>
                                     <div className="img-container img-36">
                                         <img src={icons.moon} alt="planet" />
                                     </div>

@@ -1,4 +1,3 @@
-import './css/main.css';
 import AnimatedOutlet from '../../services/AnimatedOutlet';
 import { useAuth } from '../../hooks/useAuth';
 

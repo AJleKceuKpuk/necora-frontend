@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+a {
+    color: white;
+    text-decoration: none;
+}
+
 .no-select {
     user-select: none;
     /* Современные браузеры */

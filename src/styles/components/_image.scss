@@ -1,0 +1,19 @@
+@use '../utils/mixins';
+
+.img-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-15 {
+    @include mixins.image-wrapper(22px, 15px);
+  }
+
+.img-25 {
+    @include mixins.image-wrapper(32px, 25px);
+}
+
+.img-36 {
+    @include mixins.image-wrapper(43px, 36px);
+}
