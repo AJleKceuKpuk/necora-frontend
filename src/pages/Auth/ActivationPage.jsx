@@ -10,7 +10,8 @@ const Activation = () => {
   const { t } = useTranslation(['auth', 'error']);
   const { activation, sendCodeActivation } = useAuth();
 
-  const { secondsLeft, isRunning, start } = useCountdown(60);
+  const inputTimer = useCountdown(60);
+  const footerTimer = useCountdown(60);
 
   const [codeArray, setCodeArray] = useState(Array(6).fill(""));
   const code = codeArray.join("");
@@ -36,7 +37,7 @@ const Activation = () => {
   // Повторная отрпавка кода на почту
   const handleSendCode = async (e) => {
     e.preventDefault();
-    start();
+    footerTimer.start();
     setErrors(defaultErrors);
     setButtonError("");
     await sendCodeActivation()
@@ -54,12 +55,18 @@ const Activation = () => {
       await activation({ code: finalCode });
     } catch (err) {
       const error = err.response?.data?.error;
-      if (error === "ERROR_INVALID_CODE") {
-        setErrors({ code: true });
+      if (error === 'ERROR_INVALID_CODE') {
+        console.log("Invalid code");
+        setErrors({ email: false, code: true, backend: true });
         setButtonError(t(`error:${error}`));
-      } else {
-        setButtonError(t("activate.error.server-off"));
-        setTimeout(() => setButtonError(""), 3000);
+      } else if (error === 'ERROR_RATE_LIMIT_EXCEEDED') {
+        inputTimer.start();
+        setButtonError(t(`error:${error}`));
+        return;
+      }
+      else {
+        setButtonError(t('recovery.error.server-off'));
+        setTimeout(() => setButtonError(''), 3000);
       }
     } finally {
       setIsLoading(false);
@@ -86,13 +93,14 @@ const Activation = () => {
 
       <AuthInputCode
         valueArray={codeArray}
-        setValueArray={setCodeArray}
+        setValueArray={inputTimer.isRunning ? () => { } : setCodeArray}
         error={errors.code}
         resetError={() => {
           setErrors(defaultErrors);
-          setButtonError("");
+          setButtonError('');
         }}
-        onComplete={(final) => submitCode(final)}
+        onComplete={(final) => !inputTimer.isRunning && submitCode(final)}
+        disabled={inputTimer.isRunning}
       />
 
       <button
@@ -114,10 +122,10 @@ const Activation = () => {
           </span>
           <button
             className="auth__footer-button"
-            disabled={isRunning}
+            disabled={footerTimer.isRunning}
             onClick={handleSendCode}
             data-seconds-label={t('activate.time')}
-            data-seconds={secondsLeft}
+            data-seconds={footerTimer.secondsLeft}
           >
             {t('activate.have-account-link')}
           </button>

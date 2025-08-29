@@ -13,9 +13,9 @@ import { useCountdown } from '../../hooks/useTimer';
 
 export default function Recovery() {
     const { t } = useTranslation(['auth', 'error']);
-    const { secondsLeft, isRunning, start } = useCountdown(60);
+    const { isRunning, start } = useCountdown(60);
 
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(1);z
 
     const { recovery, sendCodeRecovery } = useAuth();
 

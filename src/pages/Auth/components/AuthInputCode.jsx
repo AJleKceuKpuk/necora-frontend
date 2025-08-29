@@ -62,13 +62,7 @@ const AuthInputCode = ({
 
     return (
         <div
-            className={`
-                auth__form-code 
-                ${error
-                    ? 'auth__form-code--error'
-                    : ''} ${disabled
-                        ? 'auth__form-code--disabled'
-                        : ''}`}
+            className={`auth__form-code ${error ? 'auth__form-code--error' : ''} ${disabled ? 'auth__form-code--disabled' : ''}`}
             onPaste={handlePaste}
         >
             {valueArray.map((val, i) => (
