@@ -10,7 +10,7 @@ import PasswordReset from "../pages/Auth/PasswordResetPage";
 export const routes = [
 
     { path: '/', element: <Start />, meta: { public: true } },
-    { path: '/forum', element: <About />, meta: { public: true } },
+    { path: '/forum', element: <About />, meta: { public: true , activationRequired: true} },
 
     { path: '/signin', element: <Signin />, meta: { guestOnly: true } },
     { path: '/signup', element: <Signup />, meta: { guestOnly: true } },

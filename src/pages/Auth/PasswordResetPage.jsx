@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
 import icons from "../../assets/images/images";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, replace, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/useAuth";
 import AuthInput from "./components/AuthInput";
+import { useProfile } from "../../provider/ProfileProvider";
+import { useTransition } from "../../components/Overlay/OverlayContext";
 
 const PasswordReset = () => {
     const { t } = useTranslation(['auth', 'error']);
     const { resetPassword } = useAuth();
+    const { profile } = useProfile();
     const navigate = useNavigate();
+    const { showOverlay } = useTransition();
 
     const [password, setPassword] = useState('');
     const [passwordApply, setPasswordApply] = useState('');
@@ -55,7 +59,10 @@ const PasswordReset = () => {
         try {
             await resetPassword({ password, passwordApply })
             sessionStorage.removeItem("recoveryCode");
-            navigate("/");
+            showOverlay(`Пароль успешно изменен!`, "");
+            setTimeout(() => {
+                navigate("/", replace)
+            }, 3000);
         } catch (err) {
             setButtonError(t('reset-password.error.server-off'));
             setTimeout(() => {

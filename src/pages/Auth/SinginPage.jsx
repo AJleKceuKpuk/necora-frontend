@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, replace, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import icons from "../../assets/images/images";
 import { useAuth } from "../../hooks/useAuth";
+import { useProfile } from "../../provider/ProfileProvider";
+import { useTransition } from "../../components/Overlay/OverlayContext";
 
 const Signin = () => {
   const { t } = useTranslation(['auth', 'error']);
   const { login } = useAuth();
+  const { showOverlay } = useTransition();
+
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -56,7 +60,20 @@ const Signin = () => {
     }
     setIsLoading(true);
     try {
-      await login({ email, password });
+      const profile = await login({ email, password });
+      if (profile.activate) {
+        showOverlay(`${profile.username}, добро пожаловать!`, "Вы успешно вошли в систему.");
+        setTimeout(() => {
+          navigate("/", replace)
+        }, 3000);
+      } else {
+        showOverlay(`${profile.username}, добро пожаловать!`, "Вы успешно вошли в систему.");
+        setTimeout(() => {
+          navigate("/activate", replace)
+        }, 3000);
+
+      }
+
     } catch (err) {
       const error = err.response?.data?.error;
       if (error === "ERROR_AUTH") {

@@ -9,6 +9,8 @@ export const TokenProvider = ({ children }) => {
         localStorage.getItem('accessToken')
     );
 
+
+
     // Попытка обновить токен
     const refresh = useCallback(async () => {
         const token = await refreshToken();
@@ -25,7 +27,7 @@ export const TokenProvider = ({ children }) => {
             const { exp } = jwtDecode(token);
             if (exp * 1000 < Date.now()) {
                 console.log("Истек");
-                
+
                 await refresh();
             }
             return true;
@@ -37,8 +39,7 @@ export const TokenProvider = ({ children }) => {
     // Инициализация при старте
     useEffect(() => {
         (async () => {
-            const token = accessToken;
-            const valid = await validateToken(token);
+            const valid = await validateToken(accessToken);
             if (!valid) {
                 localStorage.removeItem('accessToken');
                 setAccessToken(null);

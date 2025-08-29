@@ -22,6 +22,8 @@ export const ProfileProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const getProfile = async () => {
+        console.log("getProfile");
+        
         setIsLoading(true)
         const user = await getProfileRequest();
         setProfile(user);

@@ -5,10 +5,16 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../../hooks/useAuth";
 import { useCountdown } from "../../hooks/useTimer";
 import AuthInputCode from "./components/AuthInputCode";
+import { replace, useNavigate } from "react-router-dom";
+import { useTransition } from "../../components/Overlay/OverlayContext";
+import { useProfile } from "../../provider/ProfileProvider";
 
 const Activation = () => {
   const { t } = useTranslation(['auth', 'error']);
   const { activation, sendCodeActivation } = useAuth();
+  const { profile } = useProfile();
+  const { showOverlay } = useTransition();
+  const navigate = useNavigate();
 
   const inputTimer = useCountdown(60);
   const footerTimer = useCountdown(60);
@@ -53,6 +59,10 @@ const Activation = () => {
     setIsLoading(true);
     try {
       await activation({ code: finalCode });
+      showOverlay(`${profile.username}, Активация прошла успешно!`, "Все функции доступны!");
+      setTimeout(() => {
+        navigate("/", replace)
+      }, 3000);
     } catch (err) {
       const error = err.response?.data?.error;
       if (error === 'ERROR_INVALID_CODE') {

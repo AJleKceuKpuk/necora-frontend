@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import icons from "../../assets/images/images";
-import { Link } from 'react-router-dom';
+import { Link, replace, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/useAuth";
 import AuthInput from "./components/AuthInput";
+import { useTransition } from "../../components/Overlay/OverlayContext";
 
 const Signup = () => {
     const { t } = useTranslation(['auth', 'error']);
     const { registration } = useAuth();
+    const navigate = useNavigate();
+    const { showOverlay } = useTransition();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -60,7 +63,10 @@ const Signup = () => {
         setIsLoading(true);
         try {
             await registration({ username, email, password });
-
+            showOverlay(`${username}, добро пожаловать!`, "Вы успешно зарегестрировались.");
+            setTimeout(() => {
+                navigate("/activate", replace)
+            }, 3000);
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === "ERROR_USERNAME_EXISTS") {

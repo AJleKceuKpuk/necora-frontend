@@ -2,6 +2,7 @@
     flex-grow: 1;
     overflow: hidden;
     display: grid;
+
     grid-template-columns: minmax(200px, 310px) 1fr minmax(200px, 310px);
 
     &__left--game,

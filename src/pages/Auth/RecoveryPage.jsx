@@ -1,19 +1,22 @@
 // src/pages/RecoveryPage.jsx
 
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, replace, useNavigate } from 'react-router-dom'
 import icons from '../../assets/images/images';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import AuthInputCode from './components/AuthInputCode';
 
 import { useCountdown } from '../../hooks/useTimer';
+import { useTransition } from '../../components/Overlay/OverlayContext';
 
 
 
 export default function Recovery() {
     const { t } = useTranslation(['auth', 'error']);
     const { isRunning, start } = useCountdown(60);
+    const navigate = useNavigate();
+    const { showOverlay } = useTransition();
 
     const [step, setStep] = useState(1);
 
@@ -86,6 +89,10 @@ export default function Recovery() {
         const code = codeArray.join('');
         try {
             await recovery({ email, code });
+            showOverlay(`Код принят!`, "Вы успешно вошли в систему.");
+            setTimeout(() => {
+                navigate("/reset-password", replace)
+            }, 3000);
         } catch (err) {
             const error = err.response?.data?.error;
             if (error === 'ERROR_INVALID_CODE') {

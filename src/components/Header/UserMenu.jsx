@@ -51,7 +51,7 @@ const UserMenu = () => {
       <div className="header__right-right">
         <div className="header__right-profile" ref={dropdownRef}>
           <div className="header__button-profile no-select" onClick={toggleMenu}>
-            {profile.username}
+            {profile?.username}
           </div>
           <div className={`header__right-dropdown ${isOpen ? "" : "header__right-dropdown--hide"}`}>
             {menuItems.map(({ to, icon, label }) => (

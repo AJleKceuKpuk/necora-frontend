@@ -5,6 +5,7 @@ import { useLanguage } from '../hooks/useLanguage';
 import { useToken } from '../hooks/useToken';
 import { useProfile } from './ProfileProvider';
 
+
 export const AuthProvider = ({ children }) => {
     const [isInitializing, setIsInitializing] = useState(true);
     const [authPhase, setAuthPhase] = useState("");
@@ -14,22 +15,23 @@ export const AuthProvider = ({ children }) => {
     const { setAccessToken, accessToken, validateToken } = useToken();
     const { getProfile, setProfile, profile, isLoading } = useProfile();
 
+
     // Функция входа!
     const login = useCallback(async ({ email, password }) => {
         const token = await loginRequest({ email, password });
         localStorage.setItem('accessToken', token);
-        const profile = await getProfile();
+        setAccessToken(token);
         setAuthPhase("login");
-        setIsAuthenticated(true); // только после профиля
-        return true;
-    }, [setAccessToken]);
+        const user = await getProfile();
+        return user;
+    }, [setAccessToken, getProfile]);
 
     // Функция регистрации
     const registration = useCallback(async ({ username, email, password }) => {
         const token = await registrationRequest({ username, email, password, language });
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
-        setAuthPhase("login");
+        setAuthPhase("registration");
         sendCodeActivation();
     }, [setAccessToken, language]);
 
@@ -42,8 +44,6 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
         setAuthPhase("recovery");
-        await getProfile();
-        return recoveryCode;
     }, [setAccessToken, language, getProfile]);
 
     const resetPassword = useCallback(async ({ password, passwordApply }) => {
@@ -53,8 +53,6 @@ export const AuthProvider = ({ children }) => {
 
     // Функция выхода
     const logout = useCallback(async () => {
-        console.log("logout()");
-
         const token = localStorage.getItem('accessToken');
         if (token) {
             try {
@@ -73,7 +71,6 @@ export const AuthProvider = ({ children }) => {
     const activation = useCallback(async ({ code }) => {
         const username = profile?.username;
         await activationRequest({ username, code });
-        await getProfile();
     }, [profile, getProfile]);
 
     // Функция отправки кода активации
@@ -86,47 +83,30 @@ export const AuthProvider = ({ children }) => {
         await recoveryCodeRequest({ email, language });
     }, [language]);
 
-    // Валидация сессии
-    const validateSession = useCallback(
-
+    const initSession = useCallback(
         async (overrideToken) => {
-            console.log("validateSession");
-
-
             const tokenToCheck = overrideToken ?? accessToken;
-            const isValid = await validateToken(tokenToCheck);
-            console.log({ isAuthenticated, profile, isValid, tokenToCheck, isLoading });
-
-            if (isLoading) return null;
-            if (isValid && tokenToCheck) {
-                setIsAuthenticated(true);
-                try {
-                    await getProfile();
-                } catch (e) {
-                    console.log("catch logout");
-
+            try {
+                const isValid = await validateToken(tokenToCheck);
+                if (tokenToCheck && isValid) {
+                    try {
+                        await getProfile();
+                        setIsAuthenticated(true);
+                    } catch (e) {
+                        await logout();
+                    }
+                } else {
                     await logout();
                 }
-            } else {
-                console.log("else logout");
-
-                //await logout();
+            } catch (e) {
+                console.error(e?.response?.data?.error || e.message);
+                await logout();
+            } finally {
+                setIsInitializing(false);
             }
         },
-        [validateToken, logout, getProfile, accessToken]
+        [accessToken, isAuthenticated, isLoading, validateToken, getProfile, logout]
     );
-
-    //Инициализация сессии
-    const initSession = useCallback(async () => {
-        try {
-            await validateSession();
-        } catch (e) {
-            console.error(e?.response?.data?.error || e.message);
-            await logout();
-        } finally {
-            setIsInitializing(false);
-        }
-    }, [validateSession, logout]);
 
     // Инициализация сессии при монтировании
     useEffect(() => {
