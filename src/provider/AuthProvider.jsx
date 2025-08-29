@@ -12,14 +12,16 @@ export const AuthProvider = ({ children }) => {
 
     const { language } = useLanguage();
     const { setAccessToken, accessToken, validateToken } = useToken();
-    const { getProfile, setProfile, profile } = useProfile();
+    const { getProfile, setProfile, profile, isLoading } = useProfile();
 
     // Функция входа!
     const login = useCallback(async ({ email, password }) => {
         const token = await loginRequest({ email, password });
         localStorage.setItem('accessToken', token);
-        setAccessToken(token);
+        const profile = await getProfile();
         setAuthPhase("login");
+        setIsAuthenticated(true); // только после профиля
+        return true;
     }, [setAccessToken]);
 
     // Функция регистрации
@@ -51,6 +53,8 @@ export const AuthProvider = ({ children }) => {
 
     // Функция выхода
     const logout = useCallback(async () => {
+        console.log("logout()");
+
         const token = localStorage.getItem('accessToken');
         if (token) {
             try {
@@ -84,18 +88,29 @@ export const AuthProvider = ({ children }) => {
 
     // Валидация сессии
     const validateSession = useCallback(
+
         async (overrideToken) => {
+            console.log("validateSession");
+
+
             const tokenToCheck = overrideToken ?? accessToken;
             const isValid = await validateToken(tokenToCheck);
+            console.log({ isAuthenticated, profile, isValid, tokenToCheck, isLoading });
+
+            if (isLoading) return null;
             if (isValid && tokenToCheck) {
                 setIsAuthenticated(true);
                 try {
                     await getProfile();
                 } catch (e) {
+                    console.log("catch logout");
+
                     await logout();
                 }
             } else {
-                await logout();
+                console.log("else logout");
+
+                //await logout();
             }
         },
         [validateToken, logout, getProfile, accessToken]

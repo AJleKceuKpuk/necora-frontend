@@ -10,62 +10,63 @@ const RouteGuard = ({ children, meta }) => {
 
     useEffect(() => {
 
-        console.log({ profile, location, isAuthenticated, authPhase, sessionStorage });
+        //console.log({ profile, location, isAuthenticated, isLoading });
+        // const resetPaths = ["/", "/activate", "/reset-password"];
+        // if (resetPaths.includes(location.pathname) && authPhase !== "") {
+        //     console.log("reset authPhase");
+        //     setAuthPhase("");
 
-        const resetPaths = ["/", "/activate", "/reset-password"];
-        if (resetPaths.includes(location.pathname) && authPhase !== "") {
-            console.log("reset authPhase");
-            setAuthPhase("");
+        // }
+        // if (location.pathname === "/" && sessionStorage.getItem("recoveryCode")) {
+        //     sessionStorage.removeItem("recoveryCode")
+        // }
+    }, [location.pathname, profile, sessionStorage, isLoading, isAuthenticated]);
 
-        }
-        if (location.pathname === "/" && sessionStorage.getItem("recoveryCode")) {
-            sessionStorage.removeItem("recoveryCode")
-        }
-    }, [location.pathname, authPhase, setAuthPhase, profile, sessionStorage]);
+    // if (!isAuthenticated  && isLoading) {
+    //     return null; // или <LoadingScreen />
+    // }
 
-    if (isLoading) return null;
+    // if (isAuthenticated) {
+    //     if (authPhase === "login" && !profile.activate) {
+    //         console.log("authPhase === login && !activate");
+    //         return <Navigate to="/activate" replace />;
+    //     }
 
-    if (isAuthenticated) {
-        if (authPhase === "login" && !profile.activate) {
-            console.log("authPhase === login && !activate");
-            return <Navigate to="/activate" replace />;
-        }
+    //     if (authPhase === "recovery") {
+    //         return <Navigate to="/reset-password" replace />;
+    //     }
 
-        if (authPhase === "recovery") {
-            return <Navigate to="/reset-password" replace />;
-        }
+    //     if (meta?.guestOnly) {
+    //         console.log("meta?.guestOnly");
+    //         return <Navigate to="/" replace />;
+    //     }
 
-        if (meta?.guestOnly) {
-            console.log("meta?.guestOnly");
-            return <Navigate to="/" replace />;
-        }
+    //     if (meta?.activationRequired && !profile.activate) {
+    //         console.log("meta?.activationRequired && !profile.activate");
+    //         return <Navigate to="/activate" replace />;
+    //     }
 
-        if (meta?.activationRequired && !profile.activate) {
-            console.log("meta?.activationRequired && !profile.activate");
-            return <Navigate to="/activate" replace />;
-        }
+    //     if (meta?.onlyIfRecovery && !sessionStorage.getItem("recoveryCode")) {
+    //         return <Navigate to="/" replace />;
+    //     }
 
-        if (meta?.onlyIfRecovery && !sessionStorage.getItem("recoveryCode")) {
-            return <Navigate to="/" replace />;
-        }
+    //     if (meta?.onlyIfNotActivated && profile.activate) {
+    //         console.log("meta?.onlyIfNotActivated && profile.activate");
+    //         return <Navigate to="/" replace />;
+    //     }
 
-        if (meta?.onlyIfNotActivated && profile.activate) {
-            console.log("meta?.onlyIfNotActivated && profile.activate");
-            return <Navigate to="/" replace />;
-        }
-
-        if (meta?.roles) {
-            const userRoles = profile.roles || [];
-            const hasAccess = meta.roles.some(role => userRoles.includes(role));
-            if (!hasAccess) {
-                return <Navigate to="/" replace />;
-            }
-        }
-    } else {
-        if (meta?.auth) {
-            return <Navigate to="/signin" replace />;
-        }
-    }
+    //     if (meta?.roles) {
+    //         const userRoles = profile.roles || [];
+    //         const hasAccess = meta.roles.some(role => userRoles.includes(role));
+    //         if (!hasAccess) {
+    //             return <Navigate to="/" replace />;
+    //         }
+    //     }
+    // } else {
+    //     if (meta?.auth) {
+    //         return <Navigate to="/signin" replace />;
+    //     }
+    // }
 
     return children;
 };

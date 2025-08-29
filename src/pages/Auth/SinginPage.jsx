@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import icons from "../../assets/images/images";
 import { useAuth } from "../../hooks/useAuth";
@@ -7,6 +7,7 @@ import { useAuth } from "../../hooks/useAuth";
 const Signin = () => {
   const { t } = useTranslation(['auth', 'error']);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
