@@ -1,4 +1,3 @@
-import "./start.css"
 import icons from "../../assets/images/images";
 import { Link } from 'react-router-dom';
 
@@ -11,10 +10,10 @@ const Start = () => {
 
   return (
     <div className='start-page'>
-      <img className='start-logo' src={icons.logo} alt="logo" />
+      <img className='start-page__logo' src={icons.logo} alt="logo" />
       {isAuthenticated
-        ? <Link to="/game" className="btn-play no-select" >{t('start.play')}</Link>
-        : <Link to="/signin" className="btn-play no-select" >{t('start.signin')}</Link>}
+        ? <Link to="/game" className="start-page__button no-select" >{t('start.play')}</Link>
+        : <Link to="/signin" className="start-page__button no-select" >{t('start.signin')}</Link>}
     </div>
   );
 };

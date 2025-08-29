@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import icons from "../../assets/images/images";
-import "./styles/auth.css";
 import { useAuth } from "../../hooks/useAuth";
 
 const Signin = () => {
@@ -72,61 +71,59 @@ const Signin = () => {
   };
 
   return (
-    <div className="auth-container">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <img src={icons.logo} alt={t('signin.logo-alt')} className="auth-logo" />
-        <h2 className="auth-title no-select">{t('signin.title')}</h2>
+    <form className="auth__form" onSubmit={handleSubmit}>
+      <img src={icons.logo} alt={t('signin.logo-alt')} className="auth__form-logo" />
+      <h2 className="auth__form-title no-select">{t('signin.title')}</h2>
 
-        <input
-          type="text"
-          placeholder={t('email-input')}
-          className={`auth-input ${errors.email ? "error" : ""}`}
-          value={email}
-          autoComplete="current-email"
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setErrors({ email: false, password: false });
-            setButtonError("");
-          }}
-        />
+      <input
+        type="text"
+        placeholder={t('email-input')}
+        className={`auth__form-input ${errors.email ? "auth__form-input--error" : ""}`}
+        value={email}
+        autoComplete="current-email"
+        onChange={(e) => {
+          setEmail(e.target.value);
+          setErrors({ email: false, password: false });
+          setButtonError("");
+        }}
+      />
 
-        <input
-          type="password"
-          placeholder={t('password-input')}
-          className={`auth-input ${errors.password ? "error" : ""}`}
-          value={password}
-          autoComplete="current-password"
-          onChange={(e) => {
-            setPassword(e.target.value);
-            setErrors({ email: false, password: false });
-            setButtonError("");
-          }}
-        />
+      <input
+        type="password"
+        placeholder={t('password-input')}
+        className={`auth__form-input ${errors.password ? "auth__form-input--error" : ""}`}
+        value={password}
+        autoComplete="current-password"
+        onChange={(e) => {
+          setPassword(e.target.value);
+          setErrors({ email: false, password: false });
+          setButtonError("");
+        }}
+      />
 
-        <button
-          type="submit"
-          className={`auth-button ${hasErrors ? "error" : ""} ${isLoading ? "loading" : ""}`}
-          disabled={hasErrors || isLoading}
-        >
-          {buttonError || t('signin.submit')}
-        </button>
+      <button
+        type="submit"
+        className={`auth__button ${hasErrors ? "auth__button--error" : ""} ${isLoading ? "auth__button--loading" : ""}`}
+        disabled={hasErrors || isLoading}
+      >
+        {buttonError || t('signin.submit')}
+      </button>
 
 
-        <div className="auth-footer">
-          <div className="auth-footer__option">
-            <Link to="/recovery" className="auth-footer__link">
-              {t('signin.forgot-password')}
-            </Link>
-          </div>
-          <div className="auth-footer__option">
-            <span className="auth-footer__label">{t('signin.no-account-label')}</span>
-            <Link to="/signup" className="auth-footer__link">
-              {t('signin.no-account-link')}
-            </Link>
-          </div>
+      <div className="auth__footer">
+        <div className="auth__footer-option">
+          <Link to="/recovery" className="auth__footer-link">
+            {t('signin.forgot-password')}
+          </Link>
         </div>
-      </form>
-    </div >
+        <div className="auth__footer-option">
+          <span className="auth__footeк-label">{t('signin.no-account-label')}</span>
+          <Link to="/signup" className="auth__footer-link">
+            {t('signin.no-account-link')}
+          </Link>
+        </div>
+      </div>
+    </form>
   );
 };
 

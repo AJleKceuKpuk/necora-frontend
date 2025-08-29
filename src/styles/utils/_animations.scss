@@ -1,0 +1,40 @@
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+//auth button
+@keyframes loading-border {
+    0% {
+        left: -75%;
+        opacity: 1;
+    }
+
+    99% {
+        opacity: 1;
+    }
+
+    100% {
+        left: 175%;
+        opacity: 0;
+    }
+}
+
+//auth button
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}

@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/useAuth";
 import AuthInput from "./components/AuthInput";
-import "./styles/auth.css";
 
 const PasswordReset = () => {
     const { t } = useTranslation(['auth', 'error']);
@@ -69,55 +68,58 @@ const PasswordReset = () => {
     };
 
     return (
-        <div className="auth-container">
-            <form className="auth-form" onSubmit={handleSubmit}>
-                <img src={icons.logo} alt={t('?.logo-alt')} className="auth-logo" />
-                <h2 className="auth-title no-select">{t('?.title')}</h2>
-                <AuthInput
-                    type="password"
-                    value={password}
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                        setErrors(defaultErrors);
-                        setButtonError("");
-                    }}
-                    placeholderKey="password-input"
-                    hasError={errors.password}
-                    errorKey="signup.error.password_invalid_format"
-                    showError={errors.password}
-                    autoComplete="current-password"
-                />
 
-                <AuthInput
-                    type="password"
-                    value={passwordApply}
-                    onChange={(e) => {
-                        setPasswordApply(e.target.value);
-                        setErrors(defaultErrors);
-                        setButtonError("");
-                    }}
-                    placeholderKey="password-input"
-                    hasError={errors.passwordApply}
-                    errorKey=".error.password_invalid_format"
-                    showError={errors.passwordApply}
-                    autoComplete="current-password"
-                />
+        <form className="auth__form" onSubmit={handleSubmit}>
+            <img src={icons.logo} alt={t('?.logo-alt')} className="auth__form-logo" />
+            <h2 className="auth__form-title no-select">{t('?.title')}</h2>
+            <AuthInput
+                type="password"
+                value={password}
+                onChange={(e) => {
+                    setPassword(e.target.value);
+                    setErrors(defaultErrors);
+                    setButtonError("");
+                }}
+                placeholderKey="password-input"
+                hasError={errors.password}
+                errorKey="signup.error.password_invalid_format"
+                showError={errors.password}
+                autoComplete="current-password"
+            />
 
-                <button
-                    type='submit'
-                    className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
-                    disabled={!!buttonError || isLoading}
-                >
-                    {buttonError || t('?.submit')}
-                </button>
-                <div className="auth-footer">
-                    <div className="auth-footer__option">
-                        <Link to="/" className="auth-footer__link">{t('?.have-account-link')}</Link>
-                    </div>
+            <AuthInput
+                type="password"
+                value={passwordApply}
+                onChange={(e) => {
+                    setPasswordApply(e.target.value);
+                    setErrors(defaultErrors);
+                    setButtonError("");
+                }}
+                placeholderKey="password-input"
+                hasError={errors.passwordApply}
+                errorKey=".error.password_invalid_format"
+                showError={errors.passwordApply}
+                autoComplete="current-password"
+            />
+
+            <button
+                type='submit'
+                className={`auth__button ${buttonError
+                    ? "auth__button--error"
+                    : ""} ${isLoading
+                        ? "auth__button--loading"
+                        : ""}`}
+                disabled={!!buttonError || isLoading}
+            >
+                {buttonError || t('?.submit')}
+            </button>
+            <div className="auth__footer">
+                <div className="auth__footer-option">
+                    <Link to="/" className="auth__footer-link">{t('?.have-account-link')}</Link>
                 </div>
+            </div>
 
-            </form>
-        </div>
+        </form>
     );
 };
 

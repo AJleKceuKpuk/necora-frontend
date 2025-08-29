@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import icons from "../../assets/images/images";
-import "./styles/auth.css";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../hooks/useAuth";
 import { useCountdown } from "../../hooks/useTimer";
@@ -74,54 +73,58 @@ const Activation = () => {
   }, []);
 
   return (
-    <div className="auth-container">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <img src={icons.logo} alt="signin logo" className="auth-logo" />
-        <h2 className="auth-title no-select">{t('activate.title')}</h2>
 
-        <div className="auth-message no-select">
-          {t('activate.email-sent-start')}
-          <b className="auth-description__span">{t('activate.email-word')}</b>
-          {t('activate.email-sent-end')}
+    <form className="auth__form" onSubmit={handleSubmit}>
+      <img src={icons.logo} alt="signin logo" className="auth__form-logo" />
+      <h2 className="auth__form-title no-select">{t('activate.title')}</h2>
+
+      <div className="auth__form-description no-select">
+        {t('activate.email-sent-start')}
+        <b className="auth__form-span">{t('activate.email-word')}</b>
+        {t('activate.email-sent-end')}
+      </div>
+
+      <AuthInputCode
+        valueArray={codeArray}
+        setValueArray={setCodeArray}
+        error={errors.code}
+        resetError={() => {
+          setErrors(defaultErrors);
+          setButtonError("");
+        }}
+        onComplete={(final) => submitCode(final)}
+      />
+
+      <button
+        type='submit'
+        className={`auth__button ${buttonError
+          ? "auth__button--error"
+          : ""} ${isLoading
+            ? "auth__button--loading"
+            : ""}`}
+        disabled={!!buttonError || isLoading}
+      >
+        {buttonError || t('activate.submit')}
+      </button>
+
+      <div className="auth__footer">
+        <div className="auth__footer-option">
+          <span className="auth__footer-label">
+            {t('activate.have-account-label')}
+          </span>
+          <button
+            className="auth__footer-button"
+            disabled={isRunning}
+            onClick={handleSendCode}
+            data-seconds-label={t('activate.time')}
+            data-seconds={secondsLeft}
+          >
+            {t('activate.have-account-link')}
+          </button>
         </div>
+      </div>
+    </form>
 
-        <AuthInputCode
-          valueArray={codeArray}
-          setValueArray={setCodeArray}
-          error={errors.code}
-          resetError={() => {
-            setErrors(defaultErrors);
-            setButtonError("");
-          }}
-          onComplete={(final) => submitCode(final)}
-        />
-
-        <button
-          type='submit'
-          className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
-          disabled={!!buttonError || isLoading}
-        >
-          {buttonError || t('activate.submit')}
-        </button>
-
-        <div className="auth-footer">
-          <div className="auth-footer__option">
-            <span className="auth-footer__label">
-              {t('activate.have-account-label')}
-            </span>
-            <button
-              className="auth-footer__button"
-              disabled={isRunning}
-              onClick={handleSendCode}
-              data-seconds-label={t('activate.time')}
-              data-seconds={secondsLeft}
-            >
-              {t('activate.have-account-link')}
-            </button>
-          </div>
-        </div>
-      </form>
-    </div>
   );
 };
 

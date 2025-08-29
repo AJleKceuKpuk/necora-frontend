@@ -1,7 +1,5 @@
-// src/pages/RecoveryPage/components/AuthInputCode.jsx
-
 import { useEffect, useRef } from 'react';
-import './../styles/auth.css';
+
 
 const AuthInputCode = ({
     valueArray,
@@ -14,12 +12,10 @@ const AuthInputCode = ({
 }) => {
     const inputRefs = useRef([]);
 
-    // focus first on mount
     useEffect(() => {
         if (!disabled) inputRefs.current[0]?.focus();
     }, [disabled]);
 
-    // clear on error and refocus
     useEffect(() => {
         if (error) {
             setValueArray(Array(length).fill(''));
@@ -66,7 +62,13 @@ const AuthInputCode = ({
 
     return (
         <div
-            className={`code-input-wrapper ${error ? 'error' : ''} ${disabled ? 'disabled' : ''}`}
+            className={`
+                auth__form-code 
+                ${error
+                    ? 'auth__form-code--error'
+                    : ''} ${disabled
+                        ? 'auth__form-code--disabled'
+                        : ''}`}
             onPaste={handlePaste}
         >
             {valueArray.map((val, i) => (
@@ -79,7 +81,7 @@ const AuthInputCode = ({
                     onChange={e => handleChange(i, e.target.value)}
                     onKeyDown={e => handleKeyDown(i, e)}
                     disabled={disabled}
-                    className="code-input-cell"
+                    className="auth__form-code-cell"
                 />
             ))}
         </div>

@@ -1,12 +1,12 @@
 // src/pages/RecoveryPage.jsx
 
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import icons from '../../assets/images/images';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import AuthInputCode from './components/AuthInputCode';
-import "./styles/auth.css";
+
 import { useCountdown } from '../../hooks/useTimer';
 
 
@@ -123,21 +123,20 @@ export default function Recovery() {
     }, [codeArray]);
 
     return (
-        <div className="auth-container">
-
+        <div>
             {step === 1 && (
-                <form className="auth-form" onSubmit={handleRequest}>
+                <form className="auth__form" onSubmit={handleRequest}>
                     <img
                         src={icons.logo}
                         alt={t('recovery.logo-alt')}
-                        className="auth-logo"
+                        className="auth__form-logo"
                     />
-                    <h2 className="auth-title no-select">{t('recovery.title')}</h2>
-                    <div className="auth-wrapper">
+                    <h2 className="auth__form-title no-select">{t('recovery.title')}</h2>
+                    <div className="auth__form-wrapper">
                         <input
                             type="text"
                             placeholder={t('email-input')}
-                            className={`auth-input ${errors.email ? 'error' : ''}`}
+                            className={`auth__form-input ${errors.email ? 'auth__form-input--error' : ''}`}
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
@@ -148,18 +147,17 @@ export default function Recovery() {
                     </div>
                     <button
                         type="submit"
-                        className={`auth-button ${buttonError ? 'error' : ''} ${isLoading ? 'loading' : ''
-                            }`}
+                        className={`auth__button ${buttonError ? "auth__button--error" : ""} ${isLoading ? "auth-page__button--loading" : ""}`}
                         disabled={!!buttonError || isLoading}
                     >
                         {buttonError || t('recovery.submit-request')}
                     </button>
-                    <div className="auth-footer">
-                        <div className="auth-footer__option">
-                            <span className="auth-footer__label">
+                    <div className="auth__footer">
+                        <div className="auth__footer-option">
+                            <span className="auth__footer-label">
                                 {t('recovery.remember-password-label')}
                             </span>
-                            <Link to="/signin" className="auth-footer__link">
+                            <Link to="/signin" className="auth__footer-link">
                                 {t('recovery.signin-link')}
                             </Link>
                         </div>
@@ -168,16 +166,16 @@ export default function Recovery() {
             )}
 
             {step === 2 && (
-                <form className="auth-form" onSubmit={handleConfirm}>
+                <form className="auth__form" onSubmit={handleConfirm}>
                     <img
                         src={icons.logo}
                         alt={t('recovery.logo-alt')}
-                        className="auth-logo"
+                        className="auth__form-logo"
                     />
-                    <h2 className="auth-title no-select">{t('recovery.title')}</h2>
-                    <span className="auth-description no-select">
+                    <h2 className="auth__form-title no-select">{t('recovery.title')}</h2>
+                    <span className="auth__form-description no-select">
                         {t('recovery.email-sent-start')}
-                        <b className="auth-description__span">{t('recovery.email-word')}</b>
+                        <b className="auth__form-span">{t('recovery.email-word')}</b>
                         {t('recovery.email-sent-end')}
                     </span>
 
@@ -196,23 +194,27 @@ export default function Recovery() {
 
                     <button
                         type="submit"
-                        className={`auth-button ${buttonError ? 'error' : ''} ${isLoading ? 'loading' : ''}`}
+                        className={`auth__button ${buttonError
+                            ? "auth__button--error"
+                            : ""} ${isLoading
+                                ? "auth__button--loading"
+                                : ""}`}
                         disabled={!!buttonError || isLoading || isRunning}
                     >
                         {buttonError || t('recovery.submit-confirm')}
                     </button>
 
-                    <div className="auth-footer">
-                        <div className="auth-footer__option">
-                            <Link onClick={handleBack} className="auth-footer__link">
+                    <div className="auth__footer">
+                        <div className="auth__footer-option">
+                            <Link onClick={handleBack} className="auth__footer-link">
                                 Не получили код?
                             </Link>
                         </div>
-                        <div className="auth-footer__option">
-                            <span className="auth-footer__label">
+                        <div className="auth__footer-option">
+                            <span className="auth__footer-label">
                                 {t('recovery.remember-password-label')}
                             </span>
-                            <Link to="/signin" className="auth-footer__link">
+                            <Link to="/signin" className="auth__footer-link">
                                 {t('recovery.signin-link')}
                             </Link>
                         </div>

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from "../../hooks/useAuth";
 import AuthInput from "./components/AuthInput";
-import "./styles/auth.css";
 
 const Signup = () => {
     const { t } = useTranslation(['auth', 'error']);
@@ -82,72 +81,69 @@ const Signup = () => {
     };
 
     return (
-        <div className="auth-container">
-            <form className="auth-form" onSubmit={handleSubmit}>
-                <img src={icons.logo} alt={t('signup.logo-alt')} className="auth-logo" />
-                <h2 className="auth-title no-select">{t('signup.title')}</h2>
-                <AuthInput
-                    type="text"
-                    value={username}
-                    onChange={(e) => {
-                        setUsername(e.target.value);
-                        setErrors(defaultErrors);
-                        setButtonError("");
-                    }}
-                    placeholderKey="username-input"
-                    hasError={errors.username}
-                    errorKey="signup.error.username_too_short"
-                    backendErrorKey={errors.backend ? "ERROR_USERNAME_EXISTS" : ""}
-                    showError={errors.username}
-                />
+        <form className="auth__form" onSubmit={handleSubmit}>
+            <img src={icons.logo} alt={t('signup.logo-alt')} className="auth__form-logo" />
+            <h2 className="auth__form-title no-select">{t('signup.title')}</h2>
+            <AuthInput
+                type="text"
+                value={username}
+                onChange={(e) => {
+                    setUsername(e.target.value);
+                    setErrors(defaultErrors);
+                    setButtonError("");
+                }}
+                placeholderKey="username-input"
+                hasError={errors.username}
+                errorKey="signup.error.username_too_short"
+                backendErrorKey={errors.backend ? "ERROR_USERNAME_EXISTS" : ""}
+                showError={errors.username}
+            />
 
-                <AuthInput
-                    type="text"
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                        setErrors(defaultErrors);
-                        setButtonError("");
-                    }}
-                    placeholderKey="email-input"
-                    hasError={errors.email}
-                    errorKey="signup.error.email_invalid_format"
-                    backendErrorKey={errors.backend ? "ERROR_EMAIL_EXISTS" : ""}
-                    showError={errors.email}
-                    autoComplete="current-email"
-                />
+            <AuthInput
+                type="text"
+                value={email}
+                onChange={(e) => {
+                    setEmail(e.target.value);
+                    setErrors(defaultErrors);
+                    setButtonError("");
+                }}
+                placeholderKey="email-input"
+                hasError={errors.email}
+                errorKey="signup.error.email_invalid_format"
+                backendErrorKey={errors.backend ? "ERROR_EMAIL_EXISTS" : ""}
+                showError={errors.email}
+                autoComplete="current-email"
+            />
 
-                <AuthInput
-                    type="password"
-                    value={password}
-                    onChange={(e) => {
-                        setPassword(e.target.value);
-                        setErrors(defaultErrors);
-                        setButtonError("");
-                    }}
-                    placeholderKey="password-input"
-                    hasError={errors.password}
-                    errorKey="signup.error.password_invalid_format"
-                    showError={errors.password}
-                    autoComplete="current-password"
-                />
+            <AuthInput
+                type="password"
+                value={password}
+                onChange={(e) => {
+                    setPassword(e.target.value);
+                    setErrors(defaultErrors);
+                    setButtonError("");
+                }}
+                placeholderKey="password-input"
+                hasError={errors.password}
+                errorKey="signup.error.password_invalid_format"
+                showError={errors.password}
+                autoComplete="current-password"
+            />
 
-                <button
-                    type='submit'
-                    className={`auth-button ${buttonError ? "error" : ""} ${isLoading ? "loading" : ""}`}
-                    disabled={!!buttonError || isLoading}
-                >
-                    {buttonError || t('signup.submit')}
-                </button>
-                <div className="auth-footer">
-                    <div className="auth-footer__option">
-                        <span className="auth-footer__label">{t('signup.have-account-label')}</span>
-                        <Link to="/signin" className="auth-footer__link">{t('signup.have-account-link')}</Link>
-                    </div>
+            <button
+                type='submit'
+                className={`auth__button ${buttonError ? "auth__button--error" : ""} ${isLoading ? "auth__button--loading" : ""}`}
+                disabled={!!buttonError || isLoading}
+            >
+                {buttonError || t('signup.submit')}
+            </button>
+            <div className="auth__footer">
+                <div className="auth__footer-option">
+                    <span className="auth__footer-label">{t('signup.have-account-label')}</span>
+                    <Link to="/signin" className="auth__footer-link">{t('signup.have-account-link')}</Link>
                 </div>
-
-            </form>
-        </div>
+            </div>
+        </form>
     );
 };
 

@@ -9,4 +9,7 @@
 @use 'layout/header';
 @use 'layout/main';
 
+@use 'utils/animations';
+@use 'utils/mixins';
+
 @use "../pages/pages"
