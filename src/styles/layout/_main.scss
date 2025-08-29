@@ -4,24 +4,15 @@
     display: grid;
     grid-template-columns: minmax(200px, 310px) 1fr minmax(200px, 310px);
 
-}
+    &__left--game,
+    &__right--game {
+        background-color: rgba(16, 16, 16, 0.9);
+    }
 
-.main-left.game {
-    background-color: rgba(16, 16, 16, 0.9);
-}
-
-.main-right.game {
-    background-color: rgba(16, 16, 16, 0.9);
-}
-
-.main-center {
-    position: relative;
-    overflow: hidden;
-}
-
-
-.motion-div {
-    height: 100%;
-    display: flex;
-    justify-content: center;
+    &__center {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }

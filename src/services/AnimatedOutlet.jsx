@@ -10,7 +10,7 @@ const AnimatedOutlet = () => {
         <AnimatePresence mode="wait">
             {outlet && cloneElement(
                 <motion.div
-                    className='motion-div'
+                    className='main__center'
                     key={location.pathname}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
