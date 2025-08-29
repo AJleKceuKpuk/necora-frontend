@@ -65,7 +65,7 @@ const Activation = () => {
         return;
       }
       else {
-        setButtonError(t('recovery.error.server-off'));
+        setButtonError(t('activate.error.server-off'));
         setTimeout(() => setButtonError(''), 3000);
       }
     } finally {

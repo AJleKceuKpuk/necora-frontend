@@ -48,7 +48,7 @@ const PasswordReset = () => {
         setButtonError("");
         const validationError = validate();
         if (validationError) {
-            setButtonError(t('?.error.incorrect_data'));
+            setButtonError(t('reset-password.error.incorrect_data'));
             return;
         }
         setIsLoading(true);
@@ -57,7 +57,7 @@ const PasswordReset = () => {
             sessionStorage.removeItem("recoveryCode");
             navigate("/");
         } catch (err) {
-            setButtonError(t('?.error.server-off'));
+            setButtonError(t('reset-password.error.server-off'));
             setTimeout(() => {
                 setButtonError("");
             }, 3000);
@@ -70,8 +70,8 @@ const PasswordReset = () => {
     return (
 
         <form className="auth__form" onSubmit={handleSubmit}>
-            <img src={icons.logo} alt={t('?.logo-alt')} className="auth__form-logo" />
-            <h2 className="auth__form-title no-select">{t('?.title')}</h2>
+            <img src={icons.logo} alt={t('reset-password.logo-alt')} className="auth__form-logo" />
+            <h2 className="auth__form-title no-select">{t('reset-password.title')}</h2>
             <AuthInput
                 type="password"
                 value={password}
@@ -82,7 +82,7 @@ const PasswordReset = () => {
                 }}
                 placeholderKey="password-input"
                 hasError={errors.password}
-                errorKey="signup.error.password_invalid_format"
+                errorKey="reset-password.error.password_invalid_format"
                 showError={errors.password}
                 autoComplete="current-password"
             />
@@ -95,27 +95,21 @@ const PasswordReset = () => {
                     setErrors(defaultErrors);
                     setButtonError("");
                 }}
-                placeholderKey="password-input"
+                placeholderKey="password-input-apply"
                 hasError={errors.passwordApply}
-                errorKey=".error.password_invalid_format"
+                errorKey="reset-password.error.password_mismatch"
                 showError={errors.passwordApply}
                 autoComplete="current-password"
             />
 
             <button
                 type='submit'
-                className={`auth__button ${buttonError
-                    ? "auth__button--error"
-                    : ""} ${isLoading
-                        ? "auth__button--loading"
-                        : ""}`}
-                disabled={!!buttonError || isLoading}
-            >
-                {buttonError || t('?.submit')}
+                className={`auth__button ${buttonError ? "auth__button--error" : ""} ${isLoading ? "auth__button--loading" : ""}`} disabled={!!buttonError || isLoading} >
+                {buttonError || t('reset-password.submit')}
             </button>
             <div className="auth__footer">
                 <div className="auth__footer-option">
-                    <Link to="/" className="auth__footer-link">{t('?.have-account-link')}</Link>
+                    <Link to="/" className="auth__footer-link">{t('reset-password.submit-pass')}</Link>
                 </div>
             </div>
 

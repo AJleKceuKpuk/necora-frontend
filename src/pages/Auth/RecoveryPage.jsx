@@ -52,7 +52,6 @@ export default function Recovery() {
             return;
         }
         setIsLoading(true);
-
         try {
             const delay = new Promise(resolve => setTimeout(resolve, 1500));
             sendCodeRecovery({ email }).catch(() => { });
@@ -147,7 +146,7 @@ export default function Recovery() {
                     </div>
                     <button
                         type="submit"
-                        className={`auth__button ${buttonError ? "auth__button--error" : ""} ${isLoading ? "auth-page__button--loading" : ""}`}
+                        className={`auth__button ${buttonError ? "auth__button--error" : ""} ${isLoading ? "auth__button--loading" : ""}`}
                         disabled={!!buttonError || isLoading}
                     >
                         {buttonError || t('recovery.submit-request')}
@@ -194,11 +193,7 @@ export default function Recovery() {
 
                     <button
                         type="submit"
-                        className={`auth__button ${buttonError
-                            ? "auth__button--error"
-                            : ""} ${isLoading
-                                ? "auth__button--loading"
-                                : ""}`}
+                        className={`auth__button ${buttonError ? "auth__button--error" : ""} ${isLoading ? "auth__button--loading" : ""}`}
                         disabled={!!buttonError || isLoading || isRunning}
                     >
                         {buttonError || t('recovery.submit-confirm')}
