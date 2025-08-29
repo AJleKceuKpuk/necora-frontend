@@ -8,5 +8,12 @@ const importAllIcons = (r) => {
   return icons;
 };
 
+
 const icons = importAllIcons(require.context('../images', false, /\.png$/));
+
+
+Object.values(icons).forEach((src) => {
+  const img = new Image();
+  img.src = src;
+});
 export default icons;

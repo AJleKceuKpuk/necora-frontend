@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import icons from "../../assets/images/images";
+import check from "../../assets/images/check.webp"
 
 const Overlay = ({ title, description }) => {
     const [visible, setVisible] = useState(false);
