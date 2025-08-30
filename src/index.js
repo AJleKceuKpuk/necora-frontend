@@ -8,6 +8,7 @@ import { LanguageProvider } from './provider/LanguageProvider';
 import { TokenProvider } from './provider/TokenProvider';
 import { ProfileProvider } from './provider/ProfileProvider';
 import { OverlayProvider } from './components/Overlay/OverlayContext';
+import { WebSocketProvider } from './provider/WebSocketProvider';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -15,11 +16,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <LanguageProvider>
       <TokenProvider>
         <ProfileProvider>
-          <AuthProvider>
-            <OverlayProvider>
-              <App />
-            </OverlayProvider>
-          </AuthProvider>
+          <WebSocketProvider>
+            <AuthProvider>
+              <OverlayProvider>
+                <App />
+              </OverlayProvider>
+            </AuthProvider>
+          </WebSocketProvider>
         </ProfileProvider>
       </TokenProvider>
     </LanguageProvider>

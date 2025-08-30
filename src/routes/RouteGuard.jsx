@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 const RouteGuard = ({ children, meta }) => {
     const location = useLocation();
     const { isAuthenticated, authPhase, setAuthPhase } = useAuth();
-    const { profile, isLoading } = useProfile();
+    const { profile } = useProfile();
 
     useEffect(() => {
         const resetPaths = ["/activate", "/reset-password"];
@@ -16,6 +16,7 @@ const RouteGuard = ({ children, meta }) => {
         if (location.pathname === "/" && sessionStorage.getItem("recoveryCode")) {
             sessionStorage.removeItem("recoveryCode")
         }
+        // eslint-disable-next-line
     }, [location.pathname]);
 
     if (isAuthenticated) {

@@ -33,7 +33,7 @@ const Signin = () => {
     if (!emailRegex.test(email)) {
       clientErrors.email = true;
     }
-    if (password.length < 4) {
+    if (password.length < 3) {
       clientErrors.password = true;
     }
 

@@ -5,6 +5,7 @@ import { useAuth } from "./hooks/useAuth";
 import RoutesConfig from "./routes/RoutesConfig";
 import "./styles/styles.scss"
 
+
 const App = () => {
   const { isInitializing } = useAuth();
 

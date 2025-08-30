@@ -1,10 +1,24 @@
-import { useState, useEffect, useCallback, useMemo, } from 'react';
-import { loginRequest, registrationRequest, recoveryRequest, activationRequest, logoutRequest, activationCodeRequest, recoveryCodeRequest, resetPasswordRequest } from '../api/authApi';
+import {
+    useState,
+    useEffect,
+    useCallback,
+    useMemo,
+} from 'react';
+import {
+    loginRequest,
+    registrationRequest,
+    recoveryRequest,
+    activationRequest,
+    logoutRequest,
+    activationCodeRequest,
+    recoveryCodeRequest,
+    resetPasswordRequest
+} from '../api/authApi';
 import { AuthContext } from '../context/AuthContext';
 import { useLanguage } from '../hooks/useLanguage';
 import { useToken } from '../hooks/useToken';
 import { useProfile } from './ProfileProvider';
-
+import { useWebSocket } from '../hooks/useWebSocket';
 
 export const AuthProvider = ({ children }) => {
     const [isInitializing, setIsInitializing] = useState(true);
@@ -13,8 +27,18 @@ export const AuthProvider = ({ children }) => {
 
     const { language } = useLanguage();
     const { setAccessToken, accessToken, validateToken } = useToken();
-    const { getProfile, setProfile, profile, isLoading } = useProfile();
+    const { getProfile, setProfile, profile } = useProfile();
+    const { disconnect } = useWebSocket();
 
+    // Функция отправки кода активации
+    const sendCodeActivation = useCallback(async () => {
+        await activationCodeRequest({ language });
+    }, [language]);
+
+    // Функция отправки кода востановления доступа
+    const sendCodeRecovery = useCallback(async ({ email }) => {
+        await recoveryCodeRequest({ email, language });
+    }, [language]);
 
     // Функция входа!
     const login = useCallback(async ({ email, password }) => {
@@ -33,7 +57,7 @@ export const AuthProvider = ({ children }) => {
         setAccessToken(token);
         setAuthPhase("registration");
         sendCodeActivation();
-    }, [setAccessToken, language]);
+    }, [setAccessToken, language, sendCodeActivation]);
 
     // Функция востановления доступа
     const recovery = useCallback(async ({ email, code }) => {
@@ -44,7 +68,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('accessToken', token);
         setAccessToken(token);
         setAuthPhase("recovery");
-    }, [setAccessToken, language, getProfile]);
+    }, [setAccessToken, language]);
 
     const resetPassword = useCallback(async ({ password, passwordApply }) => {
         const code = sessionStorage.getItem("recoveryCode");
@@ -57,6 +81,7 @@ export const AuthProvider = ({ children }) => {
         if (token) {
             try {
                 await logoutRequest();
+                await disconnect();
             } catch {
                 console.warn('Logout failed silently');
             }
@@ -65,24 +90,15 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
         setAccessToken(null);
         setProfile(null);
-    }, [setAccessToken, setProfile]);
+    }, [setAccessToken, setProfile, disconnect]);
 
     // Функция активации аккаунта
     const activation = useCallback(async ({ code }) => {
         const username = profile?.username;
         await activationRequest({ username, code });
-    }, [profile, getProfile]);
+    }, [profile]);
 
-    // Функция отправки кода активации
-    const sendCodeActivation = useCallback(async () => {
-        await activationCodeRequest({ language });
-    }, [language]);
-
-    // Функция отправки кода востановления доступа
-    const sendCodeRecovery = useCallback(async ({ email }) => {
-        await recoveryCodeRequest({ email, language });
-    }, [language]);
-
+    // Инициализация сессии
     const initSession = useCallback(
         async (overrideToken) => {
             const tokenToCheck = overrideToken ?? accessToken;
@@ -105,15 +121,13 @@ export const AuthProvider = ({ children }) => {
                 setIsInitializing(false);
             }
         },
-        [accessToken, isAuthenticated, isLoading, validateToken, getProfile, logout]
+        [accessToken, validateToken, getProfile, logout]
     );
 
-    // Инициализация сессии при монтировании
     useEffect(() => {
         initSession();
     }, [initSession]);
 
-    // Мемоизация
     const contextValue = useMemo(() => ({
         isInitializing, isAuthenticated, authPhase,
 

@@ -9,8 +9,6 @@ export const TokenProvider = ({ children }) => {
         localStorage.getItem('accessToken')
     );
 
-
-
     // Попытка обновить токен
     const refresh = useCallback(async () => {
         const token = await refreshToken();
