@@ -63,9 +63,10 @@ const Signup = () => {
         setIsLoading(true);
         try {
             await registration({ username, email, password });
-            showOverlay(`${username}, добро пожаловать!`, "Вы успешно зарегестрировались.");
+            await showOverlay(`${username}, добро пожаловать!`, "Вы успешно зарегестрировались.");
             setTimeout(() => {
                 navigate("/activate", replace)
+                setIsLoading(false);
             }, 3000);
         } catch (err) {
             const error = err.response?.data?.error;
@@ -81,7 +82,6 @@ const Signup = () => {
                     setButtonError("");
                 }, 3000);
             }
-        } finally {
             setIsLoading(false);
         }
     };

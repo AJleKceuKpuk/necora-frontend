@@ -62,15 +62,14 @@ const PasswordReset = () => {
             showOverlay(`Пароль успешно изменен!`, "");
             setTimeout(() => {
                 navigate("/", replace)
+                setIsLoading(false);
             }, 3000);
         } catch (err) {
             setButtonError(t('reset-password.error.server-off'));
+            setIsLoading(false);
             setTimeout(() => {
                 setButtonError("");
             }, 3000);
-
-        } finally {
-            setIsLoading(false);
         }
     };
 

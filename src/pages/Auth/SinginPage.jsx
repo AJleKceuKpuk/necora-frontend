@@ -61,19 +61,11 @@ const Signin = () => {
     setIsLoading(true);
     try {
       const profile = await login({ email, password });
-      if (profile.activate) {
-        showOverlay(`${profile.username}, добро пожаловать!`, "Вы успешно вошли в систему.");
-        setTimeout(() => {
-          navigate("/", replace)
-        }, 3000);
-      } else {
-        showOverlay(`${profile.username}, добро пожаловать!`, "Вы успешно вошли в систему.");
-        setTimeout(() => {
-          navigate("/activate", replace)
-        }, 3000);
-
-      }
-
+      showOverlay(`${profile.username}, добро пожаловать!`, "Вы успешно вошли в систему.");
+      setTimeout(() => {
+        navigate(profile.activate ? "/" : "/activate", replace);
+        setIsLoading(false);
+      }, 3000);
     } catch (err) {
       const error = err.response?.data?.error;
       if (error === "ERROR_AUTH") {
@@ -83,7 +75,6 @@ const Signin = () => {
         console.log("error", err);
         setButtonError(t('signin.error.server-off'));
       }
-    } finally {
       setIsLoading(false);
     }
   };

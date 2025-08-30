@@ -92,6 +92,7 @@ export default function Recovery() {
             showOverlay(`Код принят!`, "Вы успешно вошли в систему.");
             setTimeout(() => {
                 navigate("/reset-password", replace)
+                setIsLoading(false);
             }, 3000);
         } catch (err) {
             const error = err.response?.data?.error;
@@ -102,15 +103,13 @@ export default function Recovery() {
             } else if (error === 'ERROR_RATE_LIMIT_EXCEEDED') {
                 start();
                 setButtonError(t(`error:${error}`));
-                return;
             }
             else {
                 setButtonError(t('recovery.error.server-off'));
                 setTimeout(() => setButtonError(''), 3000);
             }
-        } finally {
             setIsLoading(false);
-        }
+        } 
     };
 
 

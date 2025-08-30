@@ -62,6 +62,7 @@ const Activation = () => {
       showOverlay(`${profile.username}, Активация прошла успешно!`, "Все функции доступны!");
       setTimeout(() => {
         navigate("/", replace)
+        setIsLoading(false);
       }, 3000);
     } catch (err) {
       const error = err.response?.data?.error;
@@ -78,7 +79,6 @@ const Activation = () => {
         setButtonError(t('activate.error.server-off'));
         setTimeout(() => setButtonError(''), 3000);
       }
-    } finally {
       setIsLoading(false);
     }
   };
