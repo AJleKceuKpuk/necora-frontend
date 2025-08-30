@@ -61,7 +61,7 @@ const Signin = () => {
     setIsLoading(true);
     try {
       const profile = await login({ email, password });
-      showOverlay(`${profile.username}, добро пожаловать!`, "Вы успешно вошли в систему.");
+      showOverlay(`${profile.username}, ${t('signin.overlay-title')}`, t('signin.overlay-description'));
       setTimeout(() => {
         navigate(profile.activate ? "/" : "/activate", replace);
         setIsLoading(false);

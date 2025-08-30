@@ -63,7 +63,7 @@ const Signup = () => {
         setIsLoading(true);
         try {
             await registration({ username, email, password });
-            await showOverlay(`${username}, добро пожаловать!`, "Вы успешно зарегестрировались.");
+            await showOverlay(`${username}, ${t('sigup.overlay-title')}`, t('signup.overlay-description'));
             setTimeout(() => {
                 navigate("/activate", replace)
                 setIsLoading(false);

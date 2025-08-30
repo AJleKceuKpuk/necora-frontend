@@ -59,7 +59,8 @@ const PasswordReset = () => {
         try {
             await resetPassword({ password, passwordApply })
             sessionStorage.removeItem("recoveryCode");
-            showOverlay(`Пароль успешно изменен!`, "");
+            showOverlay(t('reset-password.overlay-title'), "");
+
             setTimeout(() => {
                 navigate("/", replace)
                 setIsLoading(false);

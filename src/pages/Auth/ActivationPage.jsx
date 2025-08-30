@@ -59,7 +59,8 @@ const Activation = () => {
     setIsLoading(true);
     try {
       await activation({ code: finalCode });
-      showOverlay(`${profile.username}, Активация прошла успешно!`, "Все функции доступны!");
+
+      showOverlay(`${profile.username}, ${t('activate.overlay-title')}`, t('activate.overlay-description'));
       setTimeout(() => {
         navigate("/", replace)
         setIsLoading(false);

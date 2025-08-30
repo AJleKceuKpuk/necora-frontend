@@ -89,7 +89,8 @@ export default function Recovery() {
         const code = codeArray.join('');
         try {
             await recovery({ email, code });
-            showOverlay(`Код принят!`, "Вы успешно вошли в систему.");
+            
+            showOverlay(`${t('recovery.overlay-title')}`, t('recovery.overlay-description'));
             setTimeout(() => {
                 navigate("/reset-password", replace)
                 setIsLoading(false);
