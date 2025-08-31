@@ -19,14 +19,11 @@ export const WebSocketProvider = ({ children }) => {
             webSocketFactory: () => new SockJS(getWebSocketUrl(accessToken)),
             onConnect: () => {
                 setStatus('open')
-                console.log('[WS] connected')
             },
             onStompError: (frame) => {
-                console.error('[WS] protocol error', frame.headers['message'], frame.body)
             },
             onWebSocketClose: () => {
                 setStatus('closed')
-                console.log('[WS] disconnected')
             }
         })
         setStatus('connecting')
@@ -41,7 +38,6 @@ export const WebSocketProvider = ({ children }) => {
             client.deactivate();
             setClient(null);
             setStatus('closed');
-            console.log('[WS] manually disconnected');
         }
     }, [client]);
 
@@ -65,7 +61,6 @@ export const WebSocketProvider = ({ children }) => {
     // Универсальный запрос
     const send = useCallback((destination, body) => {
         if (!client?.connected) {
-            console.warn('[WS] cannot send, not connected')
             return
         }
         try {
@@ -73,9 +68,7 @@ export const WebSocketProvider = ({ children }) => {
                 destination,
                 body: JSON.stringify(body),
             })
-            console.log(`[WS] sent to ${destination}`, body)
         } catch (err) {
-            console.error('[WS] failed to send', err)
         }
     }, [client])
 
@@ -88,7 +81,7 @@ export const WebSocketProvider = ({ children }) => {
 
         const destination = `/ws/online/${profile.username}`;
         const sub = subscribe(destination, (data) => {
-            console.log('Online status:', data)
+           // console.log('Online status:', data)
         })
         send('/ws/online/update', {
             userId: profile.id,

@@ -1,0 +1,73 @@
+.profile {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    font-family: 'Manrope', sans-serif;
+    position: relative;
+
+    &__left {
+        width: var(--sidebar-width, 300px); // управляемая ширина
+        min-width: 200px;
+        max-width: 400px;
+        background-color: rgba(23, 23, 23, 0.9);
+        padding: 10px;
+        position: relative;
+
+        &-title {
+            box-sizing: border-box;
+            border-bottom: 1px solid white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        &-logo {
+            width: 100%;
+        }
+
+        &-navbar {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        &-item {
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: all .3s linear;
+            border: 0px solid;
+            border-radius: 10px;
+
+            &:hover {
+                background-color: #393939;
+            }
+
+            &--active {
+                transition: all .3s linear;
+                background-color: #393939;
+            }
+        }
+    }
+
+
+
+
+    &__resizer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 3px;
+        height: 100%;
+        cursor: ew-resize;
+        background-color: rgba(255, 255, 255, 0.5); // или прозрачный
+        z-index: 10;
+    }
+
+    &__right {
+        flex: 1;
+        background-color: rgba(57, 57, 57, 0.9);
+        padding: 10px;
+    }
+
+}

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useMemo } from 'react';
+import React, { createContext, useState, useMemo, useCallback } from 'react';
 import api from '../api/axiosInstance';
 
 export const ProfileContext = createContext(null);
@@ -20,22 +20,33 @@ const getProfileRequest = () => {
 export const ProfileProvider = ({ children }) => {
     const [profile, setProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [uiSettings, setUiSettings] = useState();
 
-    const getProfile = async () => {
-        
-        setIsLoading(true)
+    const getProfile = useCallback(async () => {
+        setIsLoading(true);
         const user = await getProfileRequest();
+
         setProfile(user);
-        setIsLoading(false)
+
+        try {
+            const parsedSettings = JSON.parse(user.uiSettings || '{}');
+            setUiSettings(parsedSettings);
+        } catch (e) {
+            console.warn('Ошибка парсинга uiSettings:', e);
+        }
+       
+        
+        setIsLoading(false);
         return user;
-    };
+    }, []);
 
     const value = useMemo(() => ({
         profile,
+        uiSettings,
         getProfile,
         setProfile,
         isLoading
-    }), [profile, isLoading]);
+    }), [profile, isLoading, uiSettings]);
 
     return (
         <ProfileContext.Provider value={value}>
