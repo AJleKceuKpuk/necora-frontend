@@ -1,7 +1,7 @@
 @use '../utils/mixins';
 
 .header {
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Inter', sans-serif;
     display: grid;
     height: 60px;
     background-color: black;
@@ -14,6 +14,7 @@
 
     &--game {
         grid-template-columns: 300px 1fr 300px;
+        transition: all .3s linear;
     }
 
     &__left {
@@ -40,6 +41,10 @@
 
         &-time {
             font-size: 20px;
+        }
+
+        &-spoiler {
+            display: none;
         }
     }
 
@@ -175,6 +180,7 @@
             transition: opacity 0.5s ease, visibility 0.5s ease;
             visibility: visible;
             pointer-events: auto;
+            z-index: 100;
 
             &--hide {
                 @include mixins.hidden;
@@ -227,5 +233,77 @@
             align-items: center;
         }
     }
+}
 
+@media (max-width: 1440px) {
+    .header {
+        height: 55px;
+
+        &--game {
+            grid-template-columns: 200px 1fr 200px;
+
+            &--expanded-left {
+                grid-template-columns: 310px 1fr 200px;
+            }
+        }
+
+        &--start {
+            grid-template-columns: 1fr 200px;
+        }
+
+        &__center {
+            font-size: 21px;
+        }
+
+        &__right {
+            grid-template-columns: 1fr 50px;
+
+            &-left {
+                display: none;
+            }
+
+            &-right {
+                width: 100%;
+                transition: none;
+            }
+        }
+
+        &__left {
+            grid-template-columns: 1fr;
+            position: relative;
+
+            &--expanded {
+                grid-template-columns: 50px 1fr 50px;
+            }
+
+            &-button {
+                display: none;
+
+                &--expanded {
+                    display: block;
+                }
+            }
+
+            &-spoiler {
+                position: absolute;
+                left: 0px;
+                display: flex;
+                align-items: center;
+
+                &--expanded {
+                    transform: translateX(320px) rotate(180deg);
+                }
+            }
+        }
+    }
+}
+
+@keyframes leftSpoiler {
+    from {
+        transform: translateX(320px) rotate(0deg);
+    }
+
+    to {
+        transform: translateX(0px) rotate(180deg);
+    }
 }

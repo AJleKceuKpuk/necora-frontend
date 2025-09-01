@@ -8,16 +8,64 @@
 
 .img-15 {
     @include mixins.image-wrapper(22px, 15px);
-  }
+
+    @media (max-width: 1440px) {
+        @include mixins.image-wrapper(18px, 12px);
+    }
+
+    @media (max-width: 1024px) {
+        @include mixins.image-wrapper(17px, 11px);
+    }
+
+    @media (max-width: 768px) {
+        @include mixins.image-wrapper(16px, 10px);
+    }
+}
 
 .img-25 {
     @include mixins.image-wrapper(32px, 25px);
+
+    @media (max-width: 1440px) {
+        @include mixins.image-wrapper(28px, 22px);
+    }
+
+    @media (max-width: 1024px) {
+        @include mixins.image-wrapper(26px, 20px);
+    }
+
+    @media (max-width: 768px) {
+        @include mixins.image-wrapper(24px, 18px);
+    }
 }
 
 .img-36 {
     @include mixins.image-wrapper(43px, 36px);
+
+    @media (max-width: 1440px) {
+        @include mixins.image-wrapper(38px, 32px);
+    }
+
+    @media (max-width: 1024px) {
+        @include mixins.image-wrapper(36px, 30px);
+    }
+
+    @media (max-width: 768px) {
+        @include mixins.image-wrapper(34px, 28px);
+    }
 }
 
 .img-45 {
-    @include mixins.image-wrapper(55px, 45px)
+    @include mixins.image-wrapper(55px, 45px);
+
+    @media (max-width: 1440px) {
+        @include mixins.image-wrapper(48px, 38px);
+    }
+
+    @media (max-width: 1024px) {
+        @include mixins.image-wrapper(45px, 36px);
+    }
+
+    @media (max-width: 768px) {
+        @include mixins.image-wrapper(42px, 32px);
+    }
 }

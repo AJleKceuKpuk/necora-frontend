@@ -48,6 +48,7 @@ const UserMenu = () => {
           <HeaderButton icon={icons.friends} alt="friends" />
         </div>
       </div>
+
       <div className="header__right-right">
         <div className="header__right-profile" ref={dropdownRef}>
           <div className="header__button-profile no-select" onClick={toggleMenu}>
@@ -65,7 +66,9 @@ const UserMenu = () => {
             ))}
           </div>
         </div>
+
       </div>
+      <HeaderButton className="header__right-spoiler rotate-180" icon={icons.spoiler} alt="left spoiler" />
     </div>
   );
 };

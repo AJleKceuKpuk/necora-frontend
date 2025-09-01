@@ -6,7 +6,7 @@ import Footer from "../components/Footer/Footer";
 
 
 const Body = () => {
-  const game = false;
+  const game = true;
   
 
   return (

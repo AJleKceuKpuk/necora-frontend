@@ -7,6 +7,7 @@ import PlanetMenu from './PlanetMenu';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../hooks/useAuth';
 import HeaderButton from './HeaderButton';
+import { useCallback, useState } from 'react';
 
 const Header = ({ game }) => {
   const { t } = useTranslation('header');
@@ -17,20 +18,33 @@ const Header = ({ game }) => {
   const planet = <PlanetMenu />;
 
 
+
+  const [isLeftExpanded, setIsLeftExpanded] = useState(false);
+
+  const toggleLeftSpoiler = useCallback(() => {
+    setIsLeftExpanded(prev => !prev);
+  }, []);
+
+
   if (game && isAuthenticated) {
     return (
-      <header className="header header--game">
-        <div className="header__left">
+      <header className={`header header--game ${isLeftExpanded ? 'header--game--expanded-left' : ''}`}>
 
-          <HeaderButton icon={icons.home} alt="home" />
+        <div className={`header__left ${isLeftExpanded ? 'header__left--expanded' : ''}`}>
+          <HeaderButton
+            onClick={toggleLeftSpoiler}
+            className={`header__left-spoiler ${isLeftExpanded ? 'header__left-spoiler--expanded' : ''}`}
+            icon={icons.spoiler}
+            alt="left spoiler"
+          />
+          <HeaderButton className={`header__left-button ${isLeftExpanded ? 'header__left-button--expanded' : ''}`} icon={icons.home} alt="home" />
           <div className="header__left-time">
             {dateTime.toLocaleDateString()} <br />
             {dateTime.toLocaleTimeString()}
           </div>
-          <HeaderButton icon={icons.chat} alt="chat" />
-
-
+          <HeaderButton className={`header__left-button ${isLeftExpanded ? 'header__left-button--expanded' : ''}`} icon={icons.chat} alt="chat" />
         </div>
+
         <div className="header__center">
 
           <div className="header__center-tm">
