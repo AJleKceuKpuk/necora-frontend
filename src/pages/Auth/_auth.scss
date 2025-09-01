@@ -130,7 +130,7 @@
         cursor: pointer;
 
         &::after {
-            font-family: 'Manrope', sans-serif;
+            font-family: "Inter", sans-serif;
             content: attr(data-tooltip);
             position: absolute;
             right: 0;
@@ -200,7 +200,7 @@
     width: 100%;
     box-sizing: border-box;
     display: flex;
-    font-family: 'Manrope', sans-serif;
+    font-family: "Inter", sans-serif;
     font-size: 20px;
     justify-content: space-evenly;
     gap: 100px;

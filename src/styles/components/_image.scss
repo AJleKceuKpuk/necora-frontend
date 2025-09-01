@@ -17,3 +17,7 @@
 .img-36 {
     @include mixins.image-wrapper(43px, 36px);
 }
+
+.img-45 {
+    @include mixins.image-wrapper(55px, 45px)
+}

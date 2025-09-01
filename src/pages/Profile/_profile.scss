@@ -2,8 +2,10 @@
     display: flex;
     height: 100%;
     width: 100%;
-    font-family: 'Manrope', sans-serif;
+    font-family: "Inter", sans-serif;
+    font-size: 20px;
     position: relative;
+
 
     &__left {
         width: var(--sidebar-width, 300px); // управляемая ширина
@@ -50,9 +52,6 @@
         }
     }
 
-
-
-
     &__resizer {
         position: absolute;
         top: 0;
@@ -68,6 +67,114 @@
         flex: 1;
         background-color: rgba(57, 57, 57, 0.9);
         padding: 10px;
+
+        &-page {
+            width: 100%;
+            height: 100%;
+        }
+
+        &-header {
+            font-size: 36px;
+            font-weight: bold;
+            border-bottom: 1px solid white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-left: 20px;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        &-wrapper {
+            border: 1px solid rgba(0, 0, 0, 0);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 10px;
+
+
+
+            &-header {
+                background-color: rgba(91, 91, 91, 0.9);
+                font-size: 30px;
+                font-weight: 500;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                padding: 0 10px;
+                justify-content: space-between;
+            }
+
+
+            &-body {
+                width: 100%;
+                font-size: 30px;
+                font-weight: 400;
+                color: rgba(255, 255, 255, 0.7);
+                background-color: rgba(115, 115, 115, 0.9);
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 10px;
+            }
+
+            &__edit-button {
+                transition: all .3s linear;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #393939;
+                }
+            }
+
+            &__text{
+                margin-left: 5px;
+                font-family: "Inter", sans-serif;
+                padding: 5px 0px;
+            }
+
+            &__edit-area {
+                display: flex;
+                align-items: center;
+                border: 0px solid;
+                border-radius: 5px;
+                background-color: #404040;
+                width: 100%;
+            }
+
+            &__input {
+                height: 100%;
+                font-size: 30px;
+                border: none;
+                flex-grow: 1;
+                color: white;
+                background-color: transparent;
+                padding: 5px;
+                font-family: "Inter", sans-serif;
+
+                &:focus{
+                    border: none;
+                    outline: none;
+                }
+            }
+
+            &__button {
+                border: 1px solid white;
+                color: white;
+                background-color: transparent;
+                padding: 10px;
+                cursor: pointer;
+
+                &--submit{
+                    background-color: green;
+                }
+
+                &--cancel{
+                    background-color: red;
+                }
+            }
+        }
+
     }
 
 }
